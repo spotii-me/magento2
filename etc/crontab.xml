@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/*
+ * @category    Spotii
+ * @package     Spotii_Spotiipay
+ * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="spotii_pay_daily_send" instance="Spotii\Spotiipay\Model\Cron\MerchantData" method="execute">
+            <schedule>0 0 * * *</schedule>
+        </job>
+    </group>
+</config>
