@@ -22,11 +22,19 @@
     background-color: @background_color_1;
     display: inline-block;
     padding: 15px;
-    .redirection-info {
+    .redirection-info{
       width: 100%;
       float: left;
     }
+    #total-benchmark-info
+    {
+      width: 100%;
+      display: inline-block;
+      color: red;
+    }
+    
   }
+  
   .actions-toolbar {
     float: right;
     margin-top: 1.5rem;
@@ -51,8 +59,8 @@
   position: relative;
   border-radius: 50%;
   border: 4px solid #FF4D4A;
-  width: 11px;
-  height: 11px;
+  width: 18px;
+  height: 18px;
   margin-bottom: -6px;
   >.spotii-installment-amount {
     bottom: 30px;
@@ -71,10 +79,10 @@
   border-radius: 50%;
   margin-top: -4px;
   >.spotii-installment-amount {
-    bottom: 33px;
+    bottom: 30px;
   }
   >.time-period {
-    top: 34px;
+    top: 30px;
   }
 }
 .bar {
@@ -187,6 +195,12 @@
       .redirection-info {
         width: 57%;
       }
+      #total-benchmark-info
+      {
+        width: 50%;
+        display: inline-block;
+        color: red;
+      }
     }
     .actions-toolbar {
       width: auto;
@@ -200,6 +214,12 @@
       .redirection-info {
         width: 65%;
       }
+      #total-benchmark-info
+      {
+        width: 60%;
+        display: inline-block;
+        color: red;
+      }
     }
   }
 }
@@ -212,4 +232,5 @@
     }
   }
 }
+
 
