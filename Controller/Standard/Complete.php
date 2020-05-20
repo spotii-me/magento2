@@ -42,7 +42,7 @@ class Complete extends SpotiiPay
                 $this->_checkoutSession->setLastOrderId($order->getId())
                     ->setLastRealOrderId($order->getIncrementId())
                     ->setLastOrderStatus($order->getStatus());
-                $this->_spotiipayModel->createTransaction($order, $reference);
+                $this->_spotiipayModel->createTransaction($order, $reference, $quote);
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email
