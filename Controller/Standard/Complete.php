@@ -34,8 +34,11 @@ class Complete extends SpotiiPay
                 ->setLastSuccessQuoteId($quote->getId())
                 ->clearHelperData();
             $this->spotiiHelper->logSpotiiActions("Set data on checkout session");
-
+            
+            $quote->collectTotals()->save();
+            $this->spotiiHelper->logSpotiiActions("**Saved Data on Quote**");
             $order = $this->_quoteManagement->submit($quote);
+            $this->spotiiHelper->logSpotiiActions("**Quote Updated**");
             $this->spotiiHelper->logSpotiiActions("Order created");
 
             if ($order) {
