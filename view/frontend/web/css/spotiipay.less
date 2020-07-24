@@ -22,11 +22,19 @@
     background-color: @background_color_1;
     display: inline-block;
     padding: 15px;
-    .redirection-info {
+    .redirection-info{
       width: 100%;
       float: left;
     }
+    #total-benchmark-info
+    {
+      width: 100%;
+      display: inline-block;
+      color: red;
+    }
+    
   }
+  
   .actions-toolbar {
     float: right;
     margin-top: 1.5rem;
@@ -48,12 +56,12 @@
 }
 .step {
   background: #fff;
-  position: relative;
-  border-radius: 50%;
-  border: 4px solid #FF4D4A;
-  width: 11px;
-  height: 11px;
-  margin-bottom: -6px;
+    position: relative;
+    border-radius: 50%;
+    border: 4px solid #ff4d4a;
+    width: 18px;
+    height: 18px;
+    margin-bottom: -6px;
   >.spotii-installment-amount {
     bottom: 30px;
   }
@@ -62,19 +70,19 @@
   }
 }
 .highlight {
-  box-shadow: 0px 0px 9px 8px rgba(255, 77, 74, 0.15);
-  width: 18px;
-  height: 18px;
-  border: 4px solid #FF4D4A;
-  background: #fff;
-  position: relative;
-  border-radius: 50%;
-  margin-top: -4px;
+  box-shadow: 0px 0px 9px 8px rgba(255,77,74,0.15);
+    width: 18px;
+    height: 18px;
+    border: 4px solid #ff4d4a;
+    background: #fff;
+    position: relative;
+    border-radius: 50%;
+    margin-top: 0px;
   >.spotii-installment-amount {
-    bottom: 33px;
+    bottom: 30px;
   }
   >.time-period {
-    top: 34px;
+    top: 30px;
   }
 }
 .bar {
@@ -104,13 +112,13 @@
   float: none;
 }
 .spotii-payment-text {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 400;
   color: @color_1;
 }
 .spotii-grand-total {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 500;
   color: @color_1;
 }
 .action.primary.checkout {
@@ -187,6 +195,12 @@
       .redirection-info {
         width: 57%;
       }
+      #total-benchmark-info
+      {
+        width: 50%;
+        display: inline-block;
+        color: red;
+      }
     }
     .actions-toolbar {
       width: auto;
@@ -200,6 +214,12 @@
       .redirection-info {
         width: 65%;
       }
+      #total-benchmark-info
+      {
+        width: 60%;
+        display: inline-block;
+        color: red;
+      }
     }
   }
 }
@@ -212,4 +232,5 @@
     }
   }
 }
+
 

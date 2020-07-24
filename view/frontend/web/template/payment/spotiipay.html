@@ -48,10 +48,14 @@
             <span class="spotii-grand-total" data-bind="text: getGrandTotal()"></span>
         </div>
         <div class="payment-method-content spotiipay-redirect">
-            <div class="redirection-info">
+            <div class="redirection-info" data-bind="visible:isTotalValid()">
                 <!-- ko i18n: 'You will be redirected to the Spotii Checkout when you click on Continue to Spotii. ' --><!-- /ko -->
 
             </div>
+	 
+            <div id="total-benchmark-info" data-bind="text:getTotalInvalidText()">
+            </div>
+	    
             <div class="actions-toolbar">
                 <div class="primary">
                     <button class="action primary checkout"
@@ -59,7 +63,7 @@
                             data-bind="
                                 click: continueToSpotiipay,
                                 attr: {title: $t('Continue to Spotii')},
-                                css: {disabled: !isPlaceOrderActionAllowed()},
+                                css: {disabled: !isPlaceOrderActionAllowed() || !isTotalValid()},
                                 enable: (getCode() == isChecked())
                                 "
                             disabled>
