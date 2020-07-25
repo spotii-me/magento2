@@ -36,6 +36,8 @@ class Complete extends SpotiiPay
             // $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
             // $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
 
+            // -----------------------
+
             $qid = $this->_checkoutSession->getLastQuoteId();
             $oid = $this->_checkoutSession->getLastOrderId();
             $oidReal = $this->_checkoutSession->getLastRealOrderId();
@@ -49,15 +51,17 @@ class Complete extends SpotiiPay
             // $this->spotiiHelper->logSpotiiActions("inc id ", $order->getIncrementId());
             // $order   = Mage::getModel('sales/order')->load($o3);
 
+            // $quote = $this->_checkoutSession->getQuote();
+            $order = $this->_orderFactory->create()->load($id);
 
-            $quote = $this->_checkoutSession->getQuote();
+            $order->setState("paymentauthorised")->setStatus("paymentauthorised");
+            $order->save();
+            $redirect = 'checkout/onepage/success';
+            $this->_redirect($redirect);
+            return;
 
-            $this->spotiiHelper->logSpotiiActions("quote id: $quote->getId()");
+            // -----------------------
 
-
-            $payment = $quote->getPayment();
-            $reference = $payment->getAdditionalInformation(\Spotii\Spotiipay\Model\SpotiiPay::ADDITIONAL_INFORMATION_KEY_ORDERID);
-            $orderId = $quote->getReservedOrderId();
             // $this->spotiiHelper->logSpotiiActions("Order ID from quote : $orderId.");
 
             // $this->_checkoutSession
