@@ -42,7 +42,9 @@ class Complete extends SpotiiPay
             // $order   = Mage::getModel('sales/order')->load($o3);
             // $quote = $this->_checkoutSession->getQuote();
 
-            $order = $this->_orderFactory->create()->load($orderId);
+            // $order = $this->_orderFactory->create()->load($orderId);
+
+            $order = Mage::getModel('sales/order')->loadByIncrementId($orderId);
             // $this->spotiiHelper->logSpotiiActions("currency: " . $order->getOrderCurrencyCode());
             // $this->spotiiHelper->logSpotiiActions("status: " .  $order->getStatus());
             $this->spotiiHelper->logSpotiiActions("id: " .  $order->getId());
