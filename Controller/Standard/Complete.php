@@ -24,15 +24,15 @@ class Complete extends SpotiiPay
         $redirect = 'checkout/cart';
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
-            
+
             $quote = $this->_checkoutSession->getQuote();
-            $this->spotiiHelper->logSpotiiActions("quote : $quote");
+            // $this->spotiiHelper->logSpotiiActions("quote : $quote");
 
 
             $payment = $quote->getPayment();
             $reference = $payment->getAdditionalInformation(\Spotii\Spotiipay\Model\SpotiiPay::ADDITIONAL_INFORMATION_KEY_ORDERID);
             $orderId = $quote->getReservedOrderId();
-            $this->spotiiHelper->logSpotiiActions("Order ID from quote : $orderId.");
+            // $this->spotiiHelper->logSpotiiActions("Order ID from quote : $orderId.");
 
             // $this->_checkoutSession
             //     ->setLastQuoteId($quote->getId())
@@ -47,7 +47,7 @@ class Complete extends SpotiiPay
             // $this->spotiiHelper->logSpotiiActions("Order created");
 
             $order = $this->getOrder();
-            $this->spotiiHelper->logSpotiiActions("got order: $order");
+            // $this->spotiiHelper->logSpotiiActions("got order: $order");
 
             if ($order) {
                 $this->_checkoutSession->setLastOrderId($order->getId())
