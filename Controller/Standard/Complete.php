@@ -50,7 +50,9 @@ class Complete extends SpotiiPay
 
             $order = $this->_orderFactory->create()->load($orderId);
             // $this->spotiiHelper->logSpotiiActions("currency: " . $order->getOrderCurrencyCode());
-            $this->spotiiHelper->logSpotiiActions("status: " .  $order->getStatus());
+            // $this->spotiiHelper->logSpotiiActions("status: " .  $order->getStatus());
+            $this->spotiiHelper->logSpotiiActions("id: " .  $order->getId());
+
 
             // send email
             // try {
