@@ -38,27 +38,24 @@ class Complete extends SpotiiPay
 
             // -----------------------
 
-            $qid = $this->_checkoutSession->getLastQuoteId();
-            $oid = $this->_checkoutSession->getLastOrderId();
-            $oidReal = $this->_checkoutSession->getLastRealOrderId();
-            $this->spotiiHelper->logSpotiiActions("qid " . $qid . ", oid " . $oid . ", " . $oidReal);
-
-            $id = $this->getRequest()->getParam("id");
-            $orId = $this->getRequest()->getParam("order_id");
-            $this->spotiiHelper->logSpotiiActions("id " . $id . ", orId " . $orId);
+            $quoteId = $this->_checkoutSession->getLastQuoteId();
+            $orderId = $this->getRequest()->getParam("id");
+            $reference = $this->getRequest()->getParam("magento_spotii_id");
+            $this->spotiiHelper->logSpotiiActions("orderId: " . $orderId . ", quoteId: " . $quoteId . ", reference: " . $reference);
 
             // $orderId = 163;
             // $this->spotiiHelper->logSpotiiActions("inc id ", $order->getIncrementId());
             // $order   = Mage::getModel('sales/order')->load($o3);
-
             // $quote = $this->_checkoutSession->getQuote();
-            $order = $this->_orderFactory->create()->load($id);
+
+            $order = $this->_orderFactory->create()->load($orderId);
             // send email
-            try {
-                $this->_orderSender->send($order);
-            } catch (\Exception $e) {
-                $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
-            }
+            // try {
+            //     $this->_orderSender->send($order);
+            // } catch (\Exception $e) {
+            //     $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
+            // }
+
             $redirect = 'checkout/onepage/success';
             $this->_redirect($redirect);
             return;
