@@ -39,11 +39,11 @@ class Complete extends SpotiiPay
             $quoteId = $this->_checkoutSession->getLastQuoteId();   // worked
             $oid = $this->_checkoutSession->getLastOrderId();
             $oidReal = $this->_checkoutSession->getLastRealOrderId();
-            $this->spotiiHelper->logSpotiiActions("qid " . $qid . ", oid " . $oid . ", " . $oidReal);
+            $this->spotiiHelper->logSpotiiActions("qid " . $quoteId . ", oid " . $oid . ", " . $oidReal);
 
             $orderId = $this->getRequest()->getParam("id");  //worked
             $orId = $this->getRequest()->getParam("order_id");
-            $this->spotiiHelper->logSpotiiActions("id " . $id . ", orId " . $orId);
+            $this->spotiiHelper->logSpotiiActions("id " . $orderId . ", orId " . $orId);
 
             $quote = $this->quoteFactory->create()->load($quoteId);
             $order = $this->orderFactory->create()->load($orderId);
