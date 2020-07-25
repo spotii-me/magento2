@@ -33,8 +33,14 @@ class Complete extends SpotiiPay
             // $oid1 = $this->getOrder();
             // $oid2 = $this->getOrder2();
 
-            $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
-            $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
+            // $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
+            // $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
+
+            $qid = $this->_checkoutSession->getLastQuoteId();
+            $oid = $this->_checkoutSession->getLastOrderId();
+            $oidReal = $this->_checkoutSession->getLastRealOrderId();
+            $this->spotiiHelper->logSpotiiActions("qid " . $qid . ", oid " . $oid . ", " . $oidReal);
+
 
             $quote = $this->_checkoutSession->getQuote();
 
@@ -87,7 +93,7 @@ class Complete extends SpotiiPay
 
 
                 $this->spotiiHelper->logSpotiiActions("setting order status as paymentAuthorised...");
-                $order->setState("paymentAuthorised")->setStatus("paymentAuthorised");
+                $order->setState("paymentauthorised")->setStatus("paymentauthorised");
                 $order->save();
                 $this->spotiiHelper->logSpotiiActions("done setting order status as paymentAuthorised...");
                 

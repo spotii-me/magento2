@@ -152,7 +152,7 @@ define([
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
       console.log("Total Price:", total);
-      if (total > 200) return true;
+      if (total >= 200) return true;
       else return false;
     },
 

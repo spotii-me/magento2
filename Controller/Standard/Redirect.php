@@ -77,12 +77,19 @@ class Redirect extends SpotiiPay
         // $order=$this->spotiiHelper->setInventoryBefore($quote);
         // $quote->setInventoryProcessed(true);
 
+        $qid = $quote->getId();
+        $oid = $this->_checkoutSession->getLastOrderId();
+        $oidReal = $this->_checkoutSession->getLastRealOrderId();
 
         // $quote->collectTotals();
         // $quote->save();
         $order = $this->_quoteManagement->submit($quote);        
         $order->setState("pending")->setStatus("pending");
         $order->save();
+
+        $this->_checkoutSession->setLastQuoteId($qid);
+        $this->_checkoutSession->setLastOrderId($oid);
+        $this->_checkoutSession->setLastRealOrderId($oidReal);
 
         //------------------------------------------------
 
