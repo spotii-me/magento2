@@ -38,7 +38,7 @@ class Complete extends SpotiiPay
 
             $quote = $this->_checkoutSession->getQuote();
 
-            $this->spotiiHelper->logSpotiiActions("quote : $quote");
+            $this->spotiiHelper->logSpotiiActions("quote id: $quote->getId()");
 
 
             $payment = $quote->getPayment();
