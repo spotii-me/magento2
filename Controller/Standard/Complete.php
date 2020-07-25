@@ -53,6 +53,15 @@ class Complete extends SpotiiPay
 
             // $quote = $this->_checkoutSession->getQuote();
             $order = $this->_orderFactory->create()->load($id);
+            // send email
+            try {
+                $this->_orderSender->send($order);
+            } catch (\Exception $e) {
+                $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
+            }
+            $redirect = 'checkout/onepage/success';
+            $this->_redirect($redirect);
+            return;
 
             $order->setState("paymentauthorised")->setStatus("paymentauthorised");
             $order->save();
