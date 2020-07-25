@@ -45,8 +45,8 @@ class Complete extends SpotiiPay
             $orId = $this->getRequest()->getParam("order_id");
             $this->spotiiHelper->logSpotiiActions("id " . $orderId . ", orId " . $orId);
 
-            $quote = $this->quoteFactory->create()->load($quoteId);
-            $order = $this->orderFactory->create()->load($orderId);
+            $quote = $this->_quoteFactory->create()->load($quoteId);
+            $order = $this->_orderFactory->create()->load($orderId);
 
 
             // $orderId = 163;
