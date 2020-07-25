@@ -8,6 +8,7 @@
 namespace Spotii\Spotiipay\Controller\Standard;
 
 use Spotii\Spotiipay\Controller\AbstractController\SpotiiPay;
+use Spotii\Spotiipay\Plugin\Sales\Controller\Adminhtml\Order\Invoice\SavePlugin;
 
 /**
  * Class Complete
@@ -56,8 +57,19 @@ class Complete extends SpotiiPay
                 }
 
                 $this->messageManager->addSuccess("Spotiipay Transaction Completed");
+                
+                $this->spotiiHelper->logSpotiiActions("setting order status as paymentAuthorised...");
+                $order->setState("paymentAuthorised")->setStatus("paymentAuthorised");
+                $order->save();
+                $this->spotiiHelper->logSpotiiActions("done setting order status as paymentAuthorised...");
+                
                 $redirect = 'checkout/onepage/success';
+                $orderdetails = $this->order->loadByIncrementId($order->getId());
+                foreach ($orderdetails->getInvoiceCollection() as $invoice) {
+                    SavePlugin::handleCaptureAction($invoice);
+                }
             }
+            
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
             $this->messageManager->addError(
