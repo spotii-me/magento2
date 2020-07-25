@@ -160,5 +160,14 @@ abstract class SpotiiPay extends Action
         return $this->_orderFactory->create()->loadByIncrementId(
             $this->_checkoutSession->getLastRealOrderId()
         );
+
+        // $this->_checkoutSession->getLastRealOrderId()
+    }
+
+    protected function getOrder2()
+    {
+        return $this->_orderFactory->create()->loadByIncrementId(
+            $this->_checkoutSession->getLastOrderId()
+        );
     }
 }

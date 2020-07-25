@@ -75,10 +75,11 @@ class Redirect extends SpotiiPay
         //Mai 21 July - decrease inventory
 
         // $order=$this->spotiiHelper->setInventoryBefore($quote);
-
         // $quote->setInventoryProcessed(true);
-        $quote->collectTotals();
-        $quote->save();
+
+
+        // $quote->collectTotals();
+        // $quote->save();
         $order = $this->_quoteManagement->submit($quote);        
         $order->setState("pending")->setStatus("pending");
         $order->save();

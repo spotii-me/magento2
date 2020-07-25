@@ -21,13 +21,23 @@ class Complete extends SpotiiPay
      */
     public function execute()
     {
+        $this->spotiiHelper->logSpotiiActions("--");
+
+        $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
+        $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
+
         $redirect = 'checkout/cart';
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
-            $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealOrderId());
-            // $this->_customerSession->
 
-            $quote = $this->_checkoutSession->getQuote();
+            // $oid1 = $this->getOrder();
+            // $oid2 = $this->getOrder2();
+
+            $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
+            $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
+
+            // $quote = $this->_checkoutSession->getQuote();
+
             // $this->spotiiHelper->logSpotiiActions("quote : $quote");
 
 
