@@ -230,12 +230,12 @@ class SavePlugin
                         __("The invoice can't be created without products. Add products and try again.")
                     );
                 }
-                $this->registry->register('current_invoice', $invoice);
-                if (!empty($data['capture_case'])) {
-                    if ($this->order->getId() && $data['capture_case'] == self::CAPTURE_ONLINE) {
-                        $this->handleCaptureAction($invoice);
-                    }
-                }
+                // $this->registry->register('current_invoice', $invoice);
+                // if (!empty($data['capture_case'])) {
+                //     if ($this->order->getId() && $data['capture_case'] == self::CAPTURE_ONLINE) {
+                //         $this->handleCaptureAction($invoice);
+                //     }
+                // }
 
                 if (!empty($data['comment_text'])) {
                     $invoice->addComment(

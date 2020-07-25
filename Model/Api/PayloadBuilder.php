@@ -8,12 +8,14 @@
 namespace Spotii\Spotiipay\Model\Api;
 
 use Magento\Store\Model\StoreManagerInterface;
+use Spotii\Spotiipay\Controller\AbstractController\SpotiiPay;
+//use Spotii\Spotiipay\Helper\Data;
 
 /**
  * Class PayloadBuilder
  * @package Spotii\Spotiipay\Model\Api
  */
-class PayloadBuilder
+class PayloadBuilder extends SpotiiPay
 {
     const PRECISION = 4;
 
@@ -169,7 +171,8 @@ class PayloadBuilder
     {
         $currencyCode = $this->storeManager->getStore()->getCurrentCurrencyCode();
         $itemPayload["order"]["lines"] = [];
-        foreach ($quote->getAllVisibleItems() as $item) {
+        foreach ($quote->getAllVisibleItems() as $item) {           
+           //$this->spotiiHelper->logSpotiiActions("item : ".$item->getQtyOrdered());
             $productName = $item->getName();
             $productSku = $item->getSku();
             $productQuantity = $item->getQtyOrdered();
@@ -184,4 +187,6 @@ class PayloadBuilder
         }
         return $itemPayload;
     }
+    public function execute()
+    {}
 }

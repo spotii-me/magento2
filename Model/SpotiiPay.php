@@ -182,7 +182,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $payment = $quote->getPayment();
         $payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
         $payment->save();
+        $this->spotiiHelper->logSpotiiActions("Before getSpotiiRedirectUrl");
         $response = $this->getSpotiiRedirectUrl($quote, $reference);
+        $this->spotiiHelper->logSpotiiActions("After getSpotiiRedirectUrl");
         $result = $this->jsonHelper->jsonDecode($response, true);
         $orderUrl = array_key_exists('checkout_url', $result) ? $result['checkout_url'] : false;
         $this->spotiiHelper->logSpotiiActions("Order url : $orderUrl");
@@ -203,7 +205,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     public function getSpotiiRedirectUrl($quote, $reference)
     {
         $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/checkouts/';
+        $this->spotiiHelper->logSpotiiActions("Before payload");
         $requestBody = $this->apiPayloadBuilder->buildSpotiiCheckoutPayload($quote, $reference);
+        $this->spotiiHelper->logSpotiiActions("After payload");
         try {
             $authToken = $this->spotiiApiConfig->getAuthToken();
             $response = $this->spotiiApiProcessor->call(
