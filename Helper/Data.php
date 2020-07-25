@@ -42,6 +42,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             $writer = new \Zend\Log\Writer\Stream(BP . self::SPOTII_LOG_FILE_PATH);
             $logger = new \Zend\Log\Logger();
             $logger->addWriter($writer);
+            $logger->debug($data);
             $logger->info($data);
         }
     }
