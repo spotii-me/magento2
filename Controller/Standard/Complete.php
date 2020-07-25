@@ -36,9 +36,9 @@ class Complete extends SpotiiPay
             $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
             $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
 
-            // $quote = $this->_checkoutSession->getQuote();
+            $quote = $this->_checkoutSession->getQuote();
 
-            // $this->spotiiHelper->logSpotiiActions("quote : $quote");
+            $this->spotiiHelper->logSpotiiActions("quote : $quote");
 
 
             $payment = $quote->getPayment();
