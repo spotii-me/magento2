@@ -230,27 +230,27 @@ class SavePlugin
                         __("The invoice can't be created without products. Add products and try again.")
                     );
                 }
-                $this->registry->register('current_invoice', $invoice);
-                if (!empty($data['capture_case'])) {
-                    if ($this->order->getId() && $data['capture_case'] == self::CAPTURE_ONLINE) {
-                        $this->handleCaptureAction($invoice);
-                    }
-                }
+                // $this->registry->register('current_invoice', $invoice);
+                // if (!empty($data['capture_case'])) {
+                //     if ($this->order->getId() && $data['capture_case'] == self::CAPTURE_ONLINE) {
+                //         $this->handleCaptureAction($invoice);
+                //     }
+                // }
 
-                if (!empty($data['comment_text'])) {
-                    $invoice->addComment(
-                        $data['comment_text'],
-                        isset($data['comment_customer_notify']),
-                        isset($data['is_visible_on_front'])
-                    );
+                // if (!empty($data['comment_text'])) {
+                //     $invoice->addComment(
+                //         $data['comment_text'],
+                //         isset($data['comment_customer_notify']),
+                //         isset($data['is_visible_on_front'])
+                //     );
 
-                    $invoice->setCustomerNote($data['comment_text']);
-                    $invoice->setCustomerNoteNotify(isset($data['comment_customer_notify']));
-                }
+                //     $invoice->setCustomerNote($data['comment_text']);
+                //     $invoice->setCustomerNoteNotify(isset($data['comment_customer_notify']));
+                // }
 
                 $invoice->register();
 
-                $invoice->getOrder()->setCustomerNoteNotify(!empty($data['send_email']));
+                // $invoice->getOrder()->setCustomerNoteNotify(!empty($data['send_email']));
                 $invoice->getOrder()->setIsInProcess(true);
 
                 $transactionSave = $this->transaction
@@ -271,28 +271,28 @@ class SavePlugin
 
                 // send invoice/shipment emails
                 try {
-                    if (!empty($data['send_email'])) {
-                        $this->invoiceSender->send($invoice);
-                    }
+                    // if (!empty($data['send_email'])) {
+                    //     $this->invoiceSender->send($invoice);
+                    // }
                 } catch (\Exception $e) {
                     $this->logger->critical($e);
                     $this->messageManager->addErrorMessage(__('We can\'t send the invoice email right now.'));
                 }
-                if ($shipment) {
-                    try {
-                        if (!empty($data['send_email'])) {
-                            $this->shipmentSender->send($shipment);
-                        }
-                    } catch (\Exception $e) {
-                        $this->logger->critical($e);
-                        $this->messageManager->addErrorMessage(__('We can\'t send the shipment right now.'));
-                    }
-                }
-                if (!empty($data['do_shipment'])) {
-                    $this->messageManager->addSuccessMessage(__('You created the invoice and shipment.'));
-                } else {
-                    $this->messageManager->addSuccessMessage(__('The invoice has been created.'));
-                }
+                // if ($shipment) {
+                //     try {
+                //         if (!empty($data['send_email'])) {
+                //             $this->shipmentSender->send($shipment);
+                //         }
+                //     } catch (\Exception $e) {
+                //         $this->logger->critical($e);
+                //         $this->messageManager->addErrorMessage(__('We can\'t send the shipment right now.'));
+                //     }
+                // }
+                // if (!empty($data['do_shipment'])) {
+                //     $this->messageManager->addSuccessMessage(__('You created the invoice and shipment.'));
+                // } else {
+                //     $this->messageManager->addSuccessMessage(__('The invoice has been created.'));
+                // }
                 $this->backendSession->getCommentText(true);
                 return $resultRedirect->setPath('sales/order/view', ['order_id' => $orderId]);
             } catch (LocalizedException $e) {

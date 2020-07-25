@@ -276,6 +276,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
+        $this->spotiiHelper->logSpotiiActions("skip Spotiipay :: capture()");
+        return;
+
         $this->spotiiHelper->logSpotiiActions("****Capture at Magento start****");
         if ($amount <= 0) {
             throw new LocalizedException(__('Invalid amount for capture.'));
@@ -284,6 +287,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
+        
         $result = $this->getSpotiiOrderInfo($reference);
         $spotiiOrderTotal = isset($result['total']) ?
                                 $result['total'] :
@@ -305,6 +309,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $currentTimestamp = $this->dateTime->timestamp("now");
         $this->spotiiHelper->logSpotiiActions("Capture Expiration Timestamp : $captureExpirationTimestamp");
         $this->spotiiHelper->logSpotiiActions("Current Timestamp : $currentTimestamp");
+
+
         if ($captureExpirationTimestamp >= $currentTimestamp) {
             $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
             $this->spotiiCapture($reference);
