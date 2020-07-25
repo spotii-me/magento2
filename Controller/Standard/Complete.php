@@ -49,6 +49,8 @@ class Complete extends SpotiiPay
             // $quote = $this->_checkoutSession->getQuote();
 
             $order = $this->_orderFactory->create()->load($orderId);
+            $this->spotiiHelper->logSpotiiActions("currency: " . $order->getOrderCurrencyCode());
+
             // send email
             // try {
             //     $this->_orderSender->send($order);
