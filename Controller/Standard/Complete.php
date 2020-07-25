@@ -53,6 +53,10 @@ class Complete extends SpotiiPay
 
             // $quote = $this->_checkoutSession->getQuote();
             $order = $this->_orderFactory->create()->load($id);
+            $this->spotiiHelper->logSpotiiActions("got order");
+            $redirect = 'checkout/onepage/success';
+            $this->_redirect($redirect);
+            return;
 
             $order->setState("paymentauthorised")->setStatus("paymentauthorised");
             // $order->save();
