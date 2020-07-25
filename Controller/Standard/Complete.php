@@ -21,8 +21,8 @@ class Complete extends SpotiiPay
      */
     public function execute()
     {
-        $this->spotiiHelper->logSpotiiActions("--");
-
+        $this->spotiiHelper->logSpotiiActions("Complete :: capture()");
+        
         $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
         $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
 
@@ -36,21 +36,25 @@ class Complete extends SpotiiPay
             // $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
             // $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
 
-            $qid = $this->_checkoutSession->getLastQuoteId();
+            $quoteId = $this->_checkoutSession->getLastQuoteId();   // worked
             $oid = $this->_checkoutSession->getLastOrderId();
             $oidReal = $this->_checkoutSession->getLastRealOrderId();
             $this->spotiiHelper->logSpotiiActions("qid " . $qid . ", oid " . $oid . ", " . $oidReal);
 
-            $id = $this->getRequest()->getParam("id");
+            $orderId = $this->getRequest()->getParam("id");  //worked
             $orId = $this->getRequest()->getParam("order_id");
             $this->spotiiHelper->logSpotiiActions("id " . $id . ", orId " . $orId);
+
+            $quote = $this->quoteFactory->create()->load($quoteId);
+            $order = $this->orderFactory->create()->load($orderId);
+
 
             // $orderId = 163;
             // $this->spotiiHelper->logSpotiiActions("inc id ", $order->getIncrementId());
             // $order   = Mage::getModel('sales/order')->load($o3);
 
 
-            $quote = $this->_checkoutSession->getQuote();
+            // $quote = $this->_checkoutSession->getQuote();
 
             $this->spotiiHelper->logSpotiiActions("quote id: $quote->getId()");
 
