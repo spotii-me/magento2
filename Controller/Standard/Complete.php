@@ -41,6 +41,14 @@ class Complete extends SpotiiPay
             $oidReal = $this->_checkoutSession->getLastRealOrderId();
             $this->spotiiHelper->logSpotiiActions("qid " . $qid . ", oid " . $oid . ", " . $oidReal);
 
+            $id = $this->getRequest()->getParam("id");
+            $orId = $this->getRequest()->getParam("order_id");
+            $this->spotiiHelper->logSpotiiActions("id " . $id . ", orId " . $orId);
+
+            // $orderId = 163;
+            // $this->spotiiHelper->logSpotiiActions("inc id ", $order->getIncrementId());
+            // $order   = Mage::getModel('sales/order')->load($o3);
+
 
             $quote = $this->_checkoutSession->getQuote();
 
