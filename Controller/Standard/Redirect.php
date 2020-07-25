@@ -64,7 +64,7 @@ class Redirect extends SpotiiPay
         
         $this->_checkoutSession->replaceQuote($quote);
         $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
-        $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
+        // $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
         
 
         $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);

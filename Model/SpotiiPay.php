@@ -185,7 +185,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $response = $this->getSpotiiRedirectUrl($quote, $reference);
         $result = $this->jsonHelper->jsonDecode($response, true);
         $orderUrl = array_key_exists('checkout_url', $result) ? $result['checkout_url'] : false;
-        $this->spotiiHelper->logSpotiiActions("Order url : $orderUrl");
+        // $this->spotiiHelper->logSpotiiActions("Order url : $orderUrl");
         if (!$orderUrl) {
             $this->spotiiHelper->logSpotiiActions("No Token response from API");
             throw new LocalizedException(__('There is an issue processing your order.'));

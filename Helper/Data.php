@@ -43,8 +43,6 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             $logger = new \Zend\Log\Logger();
             $logger->addWriter($writer);
             $logger->debug($data);
-            $logger->info($data);
-            $logger->error($data);
         }
     }
 }
