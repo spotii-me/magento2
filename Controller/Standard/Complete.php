@@ -57,7 +57,16 @@ class Complete extends SpotiiPay
                 }
 
                 $this->messageManager->addSuccess("Spotiipay Transaction Completed");
+
+                // -------------------------------
+                $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
                 
+                $result = $this->getSpotiiOrderInfo($reference);
+                $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+                $this->spotiiCapture($reference);
+                $payment->setTransactionId($reference)->setIsTransactionClosed(false);
+
+
                 $this->spotiiHelper->logSpotiiActions("setting order status as paymentAuthorised...");
                 $order->setState("paymentAuthorised")->setStatus("paymentAuthorised");
                 $order->save();
@@ -68,6 +77,8 @@ class Complete extends SpotiiPay
                 foreach ($orderdetails->getInvoiceCollection() as $invoice) {
                     SavePlugin::handleCaptureAction($invoice);
                 }
+
+                // -------------------------------
             }
             
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
@@ -82,5 +93,45 @@ class Complete extends SpotiiPay
             );
         }
         $this->_redirect($redirect);
+    }
+
+    public function spotiiCapture($reference)
+    {
+        try {
+            $this->spotiiHelper->logSpotiiActions("****Capture at Spotii Start****");
+            $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/orders' . '/' . $reference . '/capture' . '/';
+            $authToken = $this->spotiiApiConfig->getAuthToken();
+            $response = $this->spotiiApiProcessor->call(
+                $url,
+                $authToken,
+                null,
+                \Magento\Framework\HTTP\ZendClient::POST
+            );
+            $this->spotiiHelper->logSpotiiActions("****Capture at Spotii End****");
+        } catch (\Exception $e) {
+            $this->spotiiHelper->logSpotiiActions($e->getMessage());
+            throw new LocalizedException(__($e->getMessage()));
+        }
+        return $response;
+    }
+
+    public function getSpotiiOrderInfo($reference)
+    {
+        $this->spotiiHelper->logSpotiiActions("****Getting order from Spotii****");
+        $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/orders' . '/' . $reference . '/';
+        $authToken = $this->spotiiApiConfig->getAuthToken();
+        $result = $this->spotiiApiProcessor->call(
+            $url,
+            $authToken,
+            null,
+            \Magento\Framework\HTTP\ZendClient::GET
+        );
+        $result = $this->jsonHelper->jsonDecode($result, true);
+        if (isset($result['status']) && $result['status'] == \Spotii\Spotiipay\Model\Api\ProcessorInterface::BAD_REQUEST) {
+            throw new LocalizedException(__('Invalid checkout. Please retry again.'));
+            return $this;
+        }
+        $this->spotiiHelper->logSpotiiActions("****Order successfully fetched from Spotii****");
+        return $result;
     }
 }
