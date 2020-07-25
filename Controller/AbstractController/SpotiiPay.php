@@ -35,6 +35,8 @@ abstract class SpotiiPay extends Action
      */
     protected $_quoteFactory;
 
+    protected $_quoteRepository;
+
     /**
      * @var Order\Status\HistoryFactory
      */
@@ -123,6 +125,9 @@ abstract class SpotiiPay extends Action
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Sales\Model\OrderFactory $orderFactory,
+        \Magento\Sales\Model\QuoteFactory $quoteFactory,
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
+
         \Magento\Sales\Model\Order\Status\HistoryFactory $orderHistoryFactory,
         \Spotii\Spotiipay\Model\SpotiiPay $spotiipayModel,
         \Spotii\Spotiipay\Helper\Data $spotiiHelper,
@@ -145,6 +150,7 @@ abstract class SpotiiPay extends Action
         $this->_checkoutSession = $checkoutSession;
         $this->_orderFactory = $orderFactory;
         $this->_quoteFactory = $quoteFactory;
+        $this->_quoteRepository = $quoteRepository;
 
         $this->_orderHistoryFactory = $orderHistoryFactory;
         $this->_spotiipayModel = $spotiipayModel;
