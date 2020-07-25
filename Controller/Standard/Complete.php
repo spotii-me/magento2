@@ -24,6 +24,10 @@ class Complete extends SpotiiPay
         $redirect = 'checkout/cart';
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
+            $this->spotiiHelper->logSpotiiActions(
+                "oid: $this->_checkoutSession->getLastRealOrderId()"
+            );
+            // $this->_customerSession->
 
             $quote = $this->_checkoutSession->getQuote();
             // $this->spotiiHelper->logSpotiiActions("quote : $quote");
