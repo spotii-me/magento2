@@ -44,6 +44,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             $logger->addWriter($writer);
             $logger->debug($data);
             $logger->info($data);
+            $logger->error($data);
         }
     }
 }
