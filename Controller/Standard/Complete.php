@@ -24,23 +24,30 @@ class Complete extends SpotiiPay
         $redirect = 'checkout/cart';
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
+            
             $quote = $this->_checkoutSession->getQuote();
+            $this->spotiiHelper->logSpotiiActions("quote : $quote");
+
+
             $payment = $quote->getPayment();
             $reference = $payment->getAdditionalInformation(\Spotii\Spotiipay\Model\SpotiiPay::ADDITIONAL_INFORMATION_KEY_ORDERID);
             $orderId = $quote->getReservedOrderId();
             $this->spotiiHelper->logSpotiiActions("Order ID from quote : $orderId.");
 
-            $this->_checkoutSession
-                ->setLastQuoteId($quote->getId())
-                ->setLastSuccessQuoteId($quote->getId())
-                ->clearHelperData();
-            $this->spotiiHelper->logSpotiiActions("Set data on checkout session");
+            // $this->_checkoutSession
+            //     ->setLastQuoteId($quote->getId())
+            //     ->setLastSuccessQuoteId($quote->getId())
+            //     ->clearHelperData();
+            // $this->spotiiHelper->logSpotiiActions("Set data on checkout session");
             
-            $quote->collectTotals()->save();
-            $this->spotiiHelper->logSpotiiActions("**Saved Data on Quote**");
-            $order = $this->_quoteManagement->submit($quote);
-            $this->spotiiHelper->logSpotiiActions("**Quote Updated**");
-            $this->spotiiHelper->logSpotiiActions("Order created");
+            // $quote->collectTotals()->save();
+            // $this->spotiiHelper->logSpotiiActions("**Saved Data on Quote**");
+            // $order = $this->_quoteManagement->submit($quote);
+            // $this->spotiiHelper->logSpotiiActions("**Quote Updated**");
+            // $this->spotiiHelper->logSpotiiActions("Order created");
+
+            $order = $this->getOrder();
+            $this->spotiiHelper->logSpotiiActions("got order: $order");
 
             if ($order) {
                 $this->_checkoutSession->setLastOrderId($order->getId())
@@ -60,7 +67,7 @@ class Complete extends SpotiiPay
 
                 // -------------------------------
                 $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
-                
+
                 $result = $this->getSpotiiOrderInfo($reference);
                 $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
                 $this->spotiiCapture($reference);
