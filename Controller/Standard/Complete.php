@@ -48,8 +48,8 @@ class Complete extends SpotiiPay
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
 
 
-            // $this->spotiiHelper->logSpotiiActions("currency: " . $order->getOrderCurrencyCode());
-            // $this->spotiiHelper->logSpotiiActions("status: " .  $order->getStatus());
+            $this->spotiiHelper->logSpotiiActions("currency: " . $order->getOrderCurrencyCode());
+            $this->spotiiHelper->logSpotiiActions("status: " .  $order->getStatus());
             $this->spotiiHelper->logSpotiiActions("id: " .  $order->getId());
 
 
@@ -60,12 +60,16 @@ class Complete extends SpotiiPay
             //     $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
             // }
 
-            $redirect = 'checkout/onepage/success';
-            $this->_redirect($redirect);
-            return;
+            // $redirect = 'checkout/onepage/success';
+            // $this->_redirect($redirect);
+            // return;
 
             $order->setState("paymentauthorised")->setStatus("paymentauthorised");
             $order->save();
+
+            $this->spotiiHelper->logSpotiiActions("status: " .  $order->getStatus());
+
+            
             $redirect = 'checkout/onepage/success';
             $this->_redirect($redirect);
             return;
