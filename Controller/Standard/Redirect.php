@@ -72,12 +72,13 @@ class Redirect extends SpotiiPay
         $jsonResult->setData($json);
 
         //Mai 21 July - decrease inventory
-        $order=$this->spotiiHelper->setInventoryBefore($quote);
+        // $order=$this->spotiiHelper->setInventoryBefore($quote);
         $this->spotiiHelper->logSpotiiActions("confirm order: " .$quote->getId());
         $this->spotiiHelper->logSpotiiActions("order ID: " .$quote->getEntityId());
-        $order->setState("pending")->setStatus("pending");
-        $order->save();
+        // $order->setState("pending")->setStatus("pending");
+        // $order->save();
         //------------------------------------------------
+        
         $this->spotiiHelper->logSpotiiActions("End of Redirect");
     }catch(\Exception $e) {
         $this->spotiiHelper->logSpotiiActions($e->getMessage());
