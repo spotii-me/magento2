@@ -185,6 +185,10 @@ class SavePlugin
         \Magento\Sales\Controller\Adminhtml\Order\Invoice\Save $subject,
         \Closure $proceed
     ) {
+
+        $this->spotiiHelper->logSpotiiActions("SavePlugin :: aroundExecute() ####################");
+
+
         $orderId = $subject->getRequest()->getParam('order_id');
         $order = $this->orderRepository->get($orderId);
         $this->order = !$this->order ? $order : $this->order;
@@ -324,6 +328,7 @@ class SavePlugin
      */
     private function handleCaptureAction($invoice)
     {
+        $this->spotiiHelper->logSpotiiActions("SavePlugin :: handleCaptureActions()");
         $captureExpirationTimestamp = $this->dateTime->timestamp(
             $this->order->getPayment()
             ->getAdditionalInformation(SpotiiPay::SPOTII_CAPTURE_EXPIRY)

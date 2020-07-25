@@ -244,7 +244,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function authorize(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $this->spotiiHelper->logSpotiiActions("****Authorization start****");
+        $this->spotiiHelper->logSpotiiActions("Spotiipay :: authorize() **************");
+
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
@@ -276,7 +277,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
-        $this->spotiiHelper->logSpotiiActions("skip Spotiipay :: capture()");
+        $this->spotiiHelper->logSpotiiActions("Spotiipay :: capture() **************");
+        $this->spotiiHelper->logSpotiiActions("skip...");
         return;
 
         $this->spotiiHelper->logSpotiiActions("****Capture at Magento start****");

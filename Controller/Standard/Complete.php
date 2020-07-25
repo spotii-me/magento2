@@ -21,7 +21,7 @@ class Complete extends SpotiiPay
      */
     public function execute()
     {
-        $this->spotiiHelper->logSpotiiActions("--------");
+        $this->spotiiHelper->logSpotiiActions("Complete :: execute() **********");
 
         $redirect = 'checkout/cart';
         try {
@@ -33,65 +33,21 @@ class Complete extends SpotiiPay
             $reference = $this->getRequest()->getParam("magento_spotii_id");
             $this->spotiiHelper->logSpotiiActions("orderId: " . $orderId . ", quoteId: " . $quoteId . ", reference: " . $reference);
 
-            // $this->spotiiCapture($reference);
-
             $this->_spotiipayModel->spotiiCapture($reference);
 
-            // $orderId = 163;
-            // $this->spotiiHelper->logSpotiiActions("inc id ", $order->getIncrementId());
-            // $order   = Mage::getModel('sales/order')->load($o3);
-            // $quote = $this->_checkoutSession->getQuote();
-
-            // $order = $this->_orderFactory->create()->load($orderId);
-
-            // $order = Mage::getModel('sales/order')->loadByIncrementId($orderId);
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-
-
-            $this->spotiiHelper->logSpotiiActions("currency: " . $order->getOrderCurrencyCode());
-            $this->spotiiHelper->logSpotiiActions("status: " .  $order->getStatus());
-            $this->spotiiHelper->logSpotiiActions("id: " .  $order->getId());
-
-
-            // send email
-            // try {
-            //     $this->_orderSender->send($order);
-            // } catch (\Exception $e) {
-            //     $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
-            // }
-
-            // $redirect = 'checkout/onepage/success';
-            // $this->_redirect($redirect);
-            // return;
 
             $order->setState("paymentauthorised")->setStatus("paymentauthorised");
             $order->save();
 
             $this->spotiiHelper->logSpotiiActions("status: " .  $order->getStatus());
 
-            
+
             $redirect = 'checkout/onepage/success';
             $this->_redirect($redirect);
             return;
 
             // -----------------------
-
-            // $this->spotiiHelper->logSpotiiActions("Order ID from quote : $orderId.");
-
-            // $this->_checkoutSession
-            //     ->setLastQuoteId($quote->getId())
-            //     ->setLastSuccessQuoteId($quote->getId())
-            //     ->clearHelperData();
-            // $this->spotiiHelper->logSpotiiActions("Set data on checkout session");
-            
-            // $quote->collectTotals()->save();
-            // $this->spotiiHelper->logSpotiiActions("**Saved Data on Quote**");
-            // $order = $this->_quoteManagement->submit($quote);
-            // $this->spotiiHelper->logSpotiiActions("**Quote Updated**");
-            // $this->spotiiHelper->logSpotiiActions("Order created");
-
-            $order = $this->getOrder();
-            // $this->spotiiHelper->logSpotiiActions("got order: $order");
 
             if ($order) {
                 $this->_checkoutSession->setLastOrderId($order->getId())
