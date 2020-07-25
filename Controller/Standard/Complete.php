@@ -33,8 +33,10 @@ class Complete extends SpotiiPay
             $reference = $this->getRequest()->getParam("magento_spotii_id");
             $this->spotiiHelper->logSpotiiActions("orderId: " . $orderId . ", quoteId: " . $quoteId . ", reference: " . $reference);
 
-            $this->spotiiCapture($reference);
-            
+            // $this->spotiiCapture($reference);
+
+            $this->_spotiipayModel->spotiiCapture($reference);
+
             // $orderId = 163;
             // $this->spotiiHelper->logSpotiiActions("inc id ", $order->getIncrementId());
             // $order   = Mage::getModel('sales/order')->load($o3);
@@ -135,25 +137,6 @@ class Complete extends SpotiiPay
         $this->_redirect($redirect);
     }
 
-    public function spotiiCapture($reference)
-    {
-        try {
-            $this->spotiiHelper->logSpotiiActions("****Capture at Spotii Start****");
-            $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/orders' . '/' . $reference . '/capture' . '/';
-            $authToken = $this->spotiiApiConfig->getAuthToken();
-            $response = $this->spotiiApiProcessor->call(
-                $url,
-                $authToken,
-                null,
-                \Magento\Framework\HTTP\ZendClient::POST
-            );
-            $this->spotiiHelper->logSpotiiActions("****Capture at Spotii End****");
-        } catch (\Exception $e) {
-            $this->spotiiHelper->logSpotiiActions($e->getMessage());
-            throw new LocalizedException(__($e->getMessage()));
-        }
-        return $response;
-    }
 
     public function getSpotiiOrderInfo($reference)
     {
