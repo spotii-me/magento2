@@ -81,8 +81,8 @@ class Processor implements ProcessorInterface
             if ($authToken) {
                 $this->curl->addHeader("Authorization", "Bearer $authToken");
             }
-            $this->spotiiHelper->logSpotiiActions("Auth token : $authToken");
-            $this->spotiiHelper->logSpotiiActions("****Request Info****");
+            // $this->spotiiHelper->logSpotiiActions("Auth token : $authToken");
+            // $this->spotiiHelper->logSpotiiActions("****Request Info****");
             $requestLog = [
                 'type' => 'Request',
                 'method' => $method,
@@ -112,8 +112,8 @@ class Processor implements ProcessorInterface
                 'url' => $url,
                 'httpStatusCode' => $this->curl->getStatus()
             ];
-            $this->spotiiHelper->logSpotiiActions("****Response Info****");
-            $this->spotiiHelper->logSpotiiActions($responseLog);
+            // $this->spotiiHelper->logSpotiiActions("****Response Info****");
+            // $this->spotiiHelper->logSpotiiActions($responseLog);
         } catch (\Exception $e) {
             $this->spotiiHelper->logSpotiiActions($e->getMessage());
             throw new \Magento\Framework\Exception\LocalizedException(

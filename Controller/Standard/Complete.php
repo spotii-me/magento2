@@ -21,28 +21,20 @@ class Complete extends SpotiiPay
      */
     public function execute()
     {
-        $this->spotiiHelper->logSpotiiActions("--");
-
-        $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
-        $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
+        $this->spotiiHelper->logSpotiiActions("--------");
 
         $redirect = 'checkout/cart';
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
 
-            // $oid1 = $this->getOrder();
-            // $oid2 = $this->getOrder2();
-
-            // $this->spotiiHelper->logSpotiiActions("oid real:" . $this->_checkoutSession->getLastRealOrderId());
-            // $this->spotiiHelper->logSpotiiActions("oid:" . $this->_checkoutSession->getLastRealId());
-
             // -----------------------
-
             $quoteId = $this->_checkoutSession->getLastQuoteId();
             $orderId = $this->getRequest()->getParam("id");
             $reference = $this->getRequest()->getParam("magento_spotii_id");
             $this->spotiiHelper->logSpotiiActions("orderId: " . $orderId . ", quoteId: " . $quoteId . ", reference: " . $reference);
 
+            $this->spotiiCapture($reference);
+            
             // $orderId = 163;
             // $this->spotiiHelper->logSpotiiActions("inc id ", $order->getIncrementId());
             // $order   = Mage::getModel('sales/order')->load($o3);
