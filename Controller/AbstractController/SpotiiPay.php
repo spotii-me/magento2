@@ -17,6 +17,9 @@ use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
  */
 abstract class SpotiiPay extends Action
 {
+
+     
+
     /**
      * @var \Magento\Customer\Model\Session
      */
@@ -160,5 +163,9 @@ abstract class SpotiiPay extends Action
         return $this->_orderFactory->create()->loadByIncrementId(
             $this->_checkoutSession->getLastRealOrderId()
         );
+    }
+
+    public function canRefund() {
+        return true;
     }
 }

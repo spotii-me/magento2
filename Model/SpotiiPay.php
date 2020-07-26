@@ -30,6 +30,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @var bool
      */
     protected $_isGateway = true;
+
+    protected $_isOffline = false;
+
     /**
      * @var bool
      */
@@ -402,6 +405,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @return $this
      * @throws LocalizedException
      */
+    
+    
+    public function processBeforeRefund($invoice, $payment){}
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $this->spotiiHelper->logSpotiiActions("****Refund Start****");
@@ -434,6 +440,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException($message);
         }
     }
+    public function processCreditmemo($creditmemo, $payment){}
 
     /**
      * Create transaction
@@ -472,5 +479,13 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $this->spotiiHelper->logSpotiiActions("Transaction Id : $transactionId");
         $this->spotiiHelper->logSpotiiActions("****Transaction End****");
         return $transactionId;
+    }
+
+    public function canRefund() {
+        return true;
+    }
+
+    public function isOffline() {
+        return false;
     }
 }
