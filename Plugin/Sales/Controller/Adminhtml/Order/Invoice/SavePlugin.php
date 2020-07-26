@@ -353,6 +353,8 @@ class SavePlugin
             throw new \Magento\Framework\Exception\LocalizedException(
                 __(self::CAPTURE_ERROR_MSG)
             );
-        }
+	}
+	$invoice->setState(2);
+	$invoice->save();
     }
 }

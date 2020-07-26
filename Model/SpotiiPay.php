@@ -280,7 +280,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
-        $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+	$payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+	$payment->setIsTransactionClosed(false)->setIsTransactionPending(true)->save();
     }
 
     public function capturePostSpotii(\Magento\Payment\Model\InfoInterface $payment, $amount)
@@ -318,7 +319,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         if ($captureExpirationTimestamp >= $currentTimestamp) {
             $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
             $this->spotiiCapture($reference);
-            $payment->setTransactionId($reference)->setIsTransactionClosed(false);
+	    $payment->setTransactionId($reference)->setIsTransactionClosed(false);
+	    $payment->setTransactionId($reference)->setIsTransactionPending(true);
+	    $payment->setLastTransId($reference);
             $this->spotiiHelper->logSpotiiActions("Authorized on Spotii");
             $this->spotiiHelper->logSpotiiActions("****Capture at Magento end****");
         } else {
@@ -453,7 +456,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $this->spotiiHelper->logSpotiiActions("****Transaction start****");
         $this->spotiiHelper->logSpotiiActions("Order Id : " . $order->getId());
         $this->spotiiHelper->logSpotiiActions("Reference Id : $reference");
-        $payment = $order->getPayment();
+	$payment = $order->getPayment();
+	$this->spotiiHelper->logSpotiiActions("PAYMENT METHOD INSTANCE CLASS : " . get_class($payment->getMethodInstance()));
         $payment->setLastTransId($reference);
         $payment->setTransactionId($reference);
         $formattedPrice = $order->getBaseCurrency()->formatTxt(
@@ -471,7 +475,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             $transaction,
             $message
         );
-        $payment->setParentTransactionId(null);
+	$payment->setParentTransactionId(null);
         $payment->save();
         // $quote->collectTotals()->save();
         $order->save();
