@@ -23,29 +23,20 @@ class Complete extends SpotiiPay
         $redirect = 'checkout/cart';
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
-            $quote = $this->_checkoutSession->getQuote();
-            $payment = $quote->getPayment();
-            $reference = $payment->getAdditionalInformation(\Spotii\Spotiipay\Model\SpotiiPay::ADDITIONAL_INFORMATION_KEY_ORDERID);
-            $orderId = $quote->getReservedOrderId();
-            $this->spotiiHelper->logSpotiiActions("Order ID from quote : $orderId.");
 
-            $this->_checkoutSession
-                ->setLastQuoteId($quote->getId())
-                ->setLastSuccessQuoteId($quote->getId())
-                ->clearHelperData();
-            $this->spotiiHelper->logSpotiiActions("Set data on checkout session");
-            
-            $quote->collectTotals()->save();
-            $this->spotiiHelper->logSpotiiActions("**Saved Data on Quote**");
-            $order = $this->_quoteManagement->submit($quote);
-            $this->spotiiHelper->logSpotiiActions("**Quote Updated**");
-            $this->spotiiHelper->logSpotiiActions("Order created");
+            // $quoteId = $this->_checkoutSession->getLastQuoteId();
+            $orderId = $this->getRequest()->getParam("id");
+            $reference = $this->getRequest()->getParam("magento_spotii_id");
+            $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
+            $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
+            $order->setState("paymentauthorised")->setStatus("paymentauthorised");
+            // $order->save();
 
             if ($order) {
                 $this->_checkoutSession->setLastOrderId($order->getId())
                     ->setLastRealOrderId($order->getIncrementId())
                     ->setLastOrderStatus($order->getStatus());
-                $this->_spotiipayModel->createTransaction($order, $reference, $quote);
+                $this->_spotiipayModel->createTransaction($order, $reference);
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email

@@ -276,6 +276,12 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
+        $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+    }
+
+    public function capturePostSpotii(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
         $this->spotiiHelper->logSpotiiActions("****Capture at Magento start****");
         if ($amount <= 0) {
             throw new LocalizedException(__('Invalid amount for capture.'));
@@ -284,6 +290,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
+        
         $result = $this->getSpotiiOrderInfo($reference);
         $spotiiOrderTotal = isset($result['total']) ?
                                 $result['total'] :
@@ -434,7 +441,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param $reference
      * @return mixed
      */
-    public function createTransaction($order, $reference, $quote)
+    public function createTransaction($order, $reference)
     {
         $this->spotiiHelper->logSpotiiActions("****Transaction start****");
         $this->spotiiHelper->logSpotiiActions("Order Id : " . $order->getId());
@@ -459,7 +466,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         );
         $payment->setParentTransactionId(null);
         $payment->save();
-        $quote->collectTotals()->save();
+        // $quote->collectTotals()->save();
         $order->save();
         $transactionId = $transaction->save()->getTransactionId();
         $this->spotiiHelper->logSpotiiActions("Transaction Id : $transactionId");

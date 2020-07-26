@@ -62,6 +62,15 @@ class Redirect extends SpotiiPay
         $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
         $jsonResult = $this->_resultJsonFactory->create();
         $jsonResult->setData($json);
+
+        // Create "pending" order before redirect to Spotii
+        $quoteId = $quote->getId();
+        $quote->collectTotals()->save();        // **
+        $order = $this->_quoteManagement->submit($quote);        
+        $order->setState("pending")->setStatus("pending");
+        $order->save(); // **
+        $this->_checkoutSession->setLastQuoteId($quoteId);
+
         return $jsonResult;
     }
 }
