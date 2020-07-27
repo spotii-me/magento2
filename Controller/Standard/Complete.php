@@ -42,7 +42,7 @@ class Complete extends SpotiiPay
                     $reference,
                     \Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE
                 );
-                $quote->collectTotals()->save();          
+                // $quote->collectTotals()->save();          
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email
