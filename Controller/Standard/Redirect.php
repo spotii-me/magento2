@@ -53,24 +53,28 @@ class Redirect extends SpotiiPay
         }
         $payment = $quote->getPayment();
         $payment->setMethod('spotiipay');
+
+        
         $quote->reserveOrderId();
         $quote->setPayment($payment);
         $quote->save();
         $this->_checkoutSession->replaceQuote($quote);
         $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
-        $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
-        $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
-        $jsonResult = $this->_resultJsonFactory->create();
-        $jsonResult->setData($json);
 
-        // Create "pending" order before redirect to Spotii
+        
+        // ---- Create "pending" order -------
         $quoteId = $quote->getId();
         $quote->collectTotals()->save();        // **
         $order = $this->_quoteManagement->submit($quote);        
         $order->setState("pending")->setStatus("pending");
         $order->save(); // **
-        $this->_checkoutSession->setLastQuoteId($quoteId);
+        //-------------------------------------
 
+
+        $this->_checkoutSession->setLastQuoteId($quoteId);
+        $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
+        $jsonResult = $this->_resultJsonFactory->create();
+        $jsonResult->setData($json);
         return $jsonResult;
     }
 }
