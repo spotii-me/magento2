@@ -448,7 +448,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param $reference
      * @return mixed
      */
-    public function createTransaction($order, $reference)
+    public function createTransaction($order, $reference, $type)
     {
         $this->spotiiHelper->logSpotiiActions("****Transaction start****");
         $this->spotiiHelper->logSpotiiActions("Order Id : " . $order->getId());
@@ -459,13 +459,20 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $formattedPrice = $order->getBaseCurrency()->formatTxt(
             $order->getGrandTotal()
         );
-        $message = __('The authorized amount is %1.', $formattedPrice);
+       
+        if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
+            $message = __('Order placed for amount %1.', $formattedPrice);
+            $transactionId = $reference;
+        } else {
+            $message = __('Payment processed for amount %1.', $formattedPrice);
+            $transactionId = $reference . '-' . $type;
+        }
         $this->spotiiHelper->logSpotiiActions($message);
         $transaction = $this->_transactionBuilder->setPayment($payment)
             ->setOrder($order)
-            ->setTransactionId($reference)
+            ->setTransactionId($transactionId)
             ->setFailSafe(true)
-            ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE);
+            ->build($type);
 
         $payment->addTransactionCommentsToOrder(
             $transaction,
