@@ -67,10 +67,9 @@ class Redirect extends SpotiiPay
         $quoteId = $quote->getId();
               // **
         $order = $this->_quoteManagement->submit($quote);
-        $reference = $payment->getAdditionalInformation('spotii_order_id');
-        $this->spotiiHelper->logSpotiiActions("ORDER REF FROM REDIRECT : $reference");
-        $this->_spotiipayModel->createTransaction($order, $reference, $quote);
-        $quote->collectTotals()->save();          
+        
+        // $this->spotiiHelper->logSpotiiActions("ORDER REF FROM REDIRECT : $reference");
+       
         $order->setState("pending")->setStatus("pending");
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
