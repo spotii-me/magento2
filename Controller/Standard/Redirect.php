@@ -68,8 +68,15 @@ class Redirect extends SpotiiPay
               // **
         $order = $this->_quoteManagement->submit($quote);
         
-        // $this->spotiiHelper->logSpotiiActions("ORDER REF FROM REDIRECT : $reference");
-       
+        // $this->spotiiHelper->logSpotiiActions("ORDER REF FROM REDIRECT :
+        // $reference");
+        $reference = $payment->getAdditionalInformation('spotii_order_id');
+        $this->_spotiipayModel->createTransaction(
+            $order,
+            $reference,
+            \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
+        );
+        $quote->collectTotals()->save();   
         $order->setState("pending")->setStatus("pending");
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
