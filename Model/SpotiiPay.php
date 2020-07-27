@@ -448,7 +448,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param $reference
      * @return mixed
      */
-    public function createTransaction($order, $reference)
+    public function createTransaction($order, $reference, $quote)
     {
         $this->spotiiHelper->logSpotiiActions("****Transaction start****");
         $this->spotiiHelper->logSpotiiActions("Order Id : " . $order->getId());
@@ -473,7 +473,6 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         );
         $payment->setParentTransactionId(null);
         $payment->save();
-        $quote = $this->checkoutSession->getQuote();
         $this->spotiiHelper->logSpotiiActions("QUOTE ID FROM CREATE TRANSACTION : " . $quote->getId());
         $quote->collectTotals()->save();
         $order->save();
