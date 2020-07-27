@@ -463,7 +463,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $this->spotiiHelper->logSpotiiActions($message);
         $transaction = $this->_transactionBuilder->setPayment($payment)
             ->setOrder($order)
-            ->setTransactionId($reference)
+            ->setTransactionId($reference . '-' . $type)
             ->setFailSafe(true)
             ->build($type);
 
