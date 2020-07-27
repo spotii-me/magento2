@@ -460,7 +460,6 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             $order->getGrandTotal()
         );
        
-        $this->spotiiHelper->logSpotiiActions($message);
         if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
             $message = __('Order placed for amount %1.', $formattedPrice);
             $transactionId = $reference;
@@ -468,6 +467,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             $message = __('Payment processed for amount %1.', $formattedPrice);
             $transactionId = $reference . '-' . $type;
         }
+        $this->spotiiHelper->logSpotiiActions($message);
         $transaction = $this->_transactionBuilder->setPayment($payment)
             ->setOrder($order)
             ->setTransactionId($transactionId)
