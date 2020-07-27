@@ -56,6 +56,7 @@ class Redirect extends SpotiiPay
 
 
         $quote->reserveOrderId();
+        $reference = uniqid() . "-" . $quote->getReservedOrderId();
         $quote->setPayment($payment);
         $quote->save();
         $this->_checkoutSession->replaceQuote($quote);
@@ -65,7 +66,6 @@ class Redirect extends SpotiiPay
         $quote->collectTotals()->save();        // **
         $order = $this->_quoteManagement->submit($quote);        
         $order->setState("pending")->setStatus("pending");
-
 
         $transaction = $this->_transactionBuilder->setPayment($payment)
             ->setOrder($order)
