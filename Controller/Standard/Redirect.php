@@ -54,6 +54,26 @@ class Redirect extends SpotiiPay
         $payment = $quote->getPayment();
         $payment->setMethod('spotiipay');
 
+        $payment->setParentTransactionId(null);
+        $payment->setLastTransId($reference);
+        $payment->setTransactionId($reference);
+
+        $quoteId = $quote->getId();
+        $quote->collectTotals()->save();        // **
+        $order = $this->_quoteManagement->submit($quote);        
+        $order->setState("pending")->setStatus("pending");
+
+        $transaction = $this->_transactionBuilder->setPayment($payment)
+            ->setOrder($order)
+            ->setTransactionId($reference)
+            ->setFailSafe(true)
+            ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER);
+
+        $payment->addTransactionCommentsToOrder(
+            $transaction,
+            "Creating order"
+        );
+        $payment->setParentTransactionId(null);
         
         $quote->reserveOrderId();
         $quote->setPayment($payment);
@@ -61,15 +81,11 @@ class Redirect extends SpotiiPay
         $this->_checkoutSession->replaceQuote($quote);
         $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
 
+        $payment->setIsTransactionClosed(false)->setIsTransactionPending(true)->save();
+        $order->save();     //---
+        $transactionId = $transaction->save()->getTransactionId();
+        $this->spotiiHelper->logSpotiiActions("Transaction Id : $transactionId");
         
-        // ---- Create "pending" order -------
-        $quoteId = $quote->getId();
-        $quote->collectTotals()->save();        // **
-        $order = $this->_quoteManagement->submit($quote);        
-        $order->setState("pending")->setStatus("pending");
-        $order->save(); // **
-        //-------------------------------------
-
 
         $this->_checkoutSession->setLastQuoteId($quoteId);
         $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
