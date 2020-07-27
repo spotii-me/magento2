@@ -448,7 +448,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param $reference
      * @return mixed
      */
-    public function createTransaction($order, $reference)
+    public function createTransaction($order, $reference, $type)
     {
         $this->spotiiHelper->logSpotiiActions("****Transaction start****");
         $this->spotiiHelper->logSpotiiActions("Order Id : " . $order->getId());
@@ -465,7 +465,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             ->setOrder($order)
             ->setTransactionId($reference)
             ->setFailSafe(true)
-            ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE);
+            ->build($type);
 
         $payment->addTransactionCommentsToOrder(
             $transaction,
