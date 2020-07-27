@@ -473,7 +473,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         );
         $payment->setParentTransactionId(null);
         $payment->save();
-        // $quote->collectTotals()->save();
+        $quote = $this->_checkoutSession->getQuote();
+        $quote->collectTotals()->save();
         $order->save();
         $transactionId = $transaction->save()->getTransactionId();
         $this->spotiiHelper->logSpotiiActions("Transaction Id : $transactionId");
