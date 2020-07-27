@@ -36,7 +36,7 @@ class Complete extends SpotiiPay
                 $this->_checkoutSession->setLastOrderId($order->getId())
                     ->setLastRealOrderId($order->getIncrementId())
                     ->setLastOrderStatus($order->getStatus());
-                $quote = $payment->getQuote();
+                $quote = $order->getPayment()->getQuote();
                 $this->spotiiHelper->logSpotiiActions("QUOTE ID FROM COMPLETE" . $quote->getId());
                 $this->_spotiipayModel->createTransaction($order, $reference, $quote);
                 $quote->collectTotals()->save();          
