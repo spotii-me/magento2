@@ -59,6 +59,7 @@ class Redirect extends SpotiiPay
         $this->_checkoutSession->replaceQuote($quote);
         $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
         $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
+        try{
         $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
         $jsonResult = $this->_resultJsonFactory->create();
         $jsonResult->setData($json);
@@ -78,10 +79,22 @@ class Redirect extends SpotiiPay
             \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
         );
         
-        $order->setState("pending")->setStatus("pending");
+        $order->setState("new")->setStatus("pending");
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
 
+    }catch (\Magento\Framework\Exception\LocalizedException $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
+        );
+    } catch (\Exception $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
+        );
+    }
+        $this->spotiiHelper->logSpotiiActions("End redirect : State ". $order->getState() ." status ".$order->getStatus());  
         return $jsonResult;
     }
 }

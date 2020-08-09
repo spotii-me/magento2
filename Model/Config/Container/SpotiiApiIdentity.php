@@ -21,11 +21,15 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     const XML_PATH_LOG_TRACKER = 'payment/spotiipay/log_tracker';
     const XML_PATH_PAYMENT_ACTION = 'payment/spotiipay/payment_action';
 
-    private $liveCheckoutUrl = "https://api.spotii.me";
-    private $sandboxCheckoutUrl = "https://api.sandbox.spotii.me";
-    
-    private $liveAuthUrl = "https://auth.spotii.me";
-    private $sandboxAuthtUrl = "https://auth.sandbox.spotii.me";
+    private $checkoutUrlLive = "https://api.spotii.me";
+    private $checkoutUrlSandbox = "https://api.sandbox.spotii.me";
+    private $checkoutUrlDev = "https://api.dev.spotii.me";
+
+    private $authUrlLive = "https://auth.spotii.me";
+    private $authtUrlSandbox = "https://auth.sandbox.spotii.me";
+    private $authtUrlDev = "https://auth.dev.spotii.me";
+
+
 
     /**
      * @inheritdoc
@@ -91,10 +95,13 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
         $paymentMode = $this->getPaymentMode();
         switch ($paymentMode) {
             case 'live':
-                return $this->liveCheckoutUrl;
+                return $this->checkoutUrlLive;
                 break;
             case 'sandbox':
-                return $this->sandboxCheckoutUrl;
+                return $this->checkoutUrlSandbox;
+                break;
+            case 'prod':
+                return $this->checkoutUrlDev;
                 break;
             default:
                 break;
@@ -109,10 +116,13 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
         $paymentMode = $this->getPaymentMode();
         switch ($paymentMode) {
             case 'live':
-                return $this->liveAuthUrl;
+                return $this->authUrlLive;
                 break;
             case 'sandbox':
-                return $this->sandboxAuthtUrl;
+                return $this->authtUrlSandbox;
+                break;
+            case 'prod':
+                return $this->authtUrlDev;
                 break;
             default:
                 break;
