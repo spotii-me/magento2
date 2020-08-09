@@ -30,6 +30,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @var bool
      */
     protected $_isGateway = true;
+
+    protected $_isOffline = false;
+
     /**
      * @var bool
      */
@@ -402,6 +405,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @return $this
      * @throws LocalizedException
      */
+    
+    
+    public function processBeforeRefund($invoice, $payment){}
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $this->spotiiHelper->logSpotiiActions("****Refund Start****");
@@ -434,6 +440,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException($message);
         }
     }
+    public function processCreditmemo($creditmemo, $payment){}
 
     /**
      * Create transaction
@@ -441,7 +448,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param $reference
      * @return mixed
      */
-    public function createTransaction($order, $reference)
+    public function createTransaction($order, $reference, $type)
     {
         $this->spotiiHelper->logSpotiiActions("****Transaction start****");
         $this->spotiiHelper->logSpotiiActions("Order Id : " . $order->getId());
@@ -452,13 +459,20 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $formattedPrice = $order->getBaseCurrency()->formatTxt(
             $order->getGrandTotal()
         );
-        $message = __('The authorized amount is %1.', $formattedPrice);
+       
+        if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
+            $message = __('Order placed for amount %1.', $formattedPrice);
+            $transactionId = $reference;
+        } else {
+            $message = __('Payment processed for amount %1.', $formattedPrice);
+            $transactionId = $reference . '-' . $type;
+        }
         $this->spotiiHelper->logSpotiiActions($message);
         $transaction = $this->_transactionBuilder->setPayment($payment)
             ->setOrder($order)
-            ->setTransactionId($reference)
+            ->setTransactionId($transactionId)
             ->setFailSafe(true)
-            ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE);
+            ->build($type);
 
         $payment->addTransactionCommentsToOrder(
             $transaction,
@@ -472,5 +486,13 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $this->spotiiHelper->logSpotiiActions("Transaction Id : $transactionId");
         $this->spotiiHelper->logSpotiiActions("****Transaction End****");
         return $transactionId;
+    }
+
+    public function canRefund() {
+        return true;
+    }
+
+    public function isOffline() {
+        return false;
     }
 }
