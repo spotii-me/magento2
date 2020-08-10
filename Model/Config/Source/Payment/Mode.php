@@ -29,8 +29,8 @@ class Mode implements \Magento\Framework\Option\ArrayInterface
                 'label' => 'Sandbox',
             ],
             [
-                'value' => 'dev',
-                'label' => 'dev',
+                'value' => 'prod',
+                'label' => 'prod',
             ]
         ];
     }
