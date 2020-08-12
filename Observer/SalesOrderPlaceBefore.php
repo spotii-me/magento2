@@ -81,7 +81,7 @@ class SalesOrderPlaceBefore implements ObserverInterface
         $quote = $this->quoteFactory->create()->load($quoteId);
         $this->spotiiHelper->logSpotiiActions("Spotii observer payment method ". strval($quote->getPayment()->getMethod()));
 
-        if($quote->gePayment()->getMethod() == "spotiipay"){
+        if($quote->getPayment()->getMethod() == "spotiipay"){
             try{
                 $order->setCanSendNewEmailFlag(false);
                 $order->setEmailSent(false);
