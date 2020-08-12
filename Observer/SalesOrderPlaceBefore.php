@@ -75,11 +75,11 @@ class SalesOrderPlaceBefore implements ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer){
 
         $order = $observer->getEvent()->getOrder();
-        $this->logger->info("Spotii observer order ID".$order->getQuoteId());
-        $this->spotiiHelper->logSpotiiActions("Spotii onserver order ID".$order);
+        //$this->logger->info("Spotii observer order ID".$order->getQuoteId());
+        $this->spotiiHelper->logSpotiiActions("Spotii onserver order ID".$order->getQuoteId());
         $quoteId = $order->getQuoteId();
         $quote = $this->quoteFactory->create()->load($quoteId);
-        $this->spotiiHelper->logSpotiiActions("Spotii observer payment method ".$quote->getPayment()->getMethod());
+        $this->spotiiHelper->logSpotiiActions("Spotii observer payment method ". strval($quote->getPayment()->getMethod()));
 
         if($quote->gePayment()->getMethod() == "spotiipay"){
             try{
