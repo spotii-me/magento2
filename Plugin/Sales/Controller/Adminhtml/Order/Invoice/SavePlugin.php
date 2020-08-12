@@ -246,7 +246,7 @@ class SavePlugin
 
                    // $invoice->setCustomerNote($data['comment_text']);
                     //$invoice->setCustomerNoteNotify(isset($data['comment_customer_notify']));
-                }
+                //}
 
                 $invoice->register();
 
