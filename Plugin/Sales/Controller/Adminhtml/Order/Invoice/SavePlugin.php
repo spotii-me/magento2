@@ -275,7 +275,7 @@ class SavePlugin
                         $this->invoiceSender->send($invoice);
                     }
                 } catch (\Exception $e) {
-                    $this->logger->critical($e);
+                   // $this->logger->critical($e);
                     $this->messageManager->addErrorMessage(__('We can\'t send the invoice email right now.'));
                 }
                 if ($shipment) {
@@ -284,7 +284,7 @@ class SavePlugin
                             $this->shipmentSender->send($shipment);
                         }
                     } catch (\Exception $e) {
-                        $this->logger->critical($e);
+                     //   $this->logger->critical($e);
                         $this->messageManager->addErrorMessage(__('We can\'t send the shipment right now.'));
                     }
                 }
@@ -307,7 +307,7 @@ class SavePlugin
                 $this->messageManager->addErrorMessage(
                     __("The invoice can't be saved at this time. Please try again later.")
                 );
-                $this->logger->critical($e->getMessage());
+               // $this->logger->critical($e->getMessage());
             }
             return $resultRedirect->setPath('sales/*/new', ['order_id' => $orderId]);
         } else {

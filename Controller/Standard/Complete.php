@@ -29,7 +29,7 @@ class Complete extends SpotiiPay
             $reference = $this->getRequest()->getParam("magento_spotii_id");
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
-            $order->setState("paymentauthorised")->setStatus("paymentauthorised");
+            $order->setState("processing")->setStatus("paymentauthorised");
             $order->save();
 
             if ($order) {
