@@ -202,9 +202,9 @@ class SavePlugin
 
             $data = $subject->getRequest()->getPost('invoice');
 
-            if (!empty($data['comment_text'])) {
+           /* if (!empty($data['comment_text'])) {
                 $this->backendSession->setCommentText($data['comment_text']);
-            }
+            }*/
 
             try {
                 $invoiceData = $subject->getRequest()->getParam('invoice', []);
@@ -237,20 +237,20 @@ class SavePlugin
                     }
                 }
 
-                if (!empty($data['comment_text'])) {
+               /* if (!empty($data['comment_text'])) {
                     $invoice->addComment(
                         $data['comment_text'],
                         isset($data['comment_customer_notify']),
                         isset($data['is_visible_on_front'])
-                    );
+                    );*/
 
-                    $invoice->setCustomerNote($data['comment_text']);
-                    $invoice->setCustomerNoteNotify(isset($data['comment_customer_notify']));
+                   // $invoice->setCustomerNote($data['comment_text']);
+                    //$invoice->setCustomerNoteNotify(isset($data['comment_customer_notify']));
                 }
 
                 $invoice->register();
 
-                $invoice->getOrder()->setCustomerNoteNotify(!empty($data['send_email']));
+                //$invoice->getOrder()->setCustomerNoteNotify(!empty($data['send_email']));
                 $invoice->getOrder()->setIsInProcess(true);
 
                 $transactionSave = $this->transaction
@@ -293,7 +293,7 @@ class SavePlugin
                 } else {
                     $this->messageManager->addSuccessMessage(__('The invoice has been created.'));
                 }
-                $this->backendSession->getCommentText(true);
+               // $this->backendSession->getCommentText(true);
                 return $resultRedirect->setPath('sales/order/view', ['order_id' => $orderId]);
             } catch (LocalizedException $e) {
                 $this->messageManager->addComplexErrorMessage(
@@ -335,8 +335,7 @@ class SavePlugin
             $this->order->getGrandTotal(),
             \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION
         );
-        $spotiiOrderInfo = $this->spotiiPay
-                            ->getSpotiiOrderInfo($reference);
+        $spotiiOrderInfo = $this->spotiiPay->getSpotiiOrderInfo($reference);
 
         if (isset($spotiiOrderInfo['total'])
             && ($grandTotalInCents != $spotiiOrderInfo['total'])) {
