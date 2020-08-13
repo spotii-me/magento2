@@ -202,9 +202,9 @@ class SavePlugin
 
             $data = $subject->getRequest()->getPost('invoice');
 
-           /* if (!empty($data['comment_text'])) {
+            if (!empty($data['comment_text'])) {
                 $this->backendSession->setCommentText($data['comment_text']);
-            }*/
+            }
 
             try {
                 $invoiceData = $subject->getRequest()->getParam('invoice', []);
@@ -237,20 +237,20 @@ class SavePlugin
                     }
                 }
 
-               /* if (!empty($data['comment_text'])) {
+                if (!empty($data['comment_text'])) {
                     $invoice->addComment(
                         $data['comment_text'],
                         isset($data['comment_customer_notify']),
                         isset($data['is_visible_on_front'])
-                    );*/
+                    );
 
-                   // $invoice->setCustomerNote($data['comment_text']);
-                    //$invoice->setCustomerNoteNotify(isset($data['comment_customer_notify']));
-                //}
+                    $invoice->setCustomerNote($data['comment_text']);
+                    $invoice->setCustomerNoteNotify(isset($data['comment_customer_notify']));
+                }
 
                 $invoice->register();
 
-                //$invoice->getOrder()->setCustomerNoteNotify(!empty($data['send_email']));
+                $invoice->getOrder()->setCustomerNoteNotify(!empty($data['send_email']));
                 $invoice->getOrder()->setIsInProcess(true);
 
                 $transactionSave = $this->transaction
@@ -275,7 +275,7 @@ class SavePlugin
                         $this->invoiceSender->send($invoice);
                     }
                 } catch (\Exception $e) {
-                   // $this->logger->critical($e);
+                    $this->logger->critical($e);
                     $this->messageManager->addErrorMessage(__('We can\'t send the invoice email right now.'));
                 }
                 if ($shipment) {
@@ -284,7 +284,7 @@ class SavePlugin
                             $this->shipmentSender->send($shipment);
                         }
                     } catch (\Exception $e) {
-                     //   $this->logger->critical($e);
+                        $this->logger->critical($e);
                         $this->messageManager->addErrorMessage(__('We can\'t send the shipment right now.'));
                     }
                 }
@@ -293,7 +293,7 @@ class SavePlugin
                 } else {
                     $this->messageManager->addSuccessMessage(__('The invoice has been created.'));
                 }
-               // $this->backendSession->getCommentText(true);
+                $this->backendSession->getCommentText(true);
                 return $resultRedirect->setPath('sales/order/view', ['order_id' => $orderId]);
             } catch (LocalizedException $e) {
                 $this->messageManager->addComplexErrorMessage(
@@ -307,7 +307,7 @@ class SavePlugin
                 $this->messageManager->addErrorMessage(
                     __("The invoice can't be saved at this time. Please try again later.")
                 );
-               // $this->logger->critical($e->getMessage());
+                $this->logger->critical($e->getMessage());
             }
             return $resultRedirect->setPath('sales/*/new', ['order_id' => $orderId]);
         } else {
@@ -335,7 +335,8 @@ class SavePlugin
             $this->order->getGrandTotal(),
             \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION
         );
-        $spotiiOrderInfo = $this->spotiiPay->getSpotiiOrderInfo($reference);
+        $spotiiOrderInfo = $this->spotiiPay
+                            ->getSpotiiOrderInfo($reference);
 
         if (isset($spotiiOrderInfo['total'])
             && ($grandTotalInCents != $spotiiOrderInfo['total'])) {
