@@ -66,6 +66,7 @@ class Complete extends SpotiiPay
                 $e->getMessage()
             );
         }
+        $this->spotiiHelper->logSpotiiActions("End complete : State ". $order->getState() ." status ".$order->getStatus());  
         $this->_redirect($redirect);
     }
 }

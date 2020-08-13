@@ -79,7 +79,7 @@ class Redirect extends SpotiiPay
             \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
         );
         
-        $order->setState("New")->setStatus("pending");
+        $order->setState("new")->setStatus("pending");
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
 
@@ -94,7 +94,7 @@ class Redirect extends SpotiiPay
             $e->getMessage()
         );
     }
-
+        $this->spotiiHelper->logSpotiiActions("End redirect : State ". $order->getState() ." status ".$order->getStatus());  
         return $jsonResult;
     }
 }
