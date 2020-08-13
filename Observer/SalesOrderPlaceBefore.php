@@ -74,23 +74,7 @@ class SalesOrderPlaceBefore implements ObserverInterface
 
     public function execute(\Magento\Framework\Event\Observer $observer){
 
-        $order = $observer->getEvent()->getOrder();
-        $this->spotiiHelper->logSpotiiActions("Spotii observer order ID ".$order->getQuoteId());
-        $quoteId = $order->getQuoteId();
-        $quote = $this->quoteFactory->create()->load($quoteId);
-        $this->spotiiHelper->logSpotiiActions("Spotii observer payment method ". strval($quote->getPayment()->getMethod()));
-
-        if($quote->getPayment()->getMethod() == "spotiipay"){
-            try{
-                $order->setCanSendNewEmailFlag(false);
-                $order->setEmailSent(false);
-            }catch(\Magento\Framework\Exception\LocalizedException $e){
-                $this->spotiiHelper->logSpotiiActions('OrderPlaceBefore local'.$e->getMessage());
-            }catch(\Exception $e){
-                $this->spotiiHelper->logSpotiiActions('OrderPlaceBefore '.$e->getMessage());  
-            }
-
-        }
+      
 
     }
 
