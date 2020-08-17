@@ -4,7 +4,7 @@
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
 
-
+import '/fancybox-2.0.min.js';
 define([
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/resource-url-manager",
@@ -126,9 +126,10 @@ define([
   script.type = 'text/javascript';
   script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
   $("head").append(script);
-
   openIframeSpotiiCheckout(url);
-  };var openIframeSpotiiCheckout= function(checkoutUrl) {
+  };
+  
+  var openIframeSpotiiCheckout= function(checkoutUrl) {
     console.log("openIframeSpotiiCheckout");
     $('.fancy-box').attr('href', checkoutUrl);
     openIFrame();
