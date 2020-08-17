@@ -91,7 +91,7 @@ class PayloadBuilder
 
     public function setCompleteUrlUniv($completeUrl){
 
-        $this->$completeUrlUniv=$completeUrl;
+        $this->completeUrlUniv=$completeUrl;
     }
     
     public function getCompleteUrlUniv(){
