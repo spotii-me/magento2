@@ -109,7 +109,7 @@ define([
     redirectToSpotiipayController: function (data) {
       // Make a post request to redirect
       var url = mageUrl.build("spotiipay/standard/redirect");
-
+     
       $.ajax({
         url: url,
         method: "post",
@@ -120,7 +120,8 @@ define([
           // This would redirect to spotii
           var jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) {
-            location.href = jsonData.redirectURL;
+            console.log(jsonData.redirectURL);
+            location.href = jsonData.redirectURL;         
           } else if (typeof jsonData["message"] !== "undefined") {
             globalMessageList.addErrorMessage({
               message: jsonData["message"],
