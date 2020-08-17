@@ -105,6 +105,30 @@ define([
     getTotalInvalidText: function () {
         return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
     },
+    renderpopup: function (url) {
+      var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
+    $("head").append(script);
+    openIframeSpotiiCheckout(url);
+    },
+    openIframeOnSpottiButtonClick: function(checkoutUrl) {
+      $('.' + spottiRedirectButtonClassName).click(function(event) {
+       // showOverlay();
+        $('.' + iframeClassName).attr('href', checkoutUrl);
+        openIFrame();
+        return false;
+      });
+    },
+    redirectToSpotiiCheckout: function(checkoutUrl, timeout) {
+      setTimeout(function() {
+        window.location = checkoutUrl;
+      }, timeout); // 'milli-seconds'
+    },
+    openIframeSpotiiCheckout: function(checkoutUrl, timeout) {
+      $('.' + iframeClassName).attr('href', checkoutUrl);
+      openIFrame();
+    },
 
     redirectToSpotiipayController: function (data) {
       // Make a post request to redirect
@@ -118,8 +142,10 @@ define([
         success: function (response) {
           // Send this response to spotii api
           // This would redirect to spotii
+         console.log("redirect1 "+response);
           var jsonData = $.parseJSON(response);
-          if (jsonData.redirectURL) {
+          if (jsonData.redirectURL) {       
+            renderpopup(jsonData.redirectURL);
             console.log("redirect "+jsonData.redirectURL);
             location.href = jsonData.redirectURL;         
           } else if (typeof jsonData["message"] !== "undefined") {
