@@ -29,14 +29,12 @@ class completeURL extends SpotiiPay
     {
     try{
         $orderId=$this->getOrder()->getId();
+        $this->spotiiHelper->logSpotiiActions("orderId: " . $orderId);
         $reference = $this->getOrder()->getPayment()->getAdditionalInformation(SpotiiPay::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        $this->spotiiHelper->logSpotiiActions("reference: " . $reference);
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference);
-    }catch (\Magento\Framework\Exception\LocalizedException $e) {
-        $this->spotiiHelper->logSpotiiActions("completeUrl Exception: " . $e->getMessage());
-        $this->messageManager->addError(
-            $e->getMessage()
-        );
-    } catch (\Exception $e) {
+
+    }catch (\Exception $e) {
         $this->spotiiHelper->logSpotiiActions("completeUrl Exception: " . $e->getMessage());
         $this->messageManager->addError(
             $e->getMessage()
