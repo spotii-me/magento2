@@ -3,6 +3,18 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
+
+var renderPopup= function (url) {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
+  $("head").append(script);
+  this.openIframeSpotiiCheckout(url);
+  };
+var openIframeSpotiiCheckout= function(checkoutUrl) {
+    $('.fancy-box').attr('href', checkoutUrl);
+    openIFrame();
+  };
 define([
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/resource-url-manager",
@@ -105,17 +117,7 @@ define([
     getTotalInvalidText: function () {
         return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
     },
-    renderpopup: function (url) {
-      var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
-    $("head").append(script);
-    this.openIframeSpotiiCheckout(url);
-    },
-    openIframeSpotiiCheckout: function(checkoutUrl) {
-      $('.fancy-box').attr('href', checkoutUrl);
-      openIFrame();
-    },
+    
 
     redirectToSpotiipayController: function (data) {
       // Make a post request to redirect
@@ -132,7 +134,7 @@ define([
          console.log("redirect1 "+response);
           var jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) {       
-            this.renderpopup(jsonData.redirectURL);
+            this.renderPopup(jsonData.redirectURL);
             console.log("redirect "+jsonData.redirectURL);
             location.href = jsonData.redirectURL;         
           } else if (typeof jsonData["message"] !== "undefined") {
