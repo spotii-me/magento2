@@ -5,13 +5,15 @@
  */
 
 var renderPopup= function (url) {
+  console.log("renderPopup");
   var script = document.createElement('script');
   script.type = 'text/javascript';
   script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
   $("head").append(script);
-  this.openIframeSpotiiCheckout(url);
+  openIframeSpotiiCheckout(url);
   };
 var openIframeSpotiiCheckout= function(checkoutUrl) {
+    console.log("openIframeSpotiiCheckout");
     $('.fancy-box').attr('href', checkoutUrl);
     openIFrame();
   };
@@ -134,9 +136,9 @@ define([
          console.log("redirect1 "+response);
           var jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) {       
-            this.renderPopup(jsonData.redirectURL);
+            renderPopup(jsonData.redirectURL);
             console.log("redirect "+jsonData.redirectURL);
-            location.href = jsonData.redirectURL;         
+            //location.href = jsonData.redirectURL;         
           } else if (typeof jsonData["message"] !== "undefined") {
             globalMessageList.addErrorMessage({
               message: jsonData["message"],
