@@ -152,7 +152,25 @@ define([
         console.log('successCheckOutStatus');
         var completeURL =mageUrl.build("spotiipay/standard/completeURL");
         console.log("completeURL "+completeURL);
-        location.href = completeURL.redirectURL;
+        $.ajax({
+          url: completeURL,
+          method: "post",
+          showLoader: true,
+          data: status,
+          success: function (response) {
+            // Send this response to spotii api
+            // This would redirect to spotii
+            if (response) { 
+              console.log("response "+response);      
+              location.href =response;
+            } else if (typeof jsonData["message"] !== "undefined") {
+              globalMessageList.addErrorMessage({
+                message: jsonData["message"],
+              });
+            }
+          },
+        });
+        
         break;
       }
       case failedCheckOutStatus: {
