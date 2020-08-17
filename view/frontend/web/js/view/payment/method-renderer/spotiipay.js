@@ -120,7 +120,7 @@ define([
           // This would redirect to spotii
           var jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) {
-            console.log(jsonData.redirectURL);
+            console.log("redirect "+jsonData.redirectURL);
             location.href = jsonData.redirectURL;         
           } else if (typeof jsonData["message"] !== "undefined") {
             globalMessageList.addErrorMessage({
