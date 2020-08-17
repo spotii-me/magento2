@@ -26,7 +26,6 @@ class PayloadBuilder
      */
     private $storeManager;
 
-    protected $completeUrlUniv;
     /**
      * PayloadBuilder constructor.
      * @param ConfigInterface $spotiiApiConfig
@@ -77,7 +76,6 @@ class PayloadBuilder
     {
         $orderId = $quote->getReservedOrderId();
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference);
-        $this->setCompleteUrlUniv($completeUrl);
         $cancelUrl = $this->spotiiApiConfig->getCancelUrl();
         $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
         $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
@@ -89,15 +87,6 @@ class PayloadBuilder
         return $checkoutPayload;
     }
 
-    public function setCompleteUrlUniv($completeUrl){
-
-        $this->completeUrlUniv=$completeUrl;
-    }
-    
-    public function getCompleteUrlUniv(){
-
-        return $this->completeUrlUniv;
-    }
     /**
      * Build Order Payload
      * @param $quote

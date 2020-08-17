@@ -141,36 +141,15 @@ define([
     $('.fancy-box').attr('href', checkoutUrl);
     console.log(typeof fancy, typeof openIFrame);
     openIFrame();
-
   };
-  window.closeIFrameOnCompleteOrder = function(status) {
+  window.closeIFrameOnCompleteOrder = function(status, completeUrl) {
     console.log('Order state - ', status);
-    //$('.sptii-overlay').remove();
-   // $('.sptii-content').remove();
+    console.log('Order complete URL - ', completeUrl);
+  
     switch (status) {
       case successCheckOutStatus: {
         console.log('successCheckOutStatus');
-        var completeURL =mageUrl.build("spotiipay/standard/completeURL");
-        console.log("completeURL "+completeURL);
-        $.ajax({
-          url: completeURL,
-          method: "post",
-          showLoader: true,
-          data: data,
-          success: function (response) {
-            // Send this response to spotii api
-            // This would redirect to spotii
-            if (response) { 
-              console.log("response "+response);      
-              location.href =response;
-            } else if (typeof jsonData["message"] !== "undefined") {
-              globalMessageList.addErrorMessage({
-                message: jsonData["message"],
-              });
-            }
-          },
-        });
-        
+        location.href = completeUrl; 
         break;
       }
       case failedCheckOutStatus: {
@@ -201,7 +180,7 @@ define([
         success: function (response) {
           // Send this response to spotii api
           // This would redirect to spotii
-         console.log("redirect1 "+response);
+         console.log("response "+response);
           var jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) {       
             renderPopup(jsonData.redirectURL);

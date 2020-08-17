@@ -13,11 +13,8 @@ use Spotii\Spotiipay\Controller\AbstractController\SpotiiPay;
  * Class Complete
  * @package Spotii\Spotiipay\Controller\Standard
  */
-
 class Complete extends SpotiiPay
 {
-private $jsonResult;
-
     /**
      * Complete the order
      */
@@ -57,7 +54,6 @@ private $jsonResult;
 
                 $this->messageManager->addSuccess("Spotiipay Transaction Completed");
                 $redirect = 'checkout/onepage/success';
-                
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
@@ -70,10 +66,7 @@ private $jsonResult;
                 $e->getMessage()
             );
         }
+        $this->spotiiHelper->logSpotiiActions("End complete : State ". $order->getState() ." status ".$order->getStatus());  
         $this->_redirect($redirect);
-       // $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $redirect]);
-      // $jsonResult = $this->_resultJsonFactory->create();
-       // $jsonResult->setData($json);
-      //  return $jsonResult;
     }
 }
