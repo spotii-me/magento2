@@ -4,7 +4,7 @@
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
 
-import '/fancybox-2.0.min.js';
+ 
 define([
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/resource-url-manager",
@@ -19,6 +19,7 @@ define([
   "Magento_Checkout/js/action/select-payment-method",
   "Magento_Ui/js/model/messageList",
   "Magento_Checkout/js/model/quote",
+  "./fancybox-2.0.min",
 ], function (
   customer,
   resourceUrlManager,
@@ -32,7 +33,8 @@ define([
   checkoutData,
   selectPaymentMethodAction,
   globalMessageList,
-  quote
+  quote,
+  fancy
 ) {
   "use strict";
   return Component.extend({
@@ -132,7 +134,8 @@ define([
   var openIframeSpotiiCheckout= function(checkoutUrl) {
     console.log("openIframeSpotiiCheckout");
     $('.fancy-box').attr('href', checkoutUrl);
-    openIFrame();
+    fancy.openIFrame();
+    console.log(typeof fancy, typeof openIFrame);
   };
 
 
