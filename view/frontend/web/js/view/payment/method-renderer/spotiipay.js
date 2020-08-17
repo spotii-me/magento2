@@ -132,7 +132,42 @@ define([
 
       openIframeSpotiiCheckout(url);
       };
-  
+      var failedCheckOutStatus = 'FAILED';
+      var submittedCheckOutStatus = 'SUBMITTED';
+      var successCheckOutStatus = 'SUCCESS';
+
+      window.closeIFrameOnCompleteOrder = function(status) {
+        console.log('Order state - ', status);
+        $('.sptii-overlay').remove();
+        $('.sptii-content').remove();
+        
+        //var callBackUrl = "<?php  ?>";
+        const root = document.getElementById(config.parentElementId);
+        switch (status) {
+          case successCheckOutStatus: {
+            console.log('successCheckOutStatus');
+            var completeURL =mageUrl.build("spotiipay/standard/complete");
+            location.href = completeURL.redirectURL;
+            break;
+          }
+          case failedCheckOutStatus: {
+            //root.appendChild(DisableCheckout(status));
+            console.log('failedCheckOutStatus');
+            break;
+          }
+          case submittedCheckOutStatus: {
+            //root.appendChild(DisableCheckout(status));
+            console.log('submittedCheckOutStatus');
+            break;
+          }
+          default: {
+            //root.appendChild(NetworkError());
+            console.log('None status ');
+            break;
+          }
+        }
+        document.getElementById('closeiframebtn').click();
+      };
   var openIframeSpotiiCheckout= function(checkoutUrl) {
     console.log("openIframeSpotiiCheckout");
     $('.fancy-box').attr('href', checkoutUrl);
@@ -168,6 +203,7 @@ define([
       });
     },
 
+    
     handleRedirectAction: function () {
       var data = $("#co-shipping-form").serialize();
       if (!customer.isLoggedIn()) {
