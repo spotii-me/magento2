@@ -57,9 +57,7 @@ private $jsonResult;
 
                 $this->messageManager->addSuccess("Spotiipay Transaction Completed");
                 $redirect = 'checkout/onepage/success';
-                $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $redirect]);
-                $jsonResult = $this->_resultJsonFactory->create();
-                $jsonResult->setData($json);
+                
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
@@ -73,6 +71,9 @@ private $jsonResult;
             );
         }
         //$this->_redirect($redirect);
+        $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $redirect]);
+        $jsonResult = $this->_resultJsonFactory->create();
+        $jsonResult->setData($json);
         return $jsonResult;
     }
 }

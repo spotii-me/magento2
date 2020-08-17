@@ -3,8 +3,42 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
-
- 
+var failedCheckOutStatus = 'FAILED';
+var submittedCheckOutStatus = 'SUBMITTED';
+var successCheckOutStatus = 'SUCCESS';
+window.closeIFrameOnCompleteOrder = function(status) {
+  console.log('Order state - ', status);
+  //$('.sptii-overlay').remove();
+ // $('.sptii-content').remove();
+  
+  //var callBackUrl = "<?php  ?>";
+  const root = document.getElementById(config.parentElementId);
+  switch (status) {
+    case successCheckOutStatus: {
+      console.log('successCheckOutStatus');
+      var completeURL =mageUrl.build("spotiipay/standard/complete");
+      console.log("completeURL "+completeURL);
+      location.href = completeURL.redirectURL;
+      break;
+    }
+    case failedCheckOutStatus: {
+      //root.appendChild(DisableCheckout(status));
+      console.log('failedCheckOutStatus');
+      break;
+    }
+    case submittedCheckOutStatus: {
+      //root.appendChild(DisableCheckout(status));
+      console.log('submittedCheckOutStatus');
+      break;
+    }
+    default: {
+      //root.appendChild(NetworkError());
+      console.log('None status ');
+      break;
+    }
+  }
+  document.getElementById('closeiframebtn').click();
+};
 define([
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/resource-url-manager",
@@ -132,54 +166,16 @@ define([
 
       openIframeSpotiiCheckout(url);
       };
-      var failedCheckOutStatus = 'FAILED';
-      var submittedCheckOutStatus = 'SUBMITTED';
-      var successCheckOutStatus = 'SUCCESS';
 
-      window.closeIFrameOnCompleteOrder = function(status) {
-        console.log('Order state - ', status);
-        $('.sptii-overlay').remove();
-        $('.sptii-content').remove();
-        
-        //var callBackUrl = "<?php  ?>";
-        const root = document.getElementById(config.parentElementId);
-        switch (status) {
-          case successCheckOutStatus: {
-            console.log('successCheckOutStatus');
-            var completeURL =mageUrl.build("spotiipay/standard/complete");
-            location.href = completeURL.redirectURL;
-            break;
-          }
-          case failedCheckOutStatus: {
-            //root.appendChild(DisableCheckout(status));
-            console.log('failedCheckOutStatus');
-            break;
-          }
-          case submittedCheckOutStatus: {
-            //root.appendChild(DisableCheckout(status));
-            console.log('submittedCheckOutStatus');
-            break;
-          }
-          default: {
-            //root.appendChild(NetworkError());
-            console.log('None status ');
-            break;
-          }
-        }
-        document.getElementById('closeiframebtn').click();
-      };
   var openIframeSpotiiCheckout= function(checkoutUrl) {
     console.log("openIframeSpotiiCheckout");
     $('.fancy-box').attr('href', checkoutUrl);
     console.log(typeof fancy, typeof openIFrame);
-    if (fancy && fancy.openIFrame)
-    {fancy.openIFrame();}
-    else {openIFrame();} 
+    openIFrame();
 
   };
-  
       var url = mageUrl.build("spotiipay/standard/redirect");
-     
+     console.log("url "+url);
       $.ajax({
         url: url,
         method: "post",
