@@ -30,13 +30,21 @@ class completeURL extends SpotiiPay
     try{
 
         //$orderId = $this->getRequest()->getParam("id");
-       //$orderId=$this->getOrder()->getId();
-        //$this->spotiiHelper->logSpotiiActions("orderId: " . $orderId);
-        //$reference = $this->getOrder()->getPayment()->getAdditionalInformation(SpotiiPay::ADDITIONAL_INFORMATION_KEY_ORDERID);
-       // $reference = $this->getRequest()->getParam("magento_spotii_id");
+       $order=$this->getOrder();
+       $orderId = $order->getId();
+       $this->spotiiHelper->logSpotiiActions("orderId: " . $orderId);
+       $reference = $order->getPayment()->getAdditionalInformation('spotii_order_id');
+       $this->spotiiHelper->logSpotiiActions("reference: " . $reference1);
 
-       // $this->spotiiHelper->logSpotiiActions("reference: " . $reference);
-        $completeUrl = $this->apiPayloadBuilder->getCompleteUrlUniv();
+
+       $orderId1 = $this->getRequest()->getParam("id");
+       $order1 = $this->_orderFactory->create()->loadByIncrementId($orderId1);
+       $this->spotiiHelper->logSpotiiActions("orderId1: " . $orderId1);
+       $reference1 = $this->getRequest()->getParam("magento_spotii_id"); 
+       $this->spotiiHelper->logSpotiiActions("reference1: " . $reference1);
+
+       return "";
+
 
     }catch (\Exception $e) {
         $this->spotiiHelper->logSpotiiActions("completeUrl Exception: " . $e->getMessage());
