@@ -156,7 +156,7 @@ define([
           url: completeURL,
           method: "post",
           showLoader: true,
-          data: status,
+          data: data,
           success: function (response) {
             // Send this response to spotii api
             // This would redirect to spotii
@@ -223,6 +223,7 @@ define([
         var email = quote.guestEmail;
         data += "&email=" + email;
       }
+      console.log(data);
       this.redirectToSpotiipayController(data);
     },
 

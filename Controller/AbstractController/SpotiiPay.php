@@ -11,6 +11,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Sales\Model\Order;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
 use Spotii\Spotiipay\Model\Api\ConfigInterface;
+use Spotii\Spotiipay\Model\Api\PayloadBuilder;
 /**
  * Class Spotiipay
  * @package Spotii\Spotiipay\Controller\AbstractController
@@ -134,7 +135,8 @@ abstract class SpotiiPay extends Action
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         SpotiiApiConfigInterface $spotiiApiIdentity,
-        ConfigInterface $spotiiApiConfig
+        ConfigInterface $spotiiApiConfig,
+        PayloadBuilder $apiPayloadBuilder
     )
     {
         $this->_customerSession = $customerSession;
@@ -156,6 +158,7 @@ abstract class SpotiiPay extends Action
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->spotiiApiIdentity = $spotiiApiIdentity;
         $this->spotiiApiConfig = $spotiiApiConfig;
+        $this->apiPayloadBuilder = $apiPayloadBuilder;
         parent::__construct($context);
     }
 
