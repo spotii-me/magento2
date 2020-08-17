@@ -28,9 +28,12 @@ class completeURL extends SpotiiPay
     public function execute()
     {
     try{
-        $orderId=$this->getOrder()->getId();
+        $orderId = $this->getRequest()->getParam("id");
+       //$orderId=$this->getOrder()->getId();
         $this->spotiiHelper->logSpotiiActions("orderId: " . $orderId);
-        $reference = $this->getOrder()->getPayment()->getAdditionalInformation(SpotiiPay::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        //$reference = $this->getOrder()->getPayment()->getAdditionalInformation(SpotiiPay::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        $reference = $this->getRequest()->getParam("magento_spotii_id");
+
         $this->spotiiHelper->logSpotiiActions("reference: " . $reference);
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference);
 
