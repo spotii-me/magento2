@@ -33,8 +33,8 @@ class completeURL extends SpotiiPay
        $order=$this->getOrder();
        $orderId = $order->getId();
        $this->spotiiHelper->logSpotiiActions("orderId: " . $orderId);
-       $reference = $order->getPayment()->getAdditionalInformation('spotii_order_id');
-       $this->spotiiHelper->logSpotiiActions("reference: " . $reference1);
+       //$reference = $order->getPayment()->getAdditionalInformation('spotii_order_id');
+       //$this->spotiiHelper->logSpotiiActions("reference: " . $reference1);
 
 
        $orderId1 = $this->getRequest()->getParam("id");
