@@ -128,6 +128,31 @@ define([
   script.type = 'text/javascript';
   script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
   $("head").append(script);
+
+  var button1 = document.createElement('button');
+  button1.style.display='none';
+  button1.id = 'closeclick';
+  button1.textContent = 'set overlay closeClick to false';
+  $("body").append(button1);
+
+  var button2 = document.createElement('button');
+  button2.style.display='none';
+  button2.id = 'closeiframebtn';
+  button2.textContent = 'set overlay closeClick to false';
+  $("body").append(button2);
+
+  var div1 = document.createElement('div');
+  div1.classList = 'fancy-box-container';
+  $("body").append(div1);
+
+  var a1 = document.createElement('a');
+  a1.id = 'fancy';
+  a1.style.display='none';
+  a1.classList= 'fancy-box';
+  a1.textContent ='open fancybox';
+  a1.href='';
+  $(div1).append(a1);
+
   openIframeSpotiiCheckout(url);
   };
   
@@ -137,11 +162,9 @@ define([
     console.log(typeof fancy, typeof openIFrame);
     if (fancy && fancy.openIFrame)
     {fancy.openIFrame();}
-    else {openIFrame();}
-    
+    else {openIFrame();} 
   };
   
-
       var url = mageUrl.build("spotiipay/standard/redirect");
      
       $.ajax({
