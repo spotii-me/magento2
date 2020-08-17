@@ -30,7 +30,7 @@ class completeURL extends SpotiiPay
     try{
 
         //$orderId = $this->getRequest()->getParam("id");
-       $order=$this->getOrder();
+      /* $order=$this->getOrder();
        $orderId = $order->getId();
        $this->spotiiHelper->logSpotiiActions("orderId: " . $orderId);
        //$reference = $order->getPayment()->getAdditionalInformation('spotii_order_id');
@@ -41,9 +41,11 @@ class completeURL extends SpotiiPay
        $order1 = $this->_orderFactory->create()->loadByIncrementId($orderId1);
        $this->spotiiHelper->logSpotiiActions("orderId1: " . $orderId1);
        $reference1 = $this->getRequest()->getParam("magento_spotii_id"); 
-       $this->spotiiHelper->logSpotiiActions("reference1: " . $reference1);
+       $this->spotiiHelper->logSpotiiActions("reference1: " . $reference1);*/
+       $url =$this->apiPayloadBuilder->getCompleteUrlUniv();
+       $this->spotiiHelper->logSpotiiActions("URLComplete: " . $url);
 
-       return "";
+       return $url;
 
 
     }catch (\Exception $e) {
