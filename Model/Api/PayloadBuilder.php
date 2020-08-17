@@ -96,7 +96,7 @@ class PayloadBuilder
     
     public function getCompleteUrlUniv(){
 
-        return $completeUrlUniv;
+        return $this->completeUrlUniv;
     }
     /**
      * Build Order Payload
