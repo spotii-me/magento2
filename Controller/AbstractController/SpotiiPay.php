@@ -10,7 +10,7 @@ namespace Spotii\Spotiipay\Controller\AbstractController;
 use Magento\Framework\App\Action\Action;
 use Magento\Sales\Model\Order;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
-
+use Spotii\Spotiipay\Model\Api\ConfigInterface;
 /**
  * Class Spotiipay
  * @package Spotii\Spotiipay\Controller\AbstractController
@@ -92,6 +92,8 @@ abstract class SpotiiPay extends Action
      */
     protected $spotiiApiIdentity;
 
+
+    protected $spotiiApiConfig;
     /**
      * Spotiipay constructor.
      * @param \Magento\Framework\App\Action\Context $context
@@ -131,7 +133,8 @@ abstract class SpotiiPay extends Action
         \Magento\Quote\Model\QuoteManagement $quoteManagement,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
-        SpotiiApiConfigInterface $spotiiApiIdentity
+        SpotiiApiConfigInterface $spotiiApiIdentity,
+        ConfigInterface $spotiiApiConfig
     )
     {
         $this->_customerSession = $customerSession;
@@ -152,6 +155,7 @@ abstract class SpotiiPay extends Action
         $this->_orderSender = $orderSender;
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->spotiiApiIdentity = $spotiiApiIdentity;
+        $this->spotiiApiConfig = $spotiiApiConfig;
         parent::__construct($context);
     }
 

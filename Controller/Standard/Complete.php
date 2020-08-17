@@ -70,10 +70,10 @@ private $jsonResult;
                 $e->getMessage()
             );
         }
-        //$this->_redirect($redirect);
-        $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $redirect]);
-        $jsonResult = $this->_resultJsonFactory->create();
-        $jsonResult->setData($json);
-        return $jsonResult;
+        $this->_redirect($redirect);
+       // $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $redirect]);
+      // $jsonResult = $this->_resultJsonFactory->create();
+       // $jsonResult->setData($json);
+      //  return $jsonResult;
     }
 }

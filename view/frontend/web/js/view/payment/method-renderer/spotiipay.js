@@ -150,7 +150,7 @@ define([
     switch (status) {
       case successCheckOutStatus: {
         console.log('successCheckOutStatus');
-        var completeURL =mageUrl.build("spotiipay/standard/complete");
+        var completeURL =mageUrl.build("spotiipay/standard/completeURL");
         console.log("completeURL "+completeURL);
         location.href = completeURL.redirectURL;
         break;
