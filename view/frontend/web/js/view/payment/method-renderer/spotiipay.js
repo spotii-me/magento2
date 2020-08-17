@@ -4,19 +4,7 @@
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
 
-var renderPopup= function (url) {
-  console.log("renderPopup");
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
-  $("head").append(script);
-  openIframeSpotiiCheckout(url);
-  };
-var openIframeSpotiiCheckout= function(checkoutUrl) {
-    console.log("openIframeSpotiiCheckout");
-    $('.fancy-box').attr('href', checkoutUrl);
-    openIFrame();
-  };
+
 define([
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/resource-url-manager",
@@ -123,6 +111,30 @@ define([
 
     redirectToSpotiipayController: function (data) {
       // Make a post request to redirect
+      var LoadCSS = function (filename) {
+        var fileref = document.createElement("link");
+        fileref.setAttribute("rel", "stylesheet");
+        fileref.setAttribute("type", "text/css");
+        fileref.setAttribute("href", filename);
+        console.log(fileref);
+        $("head").append(fileref);
+      };
+    var renderPopup= function (url) {
+  console.log("renderPopup");
+  LoadCSS("https://widget.spotii.me/v1/javascript/fancybox-2.0.min.css");
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
+  $("head").append(script);
+
+  openIframeSpotiiCheckout(url);
+  };var openIframeSpotiiCheckout= function(checkoutUrl) {
+    console.log("openIframeSpotiiCheckout");
+    $('.fancy-box').attr('href', checkoutUrl);
+    openIFrame();
+  };
+
+
       var url = mageUrl.build("spotiipay/standard/redirect");
      
       $.ajax({
