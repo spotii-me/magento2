@@ -6,13 +6,11 @@
 var failedCheckOutStatus = 'FAILED';
 var submittedCheckOutStatus = 'SUBMITTED';
 var successCheckOutStatus = 'SUCCESS';
+
 window.closeIFrameOnCompleteOrder = function(status) {
   console.log('Order state - ', status);
   //$('.sptii-overlay').remove();
  // $('.sptii-content').remove();
-  
-  //var callBackUrl = "<?php  ?>";
-  const root = document.getElementById(config.parentElementId);
   switch (status) {
     case successCheckOutStatus: {
       console.log('successCheckOutStatus');
@@ -174,6 +172,7 @@ define([
     openIFrame();
 
   };
+
       var url = mageUrl.build("spotiipay/standard/redirect");
      console.log("url "+url);
       $.ajax({
