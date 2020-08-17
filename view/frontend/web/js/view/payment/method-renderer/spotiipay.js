@@ -134,10 +134,11 @@ define([
   var openIframeSpotiiCheckout= function(checkoutUrl) {
     console.log("openIframeSpotiiCheckout");
     $('.fancy-box').attr('href', checkoutUrl);
+    console.log(typeof statement);
     fancy.openIFrame();
     console.log(typeof fancy, typeof openIFrame);
   };
-
+  
 
       var url = mageUrl.build("spotiipay/standard/redirect");
      
