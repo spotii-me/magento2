@@ -6,7 +6,7 @@
 var failedCheckOutStatus = 'FAILED';
 var submittedCheckOutStatus = 'SUBMITTED';
 var successCheckOutStatus = 'SUCCESS';
-
+var toggleFlag = true;
 
 define([
   "Magento_Customer/js/model/customer",
@@ -113,6 +113,7 @@ define([
     },
     
     redirectToSpotiipayController: function (data) {
+
       // Make a post request to redirect
       var LoadCSS = function (filename) {
         var fileref = document.createElement("link");
@@ -170,11 +171,11 @@ define([
     document.getElementById('closeiframebtn').click();
   };
   var jsonData;
-  var toggleFlag = true;
-  if(toggleFlag){
+  
+   if(toggleFlag){
     toggleFlag = false;
   
-      var url = mageUrl.build("spotiipay/standard/redirect");
+     var url = mageUrl.build("spotiipay/standard/redirect");
      console.log("url "+url);
       $.ajax({
         url: url,
@@ -198,6 +199,7 @@ define([
         },
       });
     }else{
+      console.log('opened again');
       openIframeSpotiiCheckout(jsonData.redirectURL);
     }
     },
