@@ -170,7 +170,7 @@ define([
     },
     
     redirectToSpotiipayController: function (data) {
-      showOverlay();
+      
       // Make a post request to redirect
       var LoadCSS = function (filename) {
         var fileref = document.createElement("link");
@@ -295,7 +295,7 @@ define([
     },
 
     placeOrder: function (data, event) {
-      
+      showOverlay();
       this.continueToSpotiipay();
     },
   });
