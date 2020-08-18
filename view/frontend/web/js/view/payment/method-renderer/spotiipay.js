@@ -101,7 +101,6 @@ define([
           return "Error";
         });
     },
-
     /**
      * Get Checkout Message based on the currency
      * @returns {*}
@@ -113,10 +112,8 @@ define([
         return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
     },
     
-
     redirectToSpotiipayController: function (data) {
       // Make a post request to redirect
-      
       var LoadCSS = function (filename) {
         var fileref = document.createElement("link");
         fileref.setAttribute("rel", "stylesheet");
@@ -135,11 +132,9 @@ define([
 
       openIframeSpotiiCheckout(url);
       };
-
   var openIframeSpotiiCheckout= function(checkoutUrl) {
     console.log("openIframeSpotiiCheckout");
     $('.fancy-box').attr('href', checkoutUrl);
-    console.log(typeof fancy, typeof openIFrame);
     openIFrame();
   };
   window.closeIFrameOnCompleteOrder = function(message) {
@@ -174,13 +169,19 @@ define([
     }
     document.getElementById('closeiframebtn').click();
   };
+  var toggleFlag = true;
+  var data1;
+  if(toggleFlag){
+    data1=data;
+    toggleFlag = false;
+  }
       var url = mageUrl.build("spotiipay/standard/redirect");
      console.log("url "+url);
       $.ajax({
         url: url,
         method: "post",
         showLoader: true,
-        data: data,
+        data: data1,
         success: function (response) {
           // Send this response to spotii api
           // This would redirect to spotii
@@ -198,8 +199,6 @@ define([
         },
       });
     },
-
-    
     handleRedirectAction: function () {
       var data = $("#co-shipping-form").serialize();
       if (!customer.isLoggedIn()) {
