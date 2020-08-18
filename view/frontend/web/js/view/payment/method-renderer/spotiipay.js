@@ -3,6 +3,12 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
+function isMobileSafari() {
+  const ua = (window && window.navigator && window.navigator.userAgent) || '';
+  const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
+  const webkit = !!ua.match(/WebKit/i);
+  return iOS && webkit && !ua.match(/CriOS/i);
+}
 function createElement(tagName, attributes, content) {
   const el = document.createElement(tagName);
 
