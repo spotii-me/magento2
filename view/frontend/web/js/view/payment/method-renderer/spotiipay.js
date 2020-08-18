@@ -200,8 +200,9 @@ define([
         },
       });
     }else{
-      console.log('opened again');
-      openIframeSpotiiCheckout(jsonData.redirectURL);
+      console.log('opened again '+jsonData.redirectURL);
+      $('.fancy-box').open(jsonData.redirectURL);
+      //openIframeSpotiiCheckout(jsonData.redirectURL);
     }
     },
     handleRedirectAction: function () {
