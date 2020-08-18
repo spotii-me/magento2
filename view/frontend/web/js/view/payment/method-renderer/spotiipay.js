@@ -142,7 +142,7 @@ define([
     console.log(typeof fancy, typeof openIFrame);
     openIFrame();
   };
-  window.closeIFrameOnCompleteOrder = function(status, completeUrl) {
+  window.closeIFrameOnCompleteOrder = function(status, completeUrl, rejectUrl) {
     console.log('Order state - ', status);
     console.log('Order complete URL - ', completeUrl);
   
@@ -155,6 +155,7 @@ define([
       case failedCheckOutStatus: {
         //root.appendChild(DisableCheckout(status));
         console.log('failedCheckOutStatus');
+        location.href = rejectUrl; 
         break;
       }
       case submittedCheckOutStatus: {
