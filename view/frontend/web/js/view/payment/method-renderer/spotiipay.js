@@ -309,6 +309,7 @@ define([
     },
 
     continueToSpotiipay: function () {
+      showOverlay();
       if (
         this.validate() &&
         additionalValidators.validate() &&
