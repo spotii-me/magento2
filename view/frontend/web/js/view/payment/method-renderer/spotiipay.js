@@ -8,7 +8,7 @@ var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
 button1.textContent = 'set overlay closeClick to false';
-button1.onclick=removeOverlay();
+//button1.onclick=removeOverlay();
 var bodyTag=document.getElementsByTagName('body')[0];
 bodyTag.appendChild(button1);
 
@@ -16,7 +16,7 @@ var button2 = document.createElement('button');
 button2.style.display='none';
 button2.id = 'closeiframebtn';
 button2.textContent = 'set overlay closeClick to false';
-button2.onclick=removeOverlay();
+//button2.onclick=removeOverlay();
 bodyTag.appendChild(button2);
 
 var div1 = document.createElement('div');
@@ -31,12 +31,12 @@ a1.textContent ='open fancybox';
 a1.href='';
 div1.appendChild(a1);
 
-function isMobileSafari() {
+/*function isMobileSafari() {
   const ua = (window && window.navigator && window.navigator.userAgent) || '';
   const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
   const webkit = !!ua.match(/WebKit/i);
   return iOS && webkit && !ua.match(/CriOS/i);
-}
+}*/
 function createElement(tagName, attributes, content) {
   const el = document.createElement(tagName);
 
@@ -211,7 +211,7 @@ define([
       var renderPopup= function (url) {
       console.log("renderPopup");
       LoadCSS("https://widget.spotii.me/v1/javascript/fancybox-2.0.min.css");
-      LoadCSS("/inline.css");
+      LoadCSS("view/frontend/web/js/view/payment/method-renderer/inline.css");
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
