@@ -200,8 +200,11 @@ define([
         },
       });
     }else{
+      var fancybox = $('.fancy-box');
       console.log('opened again '+jsonData.redirectURL);
-      $('.fancy-box').open(jsonData.redirectURL);
+      $.fancybox.open(jsonData.redirectURL);
+      console.log('done');
+
       //openIframeSpotiiCheckout(jsonData.redirectURL);
     }
     },
