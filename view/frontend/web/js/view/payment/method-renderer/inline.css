@@ -1,0 +1,62 @@
+@-webkit-keyframes sptiianimloading {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+@keyframes sptiianimloading {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg)
+    }
+}
+.sptii-overlay {
+    z-index:1000;
+    width: auto;
+    height: auto;
+    background: rgba(0, 0, 0, 0.88);
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.sptii-overlay .sptii-loading-icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-top: -0.125em;
+    -webkit-animation: sptiianimloading 1s linear infinite;
+    animation: sptiianimloading 1s linear infinite;
+}
+.sptii-overlay .sptii-loading-icon svg {
+    display: inline-block;
+}
+.sptii-overlay .sptii-loading {
+    width: 24px;
+    /* margin: 16px auto; */
+    padding: 16px;
+}
+.sptii-overlay .sptii-loading .sptii-loading-icon {
+    width: 24px;
+    height: 24px;
+}
+
+
+.sptii-overlay .sptii-logo svg { width: 20em; height: 10em;}
+.sptii-overlay .sptii-spinnerText {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.sptii-overlay .sptii-text {
+    color: #858585;
+    font-family: Overpass,sans-serif;
+    font-size: large;
+}

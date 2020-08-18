@@ -50,7 +50,7 @@ function showOverlay() {
   overlay.appendChild(SpinTextNode());
 }
 function removeOverlay() {
-  const overlay=document.getElementsByClassName("sptii-overlay")[0];
+  var overlay = document.getElementsByClassName("sptii-overlay")[0];
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
 
@@ -164,7 +164,7 @@ define([
     },
     
     redirectToSpotiipayController: function (data) {
-
+      showOverlay();
       // Make a post request to redirect
       var LoadCSS = function (filename) {
         var fileref = document.createElement("link");
@@ -177,6 +177,7 @@ define([
       var renderPopup= function (url) {
       console.log("renderPopup");
       LoadCSS("https://widget.spotii.me/v1/javascript/fancybox-2.0.min.css");
+      LoadCSS("/inline.css");
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
@@ -288,7 +289,7 @@ define([
     },
 
     placeOrder: function (data, event) {
-      showOverlay();
+      
       this.continueToSpotiipay();
     },
   });
