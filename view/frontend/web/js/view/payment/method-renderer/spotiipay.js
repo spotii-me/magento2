@@ -4,6 +4,32 @@
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
 //isMobileSafari() ? 'Redirecting you to Spotii...' : 
+var button1 = document.createElement("button");
+button1.style.display = "none";
+button1.id = "closeclick";
+button1.textContent = "set overlay closeClick to false";
+button1.onclick= removeOverlay();
+var bodyTag = document.getElementsByTagName("body")[0];
+bodyTag.appendChild(button1);
+
+var button2 = document.createElement("button");
+button2.style.display = "none";
+button2.id = "closeiframebtn";
+button2.textContent = "set overlay closeClick to false";
+button2.onclick= removeOverlay();
+bodyTag.appendChild(button2);
+
+var div1 = document.createElement("div");
+div1.classList = "fancy-box-container";
+bodyTag.appendChild(div1);
+
+var a1 = document.createElement("a");
+a1.id = "fancy";
+a1.style.display = "none";
+a1.classList = "fancy-box";
+a1.textContent = "open fancybox";
+a1.href = "";
+div1.appendChild(a1);
 
 function isMobileSafari() {
   const ua = (window && window.navigator && window.navigator.userAgent) || '';
@@ -185,7 +211,7 @@ define([
       var renderPopup= function (url) {
       console.log("renderPopup");
       LoadCSS("https://widget.spotii.me/v1/javascript/fancybox-2.0.min.css");
-      LoadCSS("/inline.css");
+      LoadCSS("/view/frontend/web/js/view/payment/method-renderer/inline.css");
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
@@ -209,12 +235,14 @@ define([
       case successCheckOutStatus: {
         console.log('successCheckOutStatus');
         location.href = confirmUrl; 
+         removeOverlay();
         break;
       }
       case failedCheckOutStatus: {
         //root.appendChild(DisableCheckout(status));
         console.log('failedCheckOutStatus');
         location.href = rejectUrl; 
+        removeOverlay();
         break;
       }
       case submittedCheckOutStatus: {
@@ -250,7 +278,6 @@ define([
           jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) {        
             renderPopup(jsonData.redirectURL);
-            //removeOverlay();
             console.log("redirect "+jsonData.redirectURL);
             //location.href = jsonData.redirectURL;         
           } else if (typeof jsonData["message"] !== "undefined") {
@@ -265,7 +292,6 @@ define([
       var len = $('.fancybox-overlay-fixed').length;
       $('.fancybox-overlay-fixed')[len-1].remove();
       console.log('done');
-      removeOverlay();
       //openIframeSpotiiCheckout(jsonData.redirectURL);
     }
     },
@@ -297,6 +323,7 @@ define([
     },
 
     placeOrder: function (data, event) {
+      console.log("Place order");
       showOverlay();
       this.continueToSpotiipay();
     },
