@@ -3,6 +3,8 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
+//isMobileSafari() ? 'Redirecting you to Spotii...' : 
+
 function isMobileSafari() {
   const ua = (window && window.navigator && window.navigator.userAgent) || '';
   const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
@@ -40,7 +42,7 @@ function Logo() {
   return span;
 }
 function SpinTextNode() {
-  const text = isMobileSafari() ? 'Redirecting you to Spotii...' : 'Checking your payment status with Spotii...';
+  const text = 'Checking your payment status with Spotii...';
   const first= createElement('p', {}, text);
   const cont = createElement('span', {className: 'sptii-text'}, first);
   const spinner = createElement('span', { className: 'sptii-loading' }, Spinner());
@@ -248,7 +250,7 @@ define([
           jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) {        
             renderPopup(jsonData.redirectURL);
-            removeOverlay();
+            //removeOverlay();
             console.log("redirect "+jsonData.redirectURL);
             //location.href = jsonData.redirectURL;         
           } else if (typeof jsonData["message"] !== "undefined") {
