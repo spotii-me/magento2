@@ -7,7 +7,7 @@ var failedCheckOutStatus = 'FAILED';
 var submittedCheckOutStatus = 'SUBMITTED';
 var successCheckOutStatus = 'SUCCESS';
 var toggleFlag = true;
-
+var jsonData;
 define([
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/resource-url-manager",
@@ -170,10 +170,10 @@ define([
     }
     document.getElementById('closeiframebtn').click();
   };
-  var jsonData;
+
   
    if(toggleFlag){
-    toggleFlag = false;
+
   
      var url = mageUrl.build("spotiipay/standard/redirect");
      console.log("url "+url);
@@ -183,6 +183,7 @@ define([
         showLoader: true,
         data: data,
         success: function (response) {
+          toggleFlag = false;
           // Send this response to spotii api
           // This would redirect to spotii
          console.log("response "+response);
