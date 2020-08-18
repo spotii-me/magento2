@@ -200,9 +200,9 @@ define([
         },
       });
     }else{
-      var fancybox = $('.fancy-box');
-      console.log('opened again '+jsonData.redirectURL);
-      $.fancybox.open(jsonData.redirectURL);
+      openIFrame();
+      var len = $('.fancybox-overlay-fixed').length;
+      $('.fancybox-overlay-fixed')[len-1].remove();
       console.log('done');
 
       //openIframeSpotiiCheckout(jsonData.redirectURL);
