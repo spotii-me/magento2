@@ -142,14 +142,17 @@ define([
     console.log(typeof fancy, typeof openIFrame);
     openIFrame();
   };
-  window.closeIFrameOnCompleteOrder = function(status, completeUrl, rejectUrl) {
+  window.closeIFrameOnCompleteOrder = function(message) {
+    var status = message.status;
+    var rejectUrl = message.rejectUrl;
+    var confirmUrl = message.confirmUrl;
     console.log('Order state - ', status);
-    console.log('Order complete URL - ', completeUrl);
-  
+    console.log('Order confirmUrl URL - ', confirmUrl);
+
     switch (status) {
       case successCheckOutStatus: {
         console.log('successCheckOutStatus');
-        location.href = completeUrl; 
+        location.href = confirmUrl; 
         break;
       }
       case failedCheckOutStatus: {
