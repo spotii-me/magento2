@@ -3,6 +3,7 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
+window.onload=showOverlay();
 //isMobileSafari() ? 'Redirecting you to Spotii...' : 
 var button1 = document.createElement('button');
 button1.style.display='none';
