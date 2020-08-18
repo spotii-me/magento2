@@ -169,24 +169,23 @@ define([
     }
     document.getElementById('closeiframebtn').click();
   };
+  var jsonData;
   var toggleFlag = true;
-  var data1;
   if(toggleFlag){
-    data1=data;
     toggleFlag = false;
-  }
+  
       var url = mageUrl.build("spotiipay/standard/redirect");
      console.log("url "+url);
       $.ajax({
         url: url,
         method: "post",
         showLoader: true,
-        data: data1,
+        data: data,
         success: function (response) {
           // Send this response to spotii api
           // This would redirect to spotii
          console.log("response "+response);
-          var jsonData = $.parseJSON(response);
+          jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) {       
             renderPopup(jsonData.redirectURL);
             console.log("redirect "+jsonData.redirectURL);
@@ -198,6 +197,9 @@ define([
           }
         },
       });
+    }else{
+      openIframeSpotiiCheckout(jsonData.redirectURL);
+    }
     },
     handleRedirectAction: function () {
       var data = $("#co-shipping-form").serialize();
