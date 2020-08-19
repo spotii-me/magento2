@@ -3,7 +3,7 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
-
+const root=document.getElementById('spotii-checkout-status');
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
