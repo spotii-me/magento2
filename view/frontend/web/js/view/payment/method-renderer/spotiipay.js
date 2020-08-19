@@ -5,7 +5,7 @@
  */
 //id="spotiipay-method"
 //spotii-checkout-status
-const root=document.getElementById('spotiipay-method');
+const root=document.getElementsByTagName('body')[0];
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
