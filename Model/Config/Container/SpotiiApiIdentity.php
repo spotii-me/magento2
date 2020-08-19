@@ -23,11 +23,9 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
 
     private $checkoutUrlLive = "https://api.spotii.me";
     private $checkoutUrlSandbox = "https://api.sandbox.spotii.me";
-    private $checkoutUrlDev = "https://api.dev.spotii.me";
 
     private $authUrlLive = "https://auth.spotii.me";
     private $authtUrlSandbox = "https://auth.sandbox.spotii.me";
-    private $authtUrlDev = "https://auth.dev.spotii.me";
 
 
 
@@ -100,9 +98,6 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
             case 'sandbox':
                 return $this->checkoutUrlSandbox;
                 break;
-            case 'prod':
-                return $this->checkoutUrlDev;
-                break;
             default:
                 break;
         }
@@ -120,9 +115,6 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
                 break;
             case 'sandbox':
                 return $this->authtUrlSandbox;
-                break;
-            case 'prod':
-                return $this->authtUrlDev;
                 break;
             default:
                 break;
