@@ -48,6 +48,11 @@ const thirdPartySupported = root => {
     root.appendChild(frame);
   });
 };
+const redirectToSpotiiCheckout = function(checkoutUrl, timeout) {
+  setTimeout(function() {
+    window.location = checkoutUrl;
+  }, timeout); // 'milli-seconds'
+};
 function isMobileSafari() {
   const ua = (window && window.navigator && window.navigator.userAgent) || '';
   const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
