@@ -3,7 +3,7 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
-//isMobileSafari() ? 'Redirecting you to Spotii...' : 
+
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
@@ -31,12 +31,18 @@ a1.textContent ='open fancybox';
 a1.href='';
 div1.appendChild(a1);
 
-/*function isMobileSafari() {
+var redirectToSpotiiCheckout = function(checkoutUrl, timeout) {
+  setTimeout(function() {
+    window.location = checkoutUrl;
+  }, timeout); // 'milli-seconds'
+};
+
+function isMobileSafari() {
   const ua = (window && window.navigator && window.navigator.userAgent) || '';
   const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
   const webkit = !!ua.match(/WebKit/i);
   return iOS && webkit && !ua.match(/CriOS/i);
-}*/
+}
 function createElement(tagName, attributes, content) {
   const el = document.createElement(tagName);
 
@@ -68,7 +74,7 @@ function Logo() {
   return span;
 }
 function SpinTextNode() {
-  const text = 'Checking your payment status with Spotii...';
+  const text = isMobileSafari() ? 'Redirecting you to Spotii...' : 'Checking your payment status with Spotii...';
   const first= createElement('p', {}, text);
   const cont = createElement('span', {className: 'sptii-text'}, first);
   const spinner = createElement('span', { className: 'sptii-loading' }, Spinner());
@@ -278,10 +284,14 @@ define([
           // This would redirect to spotii
          console.log("response "+response);
           jsonData = $.parseJSON(response);
-          if (jsonData.redirectURL) {        
+          if (jsonData.redirectURL) { 
+            if (isMobileSafari()) {
+              console.log("redirect "+jsonData.redirectURL);
+              redirectToSpotiiCheckout(jsonData.redirectURL,200);
+            } else  {
             renderPopup(jsonData.redirectURL);
-            console.log("redirect "+jsonData.redirectURL);
-            //location.href = jsonData.redirectURL;         
+            console.log("popup "+jsonData.redirectURL);
+          }       
           } else if (typeof jsonData["message"] !== "undefined") {
             globalMessageList.addErrorMessage({
               message: jsonData["message"],
