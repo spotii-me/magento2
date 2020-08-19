@@ -4,7 +4,6 @@
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
 
-const iOSSafari = iOS && webkit && !ua.match(/CriOS/i);
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
@@ -32,12 +31,23 @@ a1.textContent ='open fancybox';
 a1.href='';
 div1.appendChild(a1);
 
-var redirectToSpotiiCheckout = function(checkoutUrl, timeout) {
-  setTimeout(function() {
-    window.location = checkoutUrl;
-  }, timeout); // 'milli-seconds'
+const thirdPartySupported = root => {
+  return new Promise((resolve, reject) => {
+    const receiveMessage = function(evt) {
+      if (evt.data === 'MM:3PCunsupported') {
+        reject();
+      } else if (evt.data === 'MM:3PCsupported') {
+        resolve();
+      }
+    };
+    window.addEventListener('message', receiveMessage, false);
+    const frame = createElement('iframe', {
+      src: 'https://mindmup.github.io/3rdpartycookiecheck/start.html',
+    });
+    frame.style.display = 'none';
+    root.appendChild(frame);
+  });
 };
-
 function isMobileSafari() {
   const ua = (window && window.navigator && window.navigator.userAgent) || '';
   const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
@@ -286,12 +296,15 @@ define([
          console.log("response "+response);
           jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) { 
-            if (isMobileSafari() || iOSSafari) {
+            if (isMobileSafari()) {
               console.log("redirect "+jsonData.redirectURL);
-              redirectToSpotiiCheckout(jsonData.redirectURL,200);
+              redirectToSpotiiCheckout(jsonData.redirectURL,2500);
             } else  {
+            thirdPartySupported(root).then( () => {
             renderPopup(jsonData.redirectURL);
-            console.log("popup "+jsonData.redirectURL);
+            console.log("popup "+jsonData.redirectURL);}).catch(() => {
+              redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
+            });
           }       
           } else if (typeof jsonData["message"] !== "undefined") {
             globalMessageList.addErrorMessage({
