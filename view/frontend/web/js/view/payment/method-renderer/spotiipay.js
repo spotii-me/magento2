@@ -4,6 +4,7 @@
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
 
+const iOSSafari = iOS && webkit && !ua.match(/CriOS/i);
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
@@ -74,7 +75,7 @@ function Logo() {
   return span;
 }
 function SpinTextNode() {
-  const text = isMobileSafari() ? 'Redirecting you to Spotii...' : 'Checking your payment status with Spotii...';
+  const text = isMobileSafari() || iOSSafari ? 'Redirecting you to Spotii...' : 'Checking your payment status with Spotii...';
   const first= createElement('p', {}, text);
   const cont = createElement('span', {className: 'sptii-text'}, first);
   const spinner = createElement('span', { className: 'sptii-loading' }, Spinner());
@@ -285,7 +286,7 @@ define([
          console.log("response "+response);
           jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) { 
-            if (isMobileSafari()) {
+            if (isMobileSafari() || iOSSafari) {
               console.log("redirect "+jsonData.redirectURL);
               redirectToSpotiiCheckout(jsonData.redirectURL,200);
             } else  {
