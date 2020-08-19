@@ -90,7 +90,7 @@ function Logo() {
   return span;
 }
 function SpinTextNode() {
-  const text = isMobileSafari() || iOSSafari ? 'Redirecting you to Spotii...' : 'Checking your payment status with Spotii...';
+  const text = isMobileSafari() ? 'Redirecting you to Spotii...' : 'Checking your payment status with Spotii...';
   const first= createElement('p', {}, text);
   const cont = createElement('span', {className: 'sptii-text'}, first);
   const spinner = createElement('span', { className: 'sptii-loading' }, Spinner());
@@ -307,7 +307,9 @@ define([
             } else  {
             thirdPartySupported(root).then( () => {
             renderPopup(jsonData.redirectURL);
-            console.log("popup "+jsonData.redirectURL);}).catch(() => {
+            console.log("popup "+jsonData.redirectURL);
+          })
+            .catch(() => {
               redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
             });
           }       
