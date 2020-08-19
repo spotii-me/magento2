@@ -229,11 +229,11 @@ define([
         fileref.setAttribute("rel", "stylesheet");
         fileref.setAttribute("type", "text/css");
         fileref.setAttribute("href", filename);
-        console.log(fileref);
+        //console.log(fileref);
         $("head").append(fileref);
       };
       var renderPopup= function (url) {
-      console.log("renderPopup");
+      //console.log("renderPopup");
       LoadCSS("https://widget.spotii.me/v1/javascript/fancybox-2.0.min.css");
       LoadCSS("view/frontend/web/js/view/payment/method-renderer/inline.css");
       var script = document.createElement('script');
@@ -244,7 +244,7 @@ define([
       openIframeSpotiiCheckout(url);
       };
   var openIframeSpotiiCheckout= function(checkoutUrl) {
-    console.log("openIframeSpotiiCheckout");
+    //console.log("openIframeSpotiiCheckout");
     $('.fancy-box').attr('href', checkoutUrl);
     openIFrame();
   };
@@ -252,32 +252,32 @@ define([
     var status = message.status;
     var rejectUrl = message.rejectUrl;
     var confirmUrl = message.confirmUrl;
-    console.log('Order state - ', status);
-    console.log('Order confirmUrl URL - ', confirmUrl);
+    //console.log('Order state - ', status);
+   // console.log('Order confirmUrl URL - ', confirmUrl);
 
     switch (status) {
       case successCheckOutStatus: {
-        console.log('successCheckOutStatus');
+       // console.log('successCheckOutStatus');
         location.href = confirmUrl; 
         removeOverlay();
         break;
       }
       case failedCheckOutStatus: {
         //root.appendChild(DisableCheckout(status));
-        console.log('failedCheckOutStatus');
+      //  console.log('failedCheckOutStatus');
         location.href = rejectUrl; 
         removeOverlay();
         break;
       }
       case submittedCheckOutStatus: {
         //root.appendChild(DisableCheckout(status));
-        console.log('submittedCheckOutStatus');
+       // console.log('submittedCheckOutStatus');
         removeOverlay();
         break;
       }
       default: {
         //root.appendChild(NetworkError());
-        console.log('None status ');
+      //  console.log('None status ');
         removeOverlay();
         break;
       }
@@ -290,7 +290,7 @@ define([
 
   
      var url = mageUrl.build("spotiipay/standard/redirect");
-     console.log("url "+url);
+     //console.log("url "+url);
       $.ajax({
         url: url,
         method: "post",
@@ -300,16 +300,16 @@ define([
           toggleFlag = false;
           // Send this response to spotii api
           // This would redirect to spotii
-         console.log("response "+response);
+       //  console.log("response "+response);
           jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) { 
             if (isMobileSafari()) {
-              console.log("redirect "+jsonData.redirectURL);
+           //   console.log("redirect "+jsonData.redirectURL);
               redirectToSpotiiCheckout(jsonData.redirectURL,2500);
             } else  {
             thirdPartySupported(root).then( () => {
             renderPopup(jsonData.redirectURL);
-            console.log("popup "+jsonData.redirectURL);
+          //  console.log("popup "+jsonData.redirectURL);
           })
             .catch(() => {
               redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
@@ -326,7 +326,7 @@ define([
       openIFrame();
       var len = $('.fancybox-overlay-fixed').length;
       $('.fancybox-overlay-fixed')[len-1].remove();
-      console.log('done');
+      //console.log('done');
       //openIframeSpotiiCheckout(jsonData.redirectURL);
     }
     },
@@ -336,7 +336,7 @@ define([
         var email = quote.guestEmail;
         data += "&email=" + email;
       }
-      console.log(data);
+      //console.log(data);
       this.redirectToSpotiipayController(data);
     },
 
@@ -353,7 +353,7 @@ define([
 
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
-      console.log("Total Price:", total);
+     // console.log("Total Price:", total);
       if (total > 200) return true;
       else return false;
     },
