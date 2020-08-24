@@ -20,14 +20,54 @@ class Cancel extends SpotiiPay
      */
     public function execute()
     {
-        $order = $this->getOrder();
+     try{
+         
+        //$order = $this->getOrder();
+        $orderId = $this->getRequest()->getParam("id");
+        $reference = $this->getRequest()->getParam("magento_spotii_id");
+        $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
+        $order->setState("cancel")->setStatus("cancel");
+        $order->save();
+        $this->spotiiHelper->logSpotiiActions('items ' . sizeof($order->getAllVisibleItems()));
+        foreach ($order->getAllVisibleItems() as $item) {
+
+            $sku = $item->getSku();
+            $qtyOrdered = $item->getQtyOrdered();
+            $this->spotiiHelper->logSpotiiActions('sku ' . $sku .' Qty ' . $qtyOrdered);
+
+            $stockItem = $this->stockRegistry->getStockItemBySku($sku);
+
+            $qtyInStock= $stockItem->getQty();
+            $finalQty = $qtyInStock +$qtyOrdered;
+
+            $stockItem->setQty($finalQty);
+            $stockItem->setIsInStock((bool)$finalQty);
+            $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
+
+            $this->spotiiHelper->logSpotiiActions('result' . $this->stockRegistry->updateStockItemBySku($sku, $stockItem));
+        }
+        
+        $this->messageManager->addError("Spotiipay Transaction failed");
         $order->registerCancellation("Returned from Spotiipay without completing payment.");
         $this->spotiiHelper->logSpotiiActions(
             "Returned from Spotiipay without completing payment. Order cancelled."
         );
         $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
-            $this->_url->getUrl('checkout')
+            $this->_url->getUrl('checkout/onepage/failure')
+       );
+     }catch (\Magento\Framework\Exception\LocalizedException $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
         );
+      } catch (\Exception $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
+        );
+    }
+
+
     }
 }

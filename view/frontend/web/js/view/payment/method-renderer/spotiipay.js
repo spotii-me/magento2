@@ -3,14 +3,24 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
-//id="spotiipay-method"
-//spotii-checkout-status
+
+var isSuccess = false;
+var isFail = false;
+var isDeclined = false;
+var failedCheckOutStatus = 'FAILED';
+var submittedCheckOutStatus = 'SUBMITTED';
+var successCheckOutStatus = 'SUCCESS';
+var toggleFlag = true;
+var jsonData;
+var rejectUrl;
+var confirmUrl;
 const root=document.getElementsByTagName('body')[0];
+
+//Build fancybox component
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
 button1.textContent = 'set overlay closeClick to false';
-//button1.onclick=removeOverlay();
 var bodyTag=document.getElementsByTagName('body')[0];
 bodyTag.appendChild(button1);
 
@@ -18,7 +28,6 @@ var button2 = document.createElement('button');
 button2.style.display='none';
 button2.id = 'closeiframebtn';
 button2.textContent = 'set overlay closeClick to false';
-//button2.onclick=removeOverlay();
 bodyTag.appendChild(button2);
 
 var div1 = document.createElement('div');
@@ -32,7 +41,9 @@ a1.classList= 'fancy-box';
 a1.textContent ='open fancybox';
 a1.href='';
 div1.appendChild(a1);
+//-----------------
 
+//Check if browser support the popup
 const thirdPartySupported = root => {
   return new Promise((resolve, reject) => {
     const receiveMessage = function(evt) {
@@ -50,17 +61,22 @@ const thirdPartySupported = root => {
     root.appendChild(frame);
   });
 };
+
+//Redirect to Spotii
 const redirectToSpotiiCheckout = function(checkoutUrl, timeout) {
   setTimeout(function() {
     window.location = checkoutUrl;
   }, timeout); // 'milli-seconds'
 };
+//Check if it's a safari broswer
 function isMobileSafari() {
   const ua = (window && window.navigator && window.navigator.userAgent) || '';
   const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
   const webkit = !!ua.match(/WebKit/i);
   return iOS && webkit && !ua.match(/CriOS/i);
 }
+
+//needed functions for the loadin page
 function createElement(tagName, attributes, content) {
   const el = document.createElement(tagName);
 
@@ -100,6 +116,9 @@ function SpinTextNode() {
   spinText.appendChild(spinner);
   return spinText;
 }
+//--------------------
+
+//Show the loading page
 function showOverlay() {
   const overlay = createElement('div', {className: 'sptii-overlay'}, '');
   const logo = createElement('span', { className: 'sptii-logo' }, Logo());
@@ -107,16 +126,100 @@ function showOverlay() {
   overlay.appendChild(logo);
   overlay.appendChild(SpinTextNode());
 }
+
+//Remove the loading page
 function removeOverlay() {
   var overlay = document.getElementsByClassName("sptii-overlay")[0];
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
 
-var failedCheckOutStatus = 'FAILED';
-var submittedCheckOutStatus = 'SUBMITTED';
-var successCheckOutStatus = 'SUCCESS';
-var toggleFlag = true;
-var jsonData;
+//Google tag manager 
+function onCheckout() {
+  dataLayer.push({
+    'event': 'checkout',
+    'ecommerce': {
+      'checkout': {
+        'actionField': {'step': 3, 'option': 'Spotiipay'}
+     }
+    }
+  }
+  );
+  dataLayer.push({
+    'event': 'checkoutOption',
+    'ecommerce': {
+      'checkout_option': {
+        'actionField': {'step': 3, 'option': 'Spotiipay'}
+      }
+    }
+  });
+}
+
+//Handle the response Decline/Accept
+window.closeIFrameOnCompleteOrder = function(message) {
+  var status = message.status;
+  rejectUrl = message.rejectUrl;
+  confirmUrl = message.confirmUrl;
+  //console.log('Order state - ', status);
+  //console.log('Order confirmUrl - ', confirmUrl);
+  //console.log('Order rejectUrl - ', rejectUrl);
+
+  switch (status) {
+    case successCheckOutStatus: {
+      if(!isSuccess){
+        isSuccess = true;
+     // console.log('successCheckOutStatus');
+      var params = confirmUrl.split('/');
+      var reference = params[params.length-2];
+      var ids = reference.split('-');
+      var id = ids[1];
+      dataLayer.push({
+        'event': 'purchase',
+        'ecommerce': {
+          'purchase': {
+            'actionField': {
+              'id': id,                         // Transaction ID. Required for purchases and refunds.
+              'affiliation': 'Spotii',
+            }
+          }
+        }
+      });
+      location.href = confirmUrl; 
+      document.getElementById('closeiframebtn').onclick = function() {
+        closeIFrame();
+        location.href = confirmUrl; 
+      };
+      removeOverlay();
+    }
+      break;
+    }
+    case failedCheckOutStatus: {
+      if(!isFail){
+      isFail = true;
+     // console.log('failedCheckOutStatus');
+      isDeclined = true;
+      document.getElementById('closeiframebtn').onclick = function() {
+        closeIFrame();
+        location.href = rejectUrl; 
+      };
+      removeOverlay();
+      
+    }
+      break;
+    }
+    case submittedCheckOutStatus: {
+     // console.log('submittedCheckOutStatus');
+      removeOverlay();
+      break;
+    }
+    default: {
+     // console.log('None status ');
+      removeOverlay();
+      break;
+    }
+  }
+  //document.getElementById('closeiframebtn').click();
+};
+
 define([
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/resource-url-manager",
@@ -222,20 +325,19 @@ define([
     },
     
     redirectToSpotiipayController: function (data) {
-      
+      if(!isDeclined){
       // Make a post request to redirect
       var LoadCSS = function (filename) {
         var fileref = document.createElement("link");
         fileref.setAttribute("rel", "stylesheet");
         fileref.setAttribute("type", "text/css");
         fileref.setAttribute("href", filename);
-        //console.log(fileref);
+
         $("head").append(fileref);
       };
       var renderPopup= function (url) {
-      //console.log("renderPopup");
+
       LoadCSS("https://widget.spotii.me/v1/javascript/fancybox-2.0.min.css");
-      LoadCSS("view/frontend/web/js/view/payment/method-renderer/inline.css");
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
@@ -243,54 +345,18 @@ define([
 
       openIframeSpotiiCheckout(url);
       };
-  var openIframeSpotiiCheckout= function(checkoutUrl) {
-    //console.log("openIframeSpotiiCheckout");
+
+   var openIframeSpotiiCheckout= function(checkoutUrl) {
+
     $('.fancy-box').attr('href', checkoutUrl);
     openIFrame();
-  };
-  window.closeIFrameOnCompleteOrder = function(message) {
-    var status = message.status;
-    var rejectUrl = message.rejectUrl;
-    var confirmUrl = message.confirmUrl;
-    //console.log('Order state - ', status);
-   // console.log('Order confirmUrl URL - ', confirmUrl);
+   };
 
-    switch (status) {
-      case successCheckOutStatus: {
-       // console.log('successCheckOutStatus');
-        location.href = confirmUrl; 
-        removeOverlay();
-        break;
-      }
-      case failedCheckOutStatus: {
-        //root.appendChild(DisableCheckout(status));
-      //  console.log('failedCheckOutStatus');
-        location.href = rejectUrl; 
-        removeOverlay();
-        break;
-      }
-      case submittedCheckOutStatus: {
-        //root.appendChild(DisableCheckout(status));
-       // console.log('submittedCheckOutStatus');
-        removeOverlay();
-        break;
-      }
-      default: {
-        //root.appendChild(NetworkError());
-      //  console.log('None status ');
-        removeOverlay();
-        break;
-      }
-    }
-    document.getElementById('closeiframebtn').click();
-  };
-
-  
    if(toggleFlag){
-
+    onCheckout();
   
      var url = mageUrl.build("spotiipay/standard/redirect");
-     //console.log("url "+url);
+
       $.ajax({
         url: url,
         method: "post",
@@ -300,16 +366,13 @@ define([
           toggleFlag = false;
           // Send this response to spotii api
           // This would redirect to spotii
-       //  console.log("response "+response);
           jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) { 
             if (isMobileSafari()) {
-           //   console.log("redirect "+jsonData.redirectURL);
               redirectToSpotiiCheckout(jsonData.redirectURL,2500);
             } else  {
             thirdPartySupported(root).then( () => {
             renderPopup(jsonData.redirectURL);
-          //  console.log("popup "+jsonData.redirectURL);
           })
             .catch(() => {
               redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
@@ -326,9 +389,8 @@ define([
       openIFrame();
       var len = $('.fancybox-overlay-fixed').length;
       $('.fancybox-overlay-fixed')[len-1].remove();
-      //console.log('done');
-      //openIframeSpotiiCheckout(jsonData.redirectURL);
-    }
+     }
+     }
     },
     handleRedirectAction: function () {
       var data = $("#co-shipping-form").serialize();
@@ -336,11 +398,12 @@ define([
         var email = quote.guestEmail;
         data += "&email=" + email;
       }
-      //console.log(data);
+
       this.redirectToSpotiipayController(data);
     },
 
     continueToSpotiipay: function () {
+
       showOverlay();
       if (
         this.validate() &&
@@ -353,13 +416,11 @@ define([
 
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
-     // console.log("Total Price:", total);
       if (total > 200) return true;
       else return false;
     },
 
     placeOrder: function (data, event) {
-      showOverlay();
       this.continueToSpotiipay();
     },
   });

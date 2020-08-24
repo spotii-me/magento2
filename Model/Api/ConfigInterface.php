@@ -26,11 +26,11 @@ interface ConfigInterface
      * @param $reference
      * @return mixed
      */
-    public function getCompleteUrl($orderId, $reference);
+    public function getCompleteUrl($orderId, $reference, $quoteId);
 
     /**
      * Get cancel url
      * @return mixed
      */
-    public function getCancelUrl();
+    public function getCancelUrl($orderId, $reference);
 }
