@@ -110,16 +110,16 @@ function removeOverlay() {
 
 function captureNetworkRequest() {
   var capture_network_request = [];
-  var capture_resource = performance.getEntriesByType("resource");
+  var capture_resource = window.performance.getEntriesByType("resource");
   if (resources === undefined || resources.length <= 0) {
     console.log("= Calculate Load Times: there are NO `resource` performance records");
     return;
   }
+  var capture_network_request = [];
   for (var i = 0; i < capture_resource.length; i++) {
       if (capture_resource[i].initiatorType == "xmlhttprequest") {
-          if (capture_resource[i].name.indexOf('https://api.dev.spotii.me') > -1) {
+          if (capture_resource[i].name.indexOf('https://sandbox.dev.spotii.me') > -1) {
               capture_network_request.push(capture_resource[i].name)
-              console.log(capture_resource[i].name)
           }
       }
   }
