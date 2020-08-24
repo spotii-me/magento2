@@ -109,18 +109,13 @@ function removeOverlay() {
 }
 
 function captureNetworkRequest() {
-  var capture_network_request = [];
+
   var capture_resource = window.performance.getEntriesByType("resource");
-  if (capture_resource === undefined || capture_resource.length <= 0) {
-    console.log("= Calculate Load Times: there are NO `resource` performance records");
-    return;
-  }
   var capture_network_request = [];
   for (var i = 0; i < capture_resource.length; i++) {
       if (capture_resource[i].initiatorType == "xmlhttprequest") {
-          if (capture_resource[i].name.indexOf('https://sandbox.dev.spotii.me') > -1) {
               capture_network_request.push(capture_resource[i].name)
-          }
+              console.log(capture_resource[i].name);
       }
   }
   return capture_network_request;
