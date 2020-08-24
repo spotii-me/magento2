@@ -293,10 +293,10 @@ define([
     document.getElementById('closeiframebtn').click();
   };
 
-  window.closeThisIFrame() = function(){
-    console.log("cancelling request");
-    
-  }
+  window.closeThisIFrame = function(){
+    console.log("cancelling request"); 
+    document.getElementById('closeiframebtn').click(); 
+  };
   
    if(toggleFlag){
 
