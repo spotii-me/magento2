@@ -292,7 +292,11 @@ define([
     }
     document.getElementById('closeiframebtn').click();
   };
-  
+
+  window.closeThisIFrame() = function(){
+    console.log("cancelling request");
+    
+  }
   
    if(toggleFlag){
 
