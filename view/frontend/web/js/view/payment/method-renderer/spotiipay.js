@@ -107,7 +107,32 @@ function removeOverlay() {
   var overlay = document.getElementsByClassName("sptii-overlay")[0];
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
+function onCheckout() {
+  var dimensionValue = 'Spotiipay';
+   ga('set', 'dimension1', dimensionValue);
+  dataLayer.push({
+    'event': 'checkout',
+    'ecommerce': {
+      'checkout': {
+        'actionField': {'step': 3, 'option': 'Spotiipay'}
+     }
+    }
+  }
+  );
+  dataLayer.push({
+    'event': 'checkoutOption',
+    'ecommerce': {
+      'checkout_option': {
+        'actionField': {'step': 3, 'option': 'Spotiipay'}
+      }
+    }
+  });
 
+}
+
+/*
+
+ */
 /*function captureNetworkRequest() {
 
   var capture_resource = window.performance.getEntriesByType("resource");
@@ -353,6 +378,7 @@ define([
     },
 
     continueToSpotiipay: function () {
+      onCheckout();
       showOverlay();
       if (
         this.validate() &&
