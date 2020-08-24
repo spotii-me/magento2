@@ -108,7 +108,7 @@ function removeOverlay() {
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
 
-function captureNetworkRequest() {
+/*function captureNetworkRequest() {
 
   var capture_resource = window.performance.getEntriesByType("resource");
   var capture_network_request = [];
@@ -117,9 +117,49 @@ function captureNetworkRequest() {
               console.log(capture_resource[i].name+" "+capture_resource[i].initiatorType);
   }
   return capture_network_request;
-}
+}*/
+window.closeThisIFrame = function(){
+  console.log("cancelling request"); 
+  document.getElementById('closeiframebtn').click(); 
+};
 
-
+window.closeIFrameOnCompleteOrder = function(message) {
+  var status = message.status;
+  var rejectUrl = message.rejectUrl;
+  var confirmUrl = message.confirmUrl;
+  console.log('Order state - ', status);
+  console.log('Order confirmUrl - ', confirmUrl);
+  console.log('Order rejectUrl - ', rejectUrl);
+ captureNetworkRequest();
+  switch (status) {
+    case successCheckOutStatus: {
+      console.log('successCheckOutStatus');
+      location.href = confirmUrl; 
+      removeOverlay();
+      break;
+    }
+    case failedCheckOutStatus: {
+      //root.appendChild(DisableCheckout(status));
+      console.log('failedCheckOutStatus');
+      location.href = rejectUrl; 
+      removeOverlay();
+      break;
+    }
+    case submittedCheckOutStatus: {
+      //root.appendChild(DisableCheckout(status));
+      console.log('submittedCheckOutStatus');
+      removeOverlay();
+      break;
+    }
+    default: {
+      //root.appendChild(NetworkError());
+      console.log('None status ');
+      removeOverlay();
+      break;
+    }
+  }
+  document.getElementById('closeiframebtn').click();
+};
 var failedCheckOutStatus = 'FAILED';
 var submittedCheckOutStatus = 'SUBMITTED';
 var successCheckOutStatus = 'SUCCESS';
@@ -256,48 +296,7 @@ define([
     $('.fancy-box').attr('href', checkoutUrl);
     openIFrame();
   };
-  window.closeIFrameOnCompleteOrder = function(message) {
-    var status = message.status;
-    var rejectUrl = message.rejectUrl;
-    var confirmUrl = message.confirmUrl;
-    console.log('Order state - ', status);
-    console.log('Order confirmUrl URL - ', confirmUrl);
-   captureNetworkRequest();
-    switch (status) {
-      case successCheckOutStatus: {
-       // console.log('successCheckOutStatus');
-        location.href = confirmUrl; 
-        removeOverlay();
-        break;
-      }
-      case failedCheckOutStatus: {
-        //root.appendChild(DisableCheckout(status));
-      //  console.log('failedCheckOutStatus');
-        location.href = rejectUrl; 
-        removeOverlay();
-        break;
-      }
-      case submittedCheckOutStatus: {
-        //root.appendChild(DisableCheckout(status));
-       // console.log('submittedCheckOutStatus');
-        removeOverlay();
-        break;
-      }
-      default: {
-        //root.appendChild(NetworkError());
-        // console.log('None status ');
-        removeOverlay();
-        break;
-      }
-    }
-    document.getElementById('closeiframebtn').click();
-  };
-
-  window.closeThisIFrame = function(){
-    console.log("cancelling request"); 
-    document.getElementById('closeiframebtn').click(); 
-  };
-  
+    
    if(toggleFlag){
 
   
