@@ -3,14 +3,11 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
-//id="spotiipay-method"
-//spotii-checkout-status
 const root=document.getElementsByTagName('body')[0];
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
 button1.textContent = 'set overlay closeClick to false';
-//button1.onclick=removeOverlay();
 var bodyTag=document.getElementsByTagName('body')[0];
 bodyTag.appendChild(button1);
 
@@ -18,7 +15,6 @@ var button2 = document.createElement('button');
 button2.style.display='none';
 button2.id = 'closeiframebtn';
 button2.textContent = 'set overlay closeClick to false';
-//button2.onclick=removeOverlay();
 bodyTag.appendChild(button2);
 
 var div1 = document.createElement('div');
@@ -111,6 +107,25 @@ function removeOverlay() {
   var overlay = document.getElementsByClassName("sptii-overlay")[0];
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
+
+function captureNetworkRequest() {
+  var capture_network_request = [];
+  var capture_resource = performance.getEntriesByType("resource");
+  if (resources === undefined || resources.length <= 0) {
+    console.log("= Calculate Load Times: there are NO `resource` performance records");
+    return;
+  }
+  for (var i = 0; i < capture_resource.length; i++) {
+      if (capture_resource[i].initiatorType == "xmlhttprequest") {
+          if (capture_resource[i].name.indexOf('https://api.dev.spotii.me') > -1) {
+              capture_network_request.push(capture_resource[i].name)
+              console.log(capture_resource[i].name)
+          }
+      }
+  }
+  return capture_network_request;
+}
+
 
 var failedCheckOutStatus = 'FAILED';
 var submittedCheckOutStatus = 'SUBMITTED';
@@ -252,9 +267,9 @@ define([
     var status = message.status;
     var rejectUrl = message.rejectUrl;
     var confirmUrl = message.confirmUrl;
-    //console.log('Order state - ', status);
-   // console.log('Order confirmUrl URL - ', confirmUrl);
-
+    console.log('Order state - ', status);
+    console.log('Order confirmUrl URL - ', confirmUrl);
+   captureNetworkRequest();
     switch (status) {
       case successCheckOutStatus: {
        // console.log('successCheckOutStatus');
@@ -277,14 +292,14 @@ define([
       }
       default: {
         //root.appendChild(NetworkError());
-      //  console.log('None status ');
+        // console.log('None status ');
         removeOverlay();
         break;
       }
     }
     document.getElementById('closeiframebtn').click();
   };
-
+  
   
    if(toggleFlag){
 
@@ -298,6 +313,7 @@ define([
         data: data,
         success: function (response) {
           toggleFlag = false;
+          captureNetworkRequest();
           // Send this response to spotii api
           // This would redirect to spotii
        //  console.log("response "+response);
