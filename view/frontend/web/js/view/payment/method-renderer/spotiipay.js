@@ -111,7 +111,7 @@ function removeOverlay() {
 function captureNetworkRequest() {
   var capture_network_request = [];
   var capture_resource = window.performance.getEntriesByType("resource");
-  if (resources === undefined || resources.length <= 0) {
+  if (capture_resource === undefined || capture_resource.length <= 0) {
     console.log("= Calculate Load Times: there are NO `resource` performance records");
     return;
   }
