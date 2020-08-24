@@ -130,7 +130,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
   console.log('Order state - ', status);
   console.log('Order confirmUrl - ', confirmUrl);
   console.log('Order rejectUrl - ', rejectUrl);
- captureNetworkRequest();
+ //captureNetworkRequest();
   switch (status) {
     case successCheckOutStatus: {
       console.log('successCheckOutStatus');
@@ -309,7 +309,7 @@ define([
         data: data,
         success: function (response) {
           toggleFlag = false;
-          captureNetworkRequest();
+         // captureNetworkRequest();
           // Send this response to spotii api
           // This would redirect to spotii
        //  console.log("response "+response);
