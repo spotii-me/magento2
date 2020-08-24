@@ -159,6 +159,18 @@ window.closeIFrameOnCompleteOrder = function(message) {
   switch (status) {
     case successCheckOutStatus: {
       console.log('successCheckOutStatus');
+      var params = confirmUrl.split('/');
+      var id = params[params.length-2];
+      dataLayer.push({
+        'ecommerce': {
+          'purchase': {
+            'actionField': {
+              'id': id,                         // Transaction ID. Required for purchases and refunds.
+              'affiliation': 'Spotii',
+            }
+          }
+        }
+      });
       location.href = confirmUrl; 
       removeOverlay();
       break;
@@ -166,7 +178,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
     case failedCheckOutStatus: {
       //root.appendChild(DisableCheckout(status));
       console.log('failedCheckOutStatus');
-      location.href = rejectUrl; 
+      location.href = confirmUrl; 
       removeOverlay();
       break;
     }
