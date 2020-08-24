@@ -113,10 +113,8 @@ function captureNetworkRequest() {
   var capture_resource = window.performance.getEntriesByType("resource");
   var capture_network_request = [];
   for (var i = 0; i < capture_resource.length; i++) {
-      if (capture_resource[i].initiatorType == "xmlhttprequest") {
               capture_network_request.push(capture_resource[i].name)
-              console.log(capture_resource[i].name);
-      }
+              console.log(capture_resource[i].name+" "+capture_resource[i].initiatorType);
   }
   return capture_network_request;
 }
