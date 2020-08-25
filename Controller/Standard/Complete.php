@@ -54,6 +54,7 @@ class Complete extends SpotiiPay
 
                 $this->messageManager->addSuccess("Spotiipay Transaction Completed");
                 $redirect = 'checkout/onepage/success';
+                $this->spotiiHelper->logSpotiiActions($redirect);
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
