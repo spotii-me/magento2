@@ -156,11 +156,6 @@ function onCheckout() {
   });
 }
 
-//Close the popup
-window.closeThisIFrame = function(){
-  console.log("cancelling request"); 
-  document.getElementById('closeiframebtn').click(); 
-};
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
@@ -193,7 +188,8 @@ window.closeIFrameOnCompleteOrder = function(message) {
       });
       document.getElementById('closeiframebtn').onclick = function() {
         closeIFrame();
-        location.href = confirmUrl; 
+        var url = mageUrl.build(confirmUrl);
+        location.href = url; 
       };
       removeOverlay();
     }
