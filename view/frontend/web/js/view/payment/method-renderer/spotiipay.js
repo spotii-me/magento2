@@ -7,7 +7,16 @@
 var isSuccess = false;
 var isFail = false;
 var isDeclined = false;
+var failedCheckOutStatus = 'FAILED';
+var submittedCheckOutStatus = 'SUBMITTED';
+var successCheckOutStatus = 'SUCCESS';
+var toggleFlag = true;
+var jsonData;
+var rejectUrl;
+var confirmUrl;
 const root=document.getElementsByTagName('body')[0];
+
+//Build fancybox component
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
@@ -32,7 +41,9 @@ a1.classList= 'fancy-box';
 a1.textContent ='open fancybox';
 a1.href='';
 div1.appendChild(a1);
+//-----------------
 
+//Check if browser support the popup
 const thirdPartySupported = root => {
   return new Promise((resolve, reject) => {
     const receiveMessage = function(evt) {
@@ -50,17 +61,22 @@ const thirdPartySupported = root => {
     root.appendChild(frame);
   });
 };
+
+//Redirect to Spotii
 const redirectToSpotiiCheckout = function(checkoutUrl, timeout) {
   setTimeout(function() {
     window.location = checkoutUrl;
   }, timeout); // 'milli-seconds'
 };
+//Check if it's a safari broswer
 function isMobileSafari() {
   const ua = (window && window.navigator && window.navigator.userAgent) || '';
   const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
   const webkit = !!ua.match(/WebKit/i);
   return iOS && webkit && !ua.match(/CriOS/i);
 }
+
+//needed functions for the loadin page
 function createElement(tagName, attributes, content) {
   const el = document.createElement(tagName);
 
@@ -100,6 +116,9 @@ function SpinTextNode() {
   spinText.appendChild(spinner);
   return spinText;
 }
+//--------------------
+
+//Show the loading page
 function showOverlay() {
   const overlay = createElement('div', {className: 'sptii-overlay'}, '');
   const logo = createElement('span', { className: 'sptii-logo' }, Logo());
@@ -107,10 +126,14 @@ function showOverlay() {
   overlay.appendChild(logo);
   overlay.appendChild(SpinTextNode());
 }
+
+//Remove the loading page
 function removeOverlay() {
   var overlay = document.getElementsByClassName("sptii-overlay")[0];
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
+
+//Google tag manager 
 function onCheckout() {
   //var dimensionValue = 'Spotiipay';
  // ga('set', 'dimension1', dimensionValue);
@@ -131,23 +154,23 @@ function onCheckout() {
       }
     }
   });
-
 }
 
+//Close the popup
 window.closeThisIFrame = function(){
   console.log("cancelling request"); 
   document.getElementById('closeiframebtn').click(); 
 };
 
+//Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
   var status = message.status;
-  var rejectUrl = message.rejectUrl;
-  var confirmUrl = message.confirmUrl;
+  rejectUrl = message.rejectUrl;
+  confirmUrl = message.confirmUrl;
   console.log('Order state - ', status);
   console.log('Order confirmUrl - ', confirmUrl);
   console.log('Order rejectUrl - ', rejectUrl);
 
- //captureNetworkRequest();
   switch (status) {
     case successCheckOutStatus: {
       if(!isSuccess){
@@ -168,7 +191,10 @@ window.closeIFrameOnCompleteOrder = function(message) {
           }
         }
       });
-      //location.href = confirmUrl; 
+      document.getElementById('closeiframebtn').onclick = function() {
+        fancybox.close();
+        location.href = confirmUrl; 
+      };
       removeOverlay();
     }
       break;
@@ -178,8 +204,12 @@ window.closeIFrameOnCompleteOrder = function(message) {
       isFail = true;
       console.log('failedCheckOutStatus');
       isDeclined = true;
-      //location.href = confirmUrl; 
+      document.getElementById('closeiframebtn').onclick = function() {
+        fancybox.close();
+        location.href = rejectUrl; 
+      };
       removeOverlay();
+      
     }
       break;
     }
@@ -195,13 +225,9 @@ window.closeIFrameOnCompleteOrder = function(message) {
       break;
     }
   }
-  document.getElementById('closeiframebtn').click();
+  //document.getElementById('closeiframebtn').click();
 };
-var failedCheckOutStatus = 'FAILED';
-var submittedCheckOutStatus = 'SUBMITTED';
-var successCheckOutStatus = 'SUCCESS';
-var toggleFlag = true;
-var jsonData;
+
 define([
   "Magento_Customer/js/model/customer",
   "Magento_Checkout/js/model/resource-url-manager",
@@ -307,7 +333,7 @@ define([
     },
     
     redirectToSpotiipayController: function (data) {
-      
+      if(!isDeclined){
       // Make a post request to redirect
       var LoadCSS = function (filename) {
         var fileref = document.createElement("link");
@@ -320,7 +346,6 @@ define([
       var renderPopup= function (url) {
       //console.log("renderPopup");
       LoadCSS("https://widget.spotii.me/v1/javascript/fancybox-2.0.min.css");
-      LoadCSS("view/frontend/web/js/view/payment/method-renderer/inline.css");
       var script = document.createElement('script');
       script.type = 'text/javascript';
       script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
@@ -328,12 +353,13 @@ define([
 
       openIframeSpotiiCheckout(url);
       };
-  var openIframeSpotiiCheckout= function(checkoutUrl) {
+
+   var openIframeSpotiiCheckout= function(checkoutUrl) {
     //console.log("openIframeSpotiiCheckout");
     $('.fancy-box').attr('href', checkoutUrl);
     openIFrame();
-  };
-    
+   };
+
    if(toggleFlag){
     onCheckout();
   
@@ -346,10 +372,8 @@ define([
         data: data,
         success: function (response) {
           toggleFlag = false;
-         // captureNetworkRequest();
           // Send this response to spotii api
           // This would redirect to spotii
-       //  console.log("response "+response);
           jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) { 
             if (isMobileSafari()) {
@@ -375,9 +399,8 @@ define([
       openIFrame();
       var len = $('.fancybox-overlay-fixed').length;
       $('.fancybox-overlay-fixed')[len-1].remove();
-      //console.log('done');
-      //openIframeSpotiiCheckout(jsonData.redirectURL);
-    }
+     }
+     }
     },
     handleRedirectAction: function () {
       var data = $("#co-shipping-form").serialize();
@@ -409,7 +432,7 @@ define([
     },
 
     placeOrder: function (data, event) {
-      showOverlay();
+      //showOverlay();
       this.continueToSpotiipay();
     },
   });
