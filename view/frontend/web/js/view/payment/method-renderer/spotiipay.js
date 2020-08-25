@@ -3,6 +3,10 @@
  * @package     Spotii_Spotiipay
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
+
+var isSuccess = false;
+var isFail = false;
+var isDeclined = false;
 const root=document.getElementsByTagName('body')[0];
 var button1 = document.createElement('button');
 button1.style.display='none';
@@ -108,8 +112,8 @@ function removeOverlay() {
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
 function onCheckout() {
-  var dimensionValue = 'Spotiipay';
-   ga('set', 'dimension1', dimensionValue);
+  //var dimensionValue = 'Spotiipay';
+ // ga('set', 'dimension1', dimensionValue);
   dataLayer.push({
     'event': 'checkout',
     'ecommerce': {
@@ -130,19 +134,6 @@ function onCheckout() {
 
 }
 
-/*
-
- */
-/*function captureNetworkRequest() {
-
-  var capture_resource = window.performance.getEntriesByType("resource");
-  var capture_network_request = [];
-  for (var i = 0; i < capture_resource.length; i++) {
-              capture_network_request.push(capture_resource[i].name)
-              console.log(capture_resource[i].name+" "+capture_resource[i].initiatorType);
-  }
-  return capture_network_request;
-}*/
 window.closeThisIFrame = function(){
   console.log("cancelling request"); 
   document.getElementById('closeiframebtn').click(); 
@@ -155,13 +146,19 @@ window.closeIFrameOnCompleteOrder = function(message) {
   console.log('Order state - ', status);
   console.log('Order confirmUrl - ', confirmUrl);
   console.log('Order rejectUrl - ', rejectUrl);
+
  //captureNetworkRequest();
   switch (status) {
     case successCheckOutStatus: {
+      if(!isSuccess){
+        isSuccess = true;
       console.log('successCheckOutStatus');
       var params = confirmUrl.split('/');
-      var id = params[params.length-2];
+      var reference = params[params.length-2];
+      var ids = reference.split('-');
+      var id = ids[1];
       dataLayer.push({
+        'event': 'purchase',
         'ecommerce': {
           'purchase': {
             'actionField': {
@@ -171,21 +168,24 @@ window.closeIFrameOnCompleteOrder = function(message) {
           }
         }
       });
-      location.href = confirmUrl; 
+      //location.href = confirmUrl; 
       removeOverlay();
+    }
       break;
     }
     case failedCheckOutStatus: {
-      //root.appendChild(DisableCheckout(status));
+      if(!isFail){
+      isFail = true;
       console.log('failedCheckOutStatus');
-      location.href = confirmUrl; 
+      isDeclined = true;
+      //location.href = confirmUrl; 
       removeOverlay();
+    }
       break;
     }
     case submittedCheckOutStatus: {
-      //root.appendChild(DisableCheckout(status));
       console.log('submittedCheckOutStatus');
-      removeOverlay();
+      //removeOverlay();
       break;
     }
     default: {
@@ -335,7 +335,7 @@ define([
   };
     
    if(toggleFlag){
-
+    onCheckout();
   
      var url = mageUrl.build("spotiipay/standard/redirect");
      //console.log("url "+url);
@@ -390,7 +390,7 @@ define([
     },
 
     continueToSpotiipay: function () {
-      onCheckout();
+
       showOverlay();
       if (
         this.validate() &&
