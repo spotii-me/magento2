@@ -192,7 +192,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
         }
       });
       document.getElementById('closeiframebtn').onclick = function() {
-        fancybox.close();
+        closeIFrame();
         location.href = confirmUrl; 
       };
       removeOverlay();
@@ -205,7 +205,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
       console.log('failedCheckOutStatus');
       isDeclined = true;
       document.getElementById('closeiframebtn').onclick = function() {
-        fancybox.close();
+        closeIFrame();
         location.href = rejectUrl; 
       };
       removeOverlay();
