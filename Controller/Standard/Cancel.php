@@ -21,6 +21,7 @@ class Cancel extends SpotiiPay
     public function execute()
     {
         $order = $this->getOrder();
+        $this->spotiiHelper->logSpotiiActions('items ' . $order->getAllVisibleItems());
         foreach ($order->getAllVisibleItems() as $item) {
             $sku = $item->getSku();
             $qty = $item->getQtyOrdered();
