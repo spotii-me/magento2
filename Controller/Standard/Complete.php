@@ -69,7 +69,7 @@ class Complete extends SpotiiPay
         }
         $this->spotiiHelper->logSpotiiActions("End complete : State ". $order->getState() ." status ".$order->getStatus());  
         $this->getResponse()->setRedirect(
-            $this->_url->getUrl($redirect)
+            $this->_url->getUrl('checkout/onepage/success')
        );
     }
 }
