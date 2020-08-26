@@ -22,7 +22,7 @@ class Cancel extends SpotiiPay
     {
      try{
         $order = $this->getOrder();
-        $this->spotiiHelper->logSpotiiActions('items ' . $order->getAllVisibleItems());
+        $this->spotiiHelper->logSpotiiActions('items ' . sizeof($order->getAllVisibleItems()));
         foreach ($order->getAllVisibleItems() as $item) {
             $sku = $item->getSku();
             $qty = $item->getQtyOrdered();
