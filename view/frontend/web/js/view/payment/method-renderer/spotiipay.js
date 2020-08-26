@@ -173,7 +173,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
       var ids = reference.split('-');
       var id = ids[1];
       dataLayer.push({
-        //'event': 'purchase',
+        'event': 'purchase',
         'ecommerce': {
           'purchase': {
             'actionField': {
