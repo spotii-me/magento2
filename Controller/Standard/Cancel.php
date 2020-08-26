@@ -20,6 +20,7 @@ class Cancel extends SpotiiPay
      */
     public function execute()
     {
+     try{
         $order = $this->getOrder();
         $this->spotiiHelper->logSpotiiActions('items ' . $order->getAllVisibleItems());
         foreach ($order->getAllVisibleItems() as $item) {
@@ -42,5 +43,18 @@ class Cancel extends SpotiiPay
         $this->getResponse()->setRedirect(
             $this->_url->getUrl('checkout/onepage/failure')
        );
+     }catch (\Magento\Framework\Exception\LocalizedException $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
+        );
+      } catch (\Exception $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
+        );
+    }
+
+
     }
 }
