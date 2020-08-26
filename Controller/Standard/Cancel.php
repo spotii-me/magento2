@@ -21,17 +21,23 @@ class Cancel extends SpotiiPay
     public function execute()
     {
      try{
+         
         $order = $this->getOrder();
         $this->spotiiHelper->logSpotiiActions('items ' . sizeof($order->getAllVisibleItems()));
         foreach ($order->getAllVisibleItems() as $item) {
             $sku = $item->getSku();
-            $qty = $item->getQtyOrdered();
-            $decrease= $qty-($qty*2);
+            $qtyOrdered = $item->getQtyOrdered();
+            $decrease= $qtyOrdered-($qtyOrdered*2);
+            
             $this->spotiiHelper->logSpotiiActions('sku ' . $sku .' Qty ' . $qty .' Decrease '.$decrease);
             $stockItem = $this->stockRegistry->getStockItemBySku($sku);
-            $stockItem->setQty($decrease);
-            //$stockItem->setIsInStock((bool)$qty); // this line
+
+            $qtyInStock= $stockItem->getQty();
+            $finalQty = $qtyInStock +$decrease;
+            $stockItem->setQty($finalQty);
+
             $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
+
             $this->spotiiHelper->logSpotiiActions('result' . $this->stockRegistry->updateStockItemBySku($sku, $stockItem));
         }
         $this->messageManager->addError("Spotiipay Transaction failed");

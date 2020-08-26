@@ -32,5 +32,5 @@ interface ConfigInterface
      * Get cancel url
      * @return mixed
      */
-    public function getCancelUrl();
+    public function getCancelUrl($orderId, $reference);
 }
