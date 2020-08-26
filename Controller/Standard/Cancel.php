@@ -16,16 +16,16 @@ use Spotii\Spotiipay\Controller\AbstractController\SpotiiPay;
 class Cancel extends SpotiiPay
 {
 
-   
-    
     public function increaseInventory($itemData) {
         $sku = $itemData['sku'];
         $qty = $itemData['quantity'];
         $decrease= $qty-($qty*2);
+        $this->spotiiHelper->logSpotiiActions('sku ' . $sku .' Qty ' . $qty .' Decrease '.$decrease);
         $stockItem = $this->stockRegistry->getStockItemBySku($sku);
         $stockItem->setQty($decrease);
         //$stockItem->setIsInStock((bool)$qty); // this line
         $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
+        $this->spotiiHelper->logSpotiiActions('result' . $this->stockRegistry->updateStockItemBySku($sku, $stockItem));
     }
     /**
      * Cancel the order
