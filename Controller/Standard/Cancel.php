@@ -37,7 +37,7 @@ class Cancel extends SpotiiPay
             $stockItem = $this->stockRegistry->getStockItemBySku($sku);
 
             $qtyInStock= $stockItem->getQty();
-            $finalQty = $qtyInStock +$decrease;
+            $finalQty = $qtyInStock +$qtyOrdered;
 
             $stockItem->setQty($finalQty);
             $stockItem->setIsInStock((bool)$finalQty);
