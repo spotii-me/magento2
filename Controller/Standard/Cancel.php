@@ -15,12 +15,32 @@ use Spotii\Spotiipay\Controller\AbstractController\SpotiiPay;
  */
 class Cancel extends SpotiiPay
 {
+
+   
+    
+    public function increaseInventory($itemData) {
+        $sku = $itemData['sku'];
+        $qty = $itemData['quantity'];
+        $decrease= $qty-($qty*2);
+        $stockItem = $this->stockRegistry->getStockItemBySku($sku);
+        $stockItem->setQty($decrease);
+        //$stockItem->setIsInStock((bool)$qty); // this line
+        $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
+    }
     /**
      * Cancel the order
      */
     public function execute()
     {
         $order = $this->getOrder();
+        foreach ($order->getAllVisibleItems() as $item) {
+            $itemData = [
+                "sku" => $item->getSku(),
+                "quantity" => $item->getQtyOrdered(),
+            ];
+            increaseInventory($itemData);
+        }
+        $this->messageManager->addError("Spotiipay Transaction failed");
         $order->registerCancellation("Returned from Spotiipay without completing payment.");
         $this->spotiiHelper->logSpotiiActions(
             "Returned from Spotiipay without completing payment. Order cancelled."

@@ -20,7 +20,7 @@ class Complete extends SpotiiPay
      */
     public function execute()
     {
-        $redirect = 'checkout/cart';
+        $redirect = 'checkout/onepage/success';
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
 
