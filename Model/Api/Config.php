@@ -115,9 +115,9 @@ class Config implements ConfigInterface
      * @param $reference
      * @return mixed
      */
-    public function getCompleteUrl($orderId, $reference)
+    public function getCompleteUrl($orderId, $reference, $quoteId)
     {
-        return $this->urlBuilder->getUrl("spotiipay/standard/complete/id/$orderId/magento_spotii_id/$reference", ['_secure' => true]);
+        return $this->urlBuilder->getUrl("spotiipay/standard/complete/id/$orderId/magento_spotii_id/$reference/quote_id/$quoteId", ['_secure' => true]);
     }
 
     /**

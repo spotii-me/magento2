@@ -27,6 +27,8 @@ class Complete extends SpotiiPay
             // $quoteId = $this->_checkoutSession->getLastQuoteId();
             $orderId = $this->getRequest()->getParam("id");
             $reference = $this->getRequest()->getParam("magento_spotii_id");
+            $quoteId = $this->getRequest()->getParam("quote_id");
+
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
             $order->setState("processing")->setStatus("paymentauthorised");
@@ -47,13 +49,14 @@ class Complete extends SpotiiPay
                     $this->_orderSender->send($order);
                 } catch (\Exception $e) {
                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
-                }
+                }; 
+                $this->spotiiHelper->logSpotiiActions("Before: QUOTE ID FROM COMPLETE " . $order->getQouteId()." ORDER ID FROM COMPLETE " . $order->getEntityId());
 
-                $this->_checkoutSession->setLastSuccessQuoteId($order->getQouteId());
-                $this->_checkoutSession->setLastQuoteId($order->getQouteId());
+                $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
+                $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
 
-                $this->spotiiHelper->logSpotiiActions("QUOTE ID FROM COMPLETE " . $order->getQouteId()." ORDER ID FROM COMPLETE " . $order->getEntityId());
+                $this->spotiiHelper->logSpotiiActions("QUOTE ID FROM COMPLETE " . $quoteId." ORDER ID FROM COMPLETE " . $order->getEntityId());
 
                 $this->messageManager->addSuccess("Spotiipay Transaction Completed");
                 $this->getResponse()->setRedirect(
