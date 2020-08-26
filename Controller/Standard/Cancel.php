@@ -22,20 +22,25 @@ class Cancel extends SpotiiPay
     {
      try{
          
-        $order = $this->getOrder();
+        //$order = $this->getOrder();
+        $orderId = $this->getRequest()->getParam("id");
+        $reference = $this->getRequest()->getParam("magento_spotii_id");
+         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
+
         $this->spotiiHelper->logSpotiiActions('items ' . sizeof($order->getAllVisibleItems()));
         foreach ($order->getAllVisibleItems() as $item) {
+
             $sku = $item->getSku();
             $qtyOrdered = $item->getQtyOrdered();
-            $decrease= $qtyOrdered-($qtyOrdered*2);
-            
-            $this->spotiiHelper->logSpotiiActions('sku ' . $sku .' Qty ' . $qty .' Decrease '.$decrease);
+            $this->spotiiHelper->logSpotiiActions('sku ' . $sku .' Qty ' . $qty);
+
             $stockItem = $this->stockRegistry->getStockItemBySku($sku);
 
             $qtyInStock= $stockItem->getQty();
             $finalQty = $qtyInStock +$decrease;
-            $stockItem->setQty($finalQty);
 
+            $stockItem->setQty($finalQty);
+            $stockItem->setIsInStock((bool)$finalQty);
             $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
 
             $this->spotiiHelper->logSpotiiActions('result' . $this->stockRegistry->updateStockItemBySku($sku, $stockItem));
