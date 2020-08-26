@@ -47,7 +47,9 @@ class Cancel extends SpotiiPay
         );
         $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
-            $this->_url->getUrl('checkout')
-        );
+            $this->_url->getUrl('checkout/onepage/failure')
+       );
+       // $this->_redirect($redirect);
+       // http://{base_url}/sales/order/cancel/order_id/76/
     }
 }
