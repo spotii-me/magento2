@@ -45,6 +45,7 @@ class Cancel extends SpotiiPay
 
             $this->spotiiHelper->logSpotiiActions('result' . $this->stockRegistry->updateStockItemBySku($sku, $stockItem));
         }
+        
         $this->messageManager->addError("Spotiipay Transaction failed");
         $order->registerCancellation("Returned from Spotiipay without completing payment.");
         $this->spotiiHelper->logSpotiiActions(

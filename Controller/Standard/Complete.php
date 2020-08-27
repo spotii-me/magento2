@@ -20,7 +20,7 @@ class Complete extends SpotiiPay
      */
     public function execute()
     {
-        $redirect = 'checkout/cart';
+        $redirect = 'checkout/onepage/success';
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
 
@@ -53,7 +53,7 @@ class Complete extends SpotiiPay
                 $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
                 $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
-                
+                $this->spotiiHelper->logSpotiiActions("quote ". $quoteId." order ".$order->getEntityId());
                 $this->messageManager->addSuccess("Spotiipay Transaction Completed");
                 $this->getResponse()->setRedirect(
                     $this->_url->getUrl('checkout/onepage/success')
