@@ -229,11 +229,19 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param float $spotiiAmount
      * @return bool
      */
-    public function isOrderAmountMatched($magentoAmount, $spotiiAmount)
+    public function isOrderAmountMatched($magentoAmount, $magento_currency, $spotiiAmount)
     {
-        $precision = \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION;
+        if ($magento_currency == 'AED'){
+            $rate = 1;}
+        else if ($magento_currency == 'USD'){
+            $rate = 3.6730;}
+        else{
+            throw new LocalizedException(__('Invaild currency.'));
+            }
 
-        return (round($magentoAmount, $precision) == round($spotiiAmount, $precision)) ? true : false;
+        $store_amount_aed = $magentoAmount * $rate;
+        $precision = \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION;
+        return abs(round($store_amount_aed, $precision) - round($spotiiAmount, $precision)) < 2 ? true : false;
     }
 
     /**
@@ -259,7 +267,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
 
         if ($spotiiOrderTotal != null
-        && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal)) {
+        && !$this->isOrderAmountMatched($grandTotalInCents,$payment->getOrder()->getGlobalCurrencyCode(), $spotiiOrderTotal)) {
             $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         } else {
@@ -301,7 +309,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
 
         if ($spotiiOrderTotal != null
-            && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal)) {
+            && !$this->isOrderAmountMatched($grandTotalInCents,$payment->getOrder()->getGlobalCurrencyCode(), $spotiiOrderTotal)) {
             $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         }

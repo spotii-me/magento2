@@ -50,11 +50,11 @@ class Cancel extends SpotiiPay
         $this->spotiiHelper->logSpotiiActions(
             "Returned from Spotiipay without completing payment. Order cancelled."
         );
-        //$this->_checkoutSession->restoreQuote();
+        $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
             $this->_url->getUrl('checkout/onepage/failure')
        );
-       $this->_checkoutSession->restoreQuote();
+       //$this->_checkoutSession->restoreQuote();
      }catch (\Magento\Framework\Exception\LocalizedException $e) {
         $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
         $this->messageManager->addError(
