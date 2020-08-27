@@ -27,7 +27,7 @@ class Cancel extends SpotiiPay
         $reference = $this->getRequest()->getParam("magento_spotii_id");
         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
 
-        $this->spotiiHelper->logSpotiiActions('items ' . sizeof($order->getAllVisibleItems()));
+       /* $this->spotiiHelper->logSpotiiActions('items ' . sizeof($order->getAllVisibleItems()));
         foreach ($order->getAllVisibleItems() as $item) {
 
             $sku = $item->getSku();
@@ -44,16 +44,17 @@ class Cancel extends SpotiiPay
             $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
 
             $this->spotiiHelper->logSpotiiActions('result' . $this->stockRegistry->updateStockItemBySku($sku, $stockItem));
-        }
+        }*/
         $this->messageManager->addError("Spotiipay Transaction failed");
         $order->registerCancellation("Returned from Spotiipay without completing payment.");
         $this->spotiiHelper->logSpotiiActions(
             "Returned from Spotiipay without completing payment. Order cancelled."
         );
-        $this->_checkoutSession->restoreQuote();
+        //$this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
             $this->_url->getUrl('checkout/onepage/failure')
        );
+       $this->_checkoutSession->restoreQuote();
      }catch (\Magento\Framework\Exception\LocalizedException $e) {
         $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
         $this->messageManager->addError(

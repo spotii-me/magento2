@@ -159,9 +159,9 @@ window.closeIFrameOnCompleteOrder = function(message) {
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
-  //console.log('Order state - ', status);
-  //console.log('Order confirmUrl - ', confirmUrl);
-  //console.log('Order rejectUrl - ', rejectUrl);
+  console.log('Order state - ', status);
+  console.log('Order confirmUrl - ', confirmUrl);
+  console.log('Order rejectUrl - ', rejectUrl);
 
   switch (status) {
     case successCheckOutStatus: {
