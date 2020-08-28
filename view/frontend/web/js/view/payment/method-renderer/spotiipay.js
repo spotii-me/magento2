@@ -156,18 +156,19 @@ function onCheckout() {
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
+  console.log('Message - ', message);
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
-  //console.log('Order state - ', status);
-  //console.log('Order confirmUrl - ', confirmUrl);
-  //console.log('Order rejectUrl - ', rejectUrl);
+  console.log('Order state - ', status);
+  console.log('Order confirmUrl - ', confirmUrl);
+  console.log('Order rejectUrl - ', rejectUrl);
 
   switch (status) {
     case successCheckOutStatus: {
       if(!isSuccess){
         isSuccess = true;
-     // console.log('successCheckOutStatus');
+      console.log('successCheckOutStatus');
       var params = confirmUrl.split('/');
       var reference = params[params.length-2];
       var ids = reference.split('-');
@@ -195,7 +196,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
     case failedCheckOutStatus: {
       if(!isFail){
       isFail = true;
-     // console.log('failedCheckOutStatus');
+      console.log('failedCheckOutStatus');
       isDeclined = true;
       document.getElementById('closeiframebtn').onclick = function() {
         closeIFrame();
@@ -207,7 +208,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
       break;
     }
     case submittedCheckOutStatus: {
-     // console.log('submittedCheckOutStatus');
+     console.log('submittedCheckOutStatus');
       removeOverlay();
       break;
     }
