@@ -126,6 +126,6 @@ class Config implements ConfigInterface
      */
     public function getCancelUrl($orderId, $reference)
     {
-        return $this->urlBuilder->getUrl("spotiipay/standard/cancel/id/$orderId/magento_spotii_id/$reference", ['_secure' => true]);
+        return $this->urlBuilder->getUrl("spotiipay/standard/cancel/id/$orderId/magento_spotii_id/$reference/submitted/0", ['_secure' => true]);
     }
 }
