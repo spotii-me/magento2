@@ -26,8 +26,7 @@ class Cancel extends SpotiiPay
         $orderId = $this->getRequest()->getParam("id");
         $reference = $this->getRequest()->getParam("magento_spotii_id");
         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-        $order->setState("cancel")->setStatus("cancel");
-        $order->save();
+
         $this->spotiiHelper->logSpotiiActions('items ' . sizeof($order->getAllVisibleItems()));
         foreach ($order->getAllVisibleItems() as $item) {
 
@@ -49,6 +48,8 @@ class Cancel extends SpotiiPay
         
         $this->messageManager->addError("Spotiipay Transaction failed");
         $order->registerCancellation("Returned from Spotiipay without completing payment.");
+        $order->setState("cancel")->setStatus("cancel");
+        $order->save();
         $this->spotiiHelper->logSpotiiActions(
             "Returned from Spotiipay without completing payment. Order cancelled."
         );
