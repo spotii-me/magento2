@@ -29,7 +29,7 @@ class Cancel extends SpotiiPay
         $paymentSubmitted = $order->getPayment()->getAdditionalInformation('IS_SUBMITTED');
         $reference = $order->getPayment()->getAdditionalInformation('spotii_order_id');
         $this->spotiiHelper->logSpotiiActions($paymentSubmitted.' '.$reference);
-        if($paymentSubmitted){
+        if($paymentSubmitted == '1'){
         $order->setState("canceled")->setStatus("canceled");
         $order->save();
         $this->spotiiHelper->logSpotiiActions('items ' . sizeof($order->getAllVisibleItems()));
