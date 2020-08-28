@@ -54,6 +54,7 @@ class Redirect extends SpotiiPay
         $payment = $quote->getPayment();
         $payment->setMethod('spotiipay');
         $payment->setAdditionalInformation('IS_SUBMITTED', false);
+        $payment->save();
         $quote->reserveOrderId();
         $quote->setPayment($payment);
         $quote->save();
