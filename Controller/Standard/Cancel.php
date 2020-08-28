@@ -26,7 +26,8 @@ class Cancel extends SpotiiPay
         $orderId = $this->getRequest()->getParam("id");
         $reference = $this->getRequest()->getParam("magento_spotii_id");
         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-
+        $order->setState("cancel")->setStatus("cancel");
+        $order->save();
         $this->spotiiHelper->logSpotiiActions('items ' . sizeof($order->getAllVisibleItems()));
         foreach ($order->getAllVisibleItems() as $item) {
 
