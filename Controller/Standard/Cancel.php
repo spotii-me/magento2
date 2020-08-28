@@ -46,7 +46,7 @@ class Cancel extends SpotiiPay
             $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
         }
         
-        $this->messageManager->addError("<h4>Order Cancelled!</h4><br> Your payment with Spotii cannot be completed as requested.");
+        $this->messageManager->addError("Order Cancelled!<br> Your payment with Spotii cannot be completed as requested.");
         $order->registerCancellation("Returned from Spotii with completeing payment, order canceled.");
         $this->spotiiHelper->logSpotiiActions("Returned from Spotii with completeing payment, order canceled.");
         $this->_checkoutSession->restoreQuote();
