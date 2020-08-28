@@ -44,22 +44,18 @@ class Cancel extends SpotiiPay
             $stockItem->setQty($finalQty);
             $stockItem->setIsInStock((bool)$finalQty);
             $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
-
-            $this->spotiiHelper->logSpotiiActions('result' . $this->stockRegistry->updateStockItemBySku($sku, $stockItem));
         }
         
-        $this->messageManager->addError("Spotiipay Transaction failed");
-        $order->registerCancellation("Spotiipay transaction failed.");
-
-        $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay without completing payment. Order cancelled.");
+        $this->messageManager->addError("<h3>Order Cancelled!</h3><br> Your payment with Spotii cannot be completed as requested.");
+        $order->registerCancellation("Returned from Spotii with completeing payment, order canceled.");
+        $this->spotiiHelper->logSpotiiActions("Returned from Spotii with completeing payment, order canceled.");
         $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
             $this->_url->getUrl('checkout/onepage/failure')
         );
     }else{
-        $this->messageManager->addError("Spotiipay Transaction was not initiated");
-        $order->registerCancellation("No attempt of payment Spotiipay. Order cancelled.");
-        $this->spotiiHelper->logSpotiiActions( "No attempt of payment Spotiipay. Order cancelled." );
+        $order->registerCancellation("Abandoned Cart");
+        $this->spotiiHelper->logSpotiiActions("Abandoned Cart");
         $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
             $this->_url->getUrl('checkout/onepage/failure') 

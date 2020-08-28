@@ -54,7 +54,7 @@ class Complete extends SpotiiPay
                 $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
                 $this->spotiiHelper->logSpotiiActions("quote ". $quoteId." order ".$order->getEntityId());
-                $this->messageManager->addSuccess("Spotiipay Transaction Completed");
+                $this->messageManager->addSuccess("<h3>Success! Payment completed!</h3><br>Thank you for your payment, your order with Spotii has been placed.");
                 $this->getResponse()->setRedirect(
                     $this->_url->getUrl('checkout/onepage/success')
                );
