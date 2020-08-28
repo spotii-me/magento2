@@ -53,7 +53,6 @@ class Redirect extends SpotiiPay
         }
         $payment = $quote->getPayment();
         $payment->setMethod('spotiipay');
-        $payment->setAdditionalInformation('IS_SUBMITTED', '0');
         $payment->save();
         $quote->reserveOrderId();
         $quote->setPayment($payment);
@@ -94,7 +93,6 @@ class Redirect extends SpotiiPay
             $e->getMessage()
         );
     }
-        $this->spotiiHelper->logSpotiiActions("End redirect : State ". $order->getState() ." status ".$order->getStatus());  
         return $jsonResult;
     }
 }
