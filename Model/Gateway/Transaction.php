@@ -48,6 +48,13 @@ class Transaction
     private $spotiiHelper;
 
     /**
+     * @var SpotiiApiConfigInterface
+     */
+    protected $spotiiApiIdentity;
+
+    protected $statusCollectionFactory;
+    const PAYMENT_CODE = 'spotiipay';
+    /**
      * Transaction constructor.
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
      * @param SpotiiHelper $spotiiHelper
@@ -64,7 +71,8 @@ class Transaction
         \Psr\Log\LoggerInterface $logger,
         \Spotii\Spotiipay\Model\Api\ProcessorInterface $spotiiApiProcessor,
         SpotiiApiConfigInterface $spotiiApiConfig,
-        \Magento\Sales\Api\Data\OrderInterface $orderInterface
+        \Magento\Sales\Api\Data\OrderInterface $orderInterface,
+        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -73,6 +81,7 @@ class Transaction
         $this->spotiiApiProcessor = $spotiiApiProcessor;
         $this->logger = $logger;
         $this->orderInterface = $orderInterface;
+        $this->statusCollectionFactory=$statusCollectionFactory;
     }
 
     /**
@@ -86,23 +95,31 @@ class Transaction
         $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
+        $status = $this->spotiiApiConfig->getPaidOrderStatus();
         try {
-            $ordersCollection = $this->orderFactory->create()->getCollection()
-                ->addFieldToFilter(
+            $ordersCollection = $this->orderFactory->create()
+               ->addFieldToFilter(
                     'status',
                     [
-                        'eq' => 'complete',
-                        'eq' => 'processing'
+                        'eq' => $status
                     ]
                 )
                 ->addAttributeToFilter(
                     'created_at',
+
                     [
                         'from' => $yesterday,
                         'to' => $today
                     ]
-                )
-                ->addAttributeToSelect('increment_id');
+                )->addAttributeToFilter(
+                    'payment_method',
+
+                    [
+                        'eq' => 'spotiipay'
+                    ])
+                    ->getCollection()->addAttributeToSelect('increment_id');
+                $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
+ 
             $body = $this->_buildOrderPayLoad($ordersCollection);
             $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
             $authToken = $this->config->getAuthToken();
@@ -133,10 +150,11 @@ class Transaction
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
                 $billing = $order->getBillingAddress();
-
+                $paymentMethod =$payment->getMethod();
+                $this->spotiiHelper->logSpotiiActions("Orders ".$orderIncrementId);
                 $orderForSpotii = [
                     'order_number' => $orderIncrementId,
-                    'payment_method' => $payment->getMethod(),
+                    'payment_method' => $paymentMethod,
                     'amount' => strval(round($order->getGrandTotal(), \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION)),
                     'currency' => $order->getOrderCurrencyCode(),
                     'reference' => $payment->getLastTransId(),

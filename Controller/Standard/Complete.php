@@ -30,7 +30,8 @@ class Complete extends SpotiiPay
 
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
-            $order->setState("processing")->setStatus("paymentauthorised");
+            $paidOrderStatus = $this->spotiiApiIdentity->getPaidOrderStatus();
+            $order->setState("processing")->setStatus($paidOrderStatus);
             $order->save();
 
             if ($order) {
@@ -53,8 +54,7 @@ class Complete extends SpotiiPay
                 $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
                 $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
-                $this->spotiiHelper->logSpotiiActions("quote ". $quoteId." order ".$order->getEntityId());
-                $this->messageManager->addSuccess("Spotiipay Transaction Completed");
+                $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
                 $this->getResponse()->setRedirect(
                     $this->_url->getUrl('checkout/onepage/success')
                );

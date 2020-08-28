@@ -20,14 +20,16 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     const XML_PATH_MERCHANT_ID = 'payment/spotiipay/merchant_id';
     const XML_PATH_LOG_TRACKER = 'payment/spotiipay/log_tracker';
     const XML_PATH_PAYMENT_ACTION = 'payment/spotiipay/payment_action';
+    const XML_PATH_NEW_ORDER_STATUS = 'payment/spotiipay/new_order_status';
+    const XML_PATH_PAID_ORDER_STATUS = 'payment/spotiipay/paid_order_status';
+    const XML_PATH_CANCELED_ORDER_STATUS = 'payment/spotiipay/canceled_order_status';
 
+    
     private $checkoutUrlLive = "https://api.spotii.me";
     private $checkoutUrlSandbox = "https://api.sandbox.spotii.me";
-    private $checkoutUrlDev = "https://api.dev.spotii.me";
 
     private $authUrlLive = "https://auth.spotii.me";
     private $authtUrlSandbox = "https://auth.sandbox.spotii.me";
-    private $authtUrlDev = "https://auth.dev.spotii.me";
 
     /**
      * @inheritdoc
@@ -77,6 +79,39 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     /**
      * @inheritdoc
      */
+    public function getNewOrderStatus()
+    {
+        return $this->getConfigValue(
+            self::XML_PATH_NEW_ORDER_STATUS,
+            $this->getStore()->getStoreId()
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPaidOrderStatus()
+    {
+        return $this->getConfigValue(
+            self::XML_PATH_PAID_ORDER_STATUS,
+            $this->getStore()->getStoreId()
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCanceledOrderStatus()
+    {
+        return $this->getConfigValue(
+            self::XML_PATH_CANCELED_ORDER_STATUS,
+            $this->getStore()->getStoreId()
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getMerchantId()
     {
         return $this->getConfigValue(
@@ -98,9 +133,6 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
             case 'sandbox':
                 return $this->checkoutUrlSandbox;
                 break;
-            case 'dev':
-                return $this->checkoutUrlDev;
-                break;
             default:
                 break;
         }
@@ -118,9 +150,6 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
                 break;
             case 'sandbox':
                 return $this->authtUrlSandbox;
-                break;
-            case 'dev':
-                return $this->authtUrlDev;
                 break;
             default:
                 break;
