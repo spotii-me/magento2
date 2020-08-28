@@ -27,7 +27,8 @@ class Cancel extends SpotiiPay
         $reference = $this->getRequest()->getParam("magento_spotii_id");
         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
         $paymentSubmitted = $order->getPayment()->getAdditionalInformation('IS_SUBMITTED');
-        $this->spotiiHelper->logSpotiiActions($paymentSubmitted);
+        $reference = $order->getPayment()->getAdditionalInformation('spotii_order_id');
+        $this->spotiiHelper->logSpotiiActions($paymentSubmitted.' '.$reference);
         if($paymentSubmitted){
         $order->setState("canceled")->setStatus("canceled");
         $order->save();
