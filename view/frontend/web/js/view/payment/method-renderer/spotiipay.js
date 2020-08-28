@@ -201,10 +201,6 @@ window.closeIFrameOnCompleteOrder = function(message) {
         closeIFrame();
         location.href = rejectUrl; 
       };
-      window.onbeforeunload = function () {
-        closeIFrame();
-        location.href = rejectUrl; 
-      };
       removeOverlay();
       
     }
