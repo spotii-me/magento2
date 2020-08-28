@@ -18,7 +18,6 @@ use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
 abstract class SpotiiPay extends Action
 {
 
-    const IS_SUBMITTED ='IS_SUBMITTED';
     /**
      * @var \Magento\Customer\Model\Session
      */

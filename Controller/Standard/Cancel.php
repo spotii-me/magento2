@@ -26,7 +26,7 @@ class Cancel extends SpotiiPay
         $orderId = $this->getRequest()->getParam("id");
         $reference = $this->getRequest()->getParam("magento_spotii_id");
         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-        $paymentSubmitted = $order->getPayment()->getAdditionalInformation(self::IS_SUBMITTED);
+        $paymentSubmitted = $order->getPayment()->getAdditionalInformation('IS_SUBMITTED');
         $this->spotiiHelper->logSpotiiActions($paymentSubmitted);
         if($paymentSubmitted){
         $order->setState("canceled")->setStatus("canceled");
@@ -52,7 +52,7 @@ class Cancel extends SpotiiPay
         
         $this->messageManager->addError("Spotiipay Transaction failed");
         $order->registerCancellation("Spotiipay transaction failed.");
-        
+
         $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay without completing payment. Order cancelled.");
         $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(

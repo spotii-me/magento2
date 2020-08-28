@@ -249,7 +249,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $this->spotiiHelper->logSpotiiActions("****Authorization start****");
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
-        $payment->setAdditionalInformation(self::IS_SUBMITTED, true);
+        $payment->setAdditionalInformation('IS_SUBMITTED', true);
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
