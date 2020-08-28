@@ -27,6 +27,7 @@ class Cancel extends SpotiiPay
         $reference = $this->getRequest()->getParam("magento_spotii_id");
         $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
         $paymentSubmitted = $order->getPayment()->getAdditionalInformation(self::IS_SUBMITTED);
+        $this->spotiiHelper->logSpotiiActions($paymentSubmitted);
         if($paymentSubmitted){
         $order->setState("canceled")->setStatus("canceled");
         $order->save();
@@ -50,21 +51,17 @@ class Cancel extends SpotiiPay
         }
         
         $this->messageManager->addError("Spotiipay Transaction failed");
-        $order->registerCancellation("Spotiipay transaction declined.");
-    
-        $this->spotiiHelper->logSpotiiActions(
-            "Returned from Spotiipay without completing payment. Order cancelled."
-        );
-      
+        $order->registerCancellation("Spotiipay transaction failed.");
+        
+        $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay without completing payment. Order cancelled.");
         $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
             $this->_url->getUrl('checkout/onepage/failure')
         );
     }else{
-        $order->registerCancellation("Returned from Spotiipay without completing payment.");
-        $this->spotiiHelper->logSpotiiActions(
-            "No attempt of payment Spotiipay. Order cancelled."
-        );
+        $this->messageManager->addError("Spotiipay Transaction was cancelled");
+        $order->registerCancellation("No attempt of payment Spotiipay. Order cancelled.");
+        $this->spotiiHelper->logSpotiiActions( "No attempt of payment Spotiipay. Order cancelled." );
         $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
             $this->_url->getUrl('checkout/onepage/failure') 
