@@ -10,6 +10,7 @@ namespace Spotii\Spotiipay\Model\Config\Container;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManagerInterface;
+use \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory;
 
 /**
  * Class Container
@@ -44,17 +45,20 @@ abstract class Container implements IdentityInterface
      */
     protected $customerEmail;
 
+    private $statusCollectionFactory;
     /**
      * @param ScopeConfigInterface $scopeConfig
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        CollectionFactory $statusCollectionFactory
     )
     {
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
+        $this->statusCollectionFactory = $statusCollectionFactory;
     }
 
     /**

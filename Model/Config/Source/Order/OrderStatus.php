@@ -6,32 +6,18 @@
  */
 
 namespace Spotii\Spotiipay\Model\Config\Source\Order;
-
 /**
  * Class Mode
  * @package Spotii\Spotiipay\Model\Config\Source\Payment
  */
 class OrderStatus implements \Magento\Framework\Option\ArrayInterface
 {
-
     /**
      * @return array
      */
-    public function toOptionArray()
+    public function toOptionArray($statusCollectionFactory)
     {
-        return [
-            [
-                'value' => 'pending',
-                'label' => 'pending',
-            ],
-            [
-                'value' => 'paymentauthorized',
-                'label' => 'paymentauthorized',
-            ],
-            [
-                'value' => 'canceled',
-                'label' => 'canceled',
-            ]
-        ];
+        $options = $this->statusCollectionFactory->create()->toOptionArray();        
+        return $options;
     }
 }
