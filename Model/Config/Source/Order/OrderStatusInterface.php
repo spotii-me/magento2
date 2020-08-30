@@ -12,15 +12,16 @@ namespace Spotii\Spotiipay\Model\Config\Source\Order;
  * Class Mode
  * @package Spotii\Spotiipay\Model\Config\Source\Payment
  */
-class OrderStatus extends OrderStatusInterface implements \Magento\Framework\Option\ArrayInterface
+abstract class OrderStatusInterface
 {
 
-    /**
-     * @return array
-     */
-    public function toOptionArray()
+    protected $statusCollectionFactory;
+
+    public function __construct(
+        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
+    )
     {
-        $options = $this->statusCollectionFactory->create()->toOptionArray();        
-        return $options;
+        $this->statusCollectionFactory=$statusCollectionFactory;
     }
+    
 }
