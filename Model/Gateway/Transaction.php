@@ -87,23 +87,24 @@ class Transaction
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
         try {
-            $ordersCollection = $this->orderFactory->create()->getCollection()
-                ->addFieldToFilter(
+            $ordersCollection = $this->orderFactory->create()->getCollection()->addAttributeToSelect('increment_id');
+             /*  ->addFieldToFilter(
                     'status',
                     [
                         'eq' => 'complete',
-                        'eq' => 'processing',
-                        'eq' => 'pending'
+                        'eq' => 'processing'
                     ]
                 )
                 ->addAttributeToFilter(
                     'created_at',
+
                     [
                         'from' => $yesterday,
                         'to' => $today
                     ]
-                )
-                ->addAttributeToSelect('increment_id');
+                )*/
+                $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
+ 
             $body = $this->_buildOrderPayLoad($ordersCollection);
             $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
             $authToken = $this->config->getAuthToken();

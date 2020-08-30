@@ -30,7 +30,8 @@ class Complete extends SpotiiPay
 
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
-            $order->setState("processing")->setStatus("paymentauthorised");
+            $paidOrderStatus = $this->spotiiApiIdentity->getPaidOrderStatus();
+            $order->setState("processing")->setStatus($paidOrderStatus);
             $order->save();
 
             if ($order) {
