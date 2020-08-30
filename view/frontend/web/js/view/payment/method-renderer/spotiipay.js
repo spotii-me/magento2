@@ -196,12 +196,12 @@ window.closeIFrameOnCompleteOrder = function(message) {
     case failedCheckOutStatus: {
       if(!isFail){
       isFail = true;
-      //console.log('failedCheckOutStatus');
+      console.log('failedCheckOutStatus');
       isDeclined = true;
       document.getElementById('closeiframebtn').onclick = function() {
         closeIFrame();
         var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
-        //console.log('rejectUrlSubmitted '+rejectUrlSubmitted);
+        console.log('rejectUrlSubmitted '+rejectUrlSubmitted);
         location.href = rejectUrlSubmitted; 
       };
       removeOverlay();
