@@ -92,7 +92,8 @@ class Transaction
                     'status',
                     [
                         'eq' => 'complete',
-                        'eq' => 'processing'
+                        'eq' => 'processing',
+                        'eq' => 'pending'
                     ]
                 )
                 ->addAttributeToFilter(
@@ -133,7 +134,7 @@ class Transaction
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
                 $billing = $order->getBillingAddress();
-
+                $this->spotiiHelper->logSpotiiActions("Orders ".$orderIncrementId);
                 $orderForSpotii = [
                     'order_number' => $orderIncrementId,
                     'payment_method' => $payment->getMethod(),
