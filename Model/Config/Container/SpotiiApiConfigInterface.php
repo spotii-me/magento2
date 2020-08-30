@@ -68,17 +68,17 @@ interface SpotiiApiConfigInterface extends IdentityInterface
      * Get new order status
      * @return mixed
      */
-    public function getNewOrderStatus();
+    public function getNewOrderStatus(\Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory);
     
     /**
      * Get paid order status
      * @return mixed
      */
-    public function getPaidOrderStatus();
+    public function getPaidOrderStatus(\Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory);
 
     /**
      * Get canceled order status
      * @return mixed
      */
-    public function getCanceledOrderStatus();
+    public function getCanceledOrderStatus(\Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory);
 }

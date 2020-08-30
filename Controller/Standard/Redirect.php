@@ -78,7 +78,7 @@ class Redirect extends SpotiiPay
             \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
         );
         
-        $newOrderStatus = $this->spotiiApiIdentity->getNewOrderStatus();
+        $newOrderStatus = $this->spotiiApiIdentity->getNewOrderStatus($statusCollectionFactory);
         $order->setState("new")->setStatus($newOrderStatus);
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);

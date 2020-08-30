@@ -79,7 +79,7 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     /**
      * @inheritdoc
      */
-    public function getNewOrderStatus($statusCollectionFactory)
+    public function getNewOrderStatus(\Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory)
     {
         return $this->getConfigValue(
             self::XML_PATH_NEW_ORDER_STATUS,
@@ -90,7 +90,7 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     /**
      * @inheritdoc
      */
-    public function getPaidOrderStatus($statusCollectionFactory)
+    public function getPaidOrderStatus(\Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory)
     {
         return $this->getConfigValue(
             self::XML_PATH_PAID_ORDER_STATUS,
@@ -101,7 +101,7 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     /**
      * @inheritdoc
      */
-    public function getCanceledOrderStatus($statusCollectionFactory)
+    public function getCanceledOrderStatus(\Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory)
     {
         return $this->getConfigValue(
             self::XML_PATH_CANCELED_ORDER_STATUS,

@@ -46,6 +46,13 @@ class Transaction
      * @var SpotiiHelper
      */
     private $spotiiHelper;
+
+    /**
+     * @var SpotiiApiConfigInterface
+     */
+    protected $spotiiApiIdentity;
+
+    protected $statusCollectionFactory;
     const PAYMENT_CODE = 'spotiipay';
     /**
      * Transaction constructor.
@@ -64,7 +71,8 @@ class Transaction
         \Psr\Log\LoggerInterface $logger,
         \Spotii\Spotiipay\Model\Api\ProcessorInterface $spotiiApiProcessor,
         SpotiiApiConfigInterface $spotiiApiConfig,
-        \Magento\Sales\Api\Data\OrderInterface $orderInterface
+        \Magento\Sales\Api\Data\OrderInterface $orderInterface,
+        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -73,6 +81,7 @@ class Transaction
         $this->spotiiApiProcessor = $spotiiApiProcessor;
         $this->logger = $logger;
         $this->orderInterface = $orderInterface;
+        $this->statusCollectionFactory=$statusCollectionFactory;
     }
 
     /**
@@ -86,13 +95,13 @@ class Transaction
         $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
+        $status = $this->spotiiApiConfig->getPaidOrderStatus($statusCollectionFactory);
         try {
             $ordersCollection = $this->orderFactory->create()
                ->addFieldToFilter(
                     'status',
                     [
-                        'eq' => 'paymentauthorized',
-                        'eq' => 'processing'
+                        'eq' => $status
                     ]
                 )
                 ->addAttributeToFilter(
@@ -142,7 +151,6 @@ class Transaction
                 $payment = $order->getPayment();
                 $billing = $order->getBillingAddress();
                 $paymentMethod =$payment->getMethod();
-                if ($paymentMethod == self::PAYMENT_CODE){
                 $this->spotiiHelper->logSpotiiActions("Orders ".$orderIncrementId);
                 $orderForSpotii = [
                     'order_number' => $orderIncrementId,
@@ -161,7 +169,6 @@ class Transaction
                     'merchant_id' => $this->spotiiApiConfig->getMerchantId()
                 ];
                 array_push($body, $orderForSpotii);
-            }
             }
         }
         return $body;
