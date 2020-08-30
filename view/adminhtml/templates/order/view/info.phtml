@@ -121,8 +121,8 @@ $allowedAddressHtmlTags = ['b', 'br', 'em', 'i', 'li', 'ol', 'p', 'strong', 'sub
                         <td><?= $block->escapeHtml($order->getBaseToOrderRate()) ?></td>
                     </tr>
                 <?php endif; ?>
-                <?php if ($spotiiCaptureExpiry 
-                    && $paymentMethodCode == \Spotii\Spotiipay\Model\SpotiiPay::PAYMENT_CODE) : ?>
+                <?php /*if ($spotiiCaptureExpiry 
+                    && $paymentMethodCode == \Spotii\Spotiipay\Model\SpotiiPay::PAYMENT_CODE) : */?>
                     <tr>
                         <th><?= $block->escapeHtml(__('Spotii Capture Expiry')) ?></th>
                         <td>
@@ -132,7 +132,7 @@ $allowedAddressHtmlTags = ['b', 'br', 'em', 'i', 'li', 'ol', 'p', 'strong', 'sub
                             <?= $block->escapeHtml($captureInfo); ?>
                         </td>
                     </tr>
-            <?php endif; ?>
+            <?php/* endif; */?>
             </table>
             </div>
         </div>

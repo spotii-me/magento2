@@ -44,17 +44,21 @@ abstract class Container implements IdentityInterface
      */
     protected $customerEmail;
 
+    protected $statusCollectionFactory;
+
     /**
      * @param ScopeConfigInterface $scopeConfig
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
     )
     {
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
+        $this->statusCollectionFactory=$statusCollectionFactory;
     }
 
     /**
