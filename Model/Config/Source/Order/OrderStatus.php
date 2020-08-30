@@ -24,7 +24,7 @@ class OrderStatus implements \Magento\Framework\Option\ArrayInterface
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
      */
-    public function __construct(Template\Context $context,
+    public function __construct( \Magento\Framework\App\Action\Context $context,
             \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
         ) 
     {       
