@@ -81,13 +81,13 @@
                     <!-- paid order status -->
                      <field id="paid_order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Paid order status</label>
-                        <source_model>Spotii\Spotiipay\Model\Config\Source\Payment\OrderStatus</source_model>
+                        <source_model>Spotii\Spotiipay\Model\Config\Source\Order\OrderStatus</source_model>
                         <config_path>payment/spotiipay/paid_order_status"</config_path>
                     </field>
                      <!-- canceled order status -->
                      <field id="canceled_order_status" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Canceled order status</label>
-                        <source_model>Spotii\Spotiipay\Model\Config\Source\Payment\OrderStatus</source_model>
+                        <source_model>Spotii\Spotiipay\Model\Config\Source\Order\OrderStatus</source_model>
                         <config_path>payment/spotiipay/canceled_order_status"</config_path>
                     </field>
                 </group>
