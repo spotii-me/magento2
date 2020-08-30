@@ -46,7 +46,7 @@ class Transaction
      * @var SpotiiHelper
      */
     private $spotiiHelper;
-
+    const PAYMENT_CODE = 'spotiipay';
     /**
      * Transaction constructor.
      * @param \Magento\Sales\Model\OrderFactory $orderFactory
@@ -87,11 +87,11 @@ class Transaction
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
         try {
-            $ordersCollection = $this->orderFactory->create()->getCollection()->addAttributeToSelect('increment_id');
-             /*  ->addFieldToFilter(
+            $ordersCollection = $this->orderFactory->create()
+               ->addFieldToFilter(
                     'status',
                     [
-                        'eq' => 'complete',
+                        'eq' => 'paymentauthorized',
                         'eq' => 'processing'
                     ]
                 )
@@ -102,7 +102,13 @@ class Transaction
                         'from' => $yesterday,
                         'to' => $today
                     ]
-                )*/
+                )->addAttributeToFilter(
+                    'payment_method',
+
+                    [
+                        'eq' => 'spotiipay'
+                    ])
+                    ->getCollection()->addAttributeToSelect('increment_id');
                 $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
  
             $body = $this->_buildOrderPayLoad($ordersCollection);
@@ -135,10 +141,12 @@ class Transaction
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
                 $billing = $order->getBillingAddress();
+                $paymentMethod =$payment->getMethod();
+                if ($paymentMethod == self::PAYMENT_CODE){
                 $this->spotiiHelper->logSpotiiActions("Orders ".$orderIncrementId);
                 $orderForSpotii = [
                     'order_number' => $orderIncrementId,
-                    'payment_method' => $payment->getMethod(),
+                    'payment_method' => $paymentMethod,
                     'amount' => strval(round($order->getGrandTotal(), \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION)),
                     'currency' => $order->getOrderCurrencyCode(),
                     'reference' => $payment->getLastTransId(),
@@ -153,6 +161,7 @@ class Transaction
                     'merchant_id' => $this->spotiiApiConfig->getMerchantId()
                 ];
                 array_push($body, $orderForSpotii);
+            }
             }
         }
         return $body;
