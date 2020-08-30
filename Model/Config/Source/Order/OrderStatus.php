@@ -13,32 +13,25 @@ namespace Spotii\Spotiipay\Model\Config\Source\Order;
  */
 class OrderStatus implements \Magento\Framework\Option\ArrayInterface
 {
-    /**
-     * @var Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
-     */
-    protected $statusCollectionFactory;
-
-    /**
-     * Construct
-     *
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
-     */
-    public function __construct( \Magento\Framework\App\Action\Context $context,
-            \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
-        ) 
-    {       
-        $this->statusCollectionFactory = $statusCollectionFactory;      
-        parent::__construct($context);
-    }
-
 
     /**
      * @return array
      */
     public function toOptionArray()
     {
-        $options = $this->statusCollectionFactory->create()->toOptionArray();        
-        return $options;
+        return [
+            [
+                'value' => 'pending',
+                'label' => 'pending',
+            ],
+            [
+                'value' => 'paymentauthorized',
+                'label' => 'paymentauthorized',
+            ],
+            [
+                'value' => 'canceled',
+                'label' => 'canceled',
+            ]
+        ];
     }
 }
