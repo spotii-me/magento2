@@ -160,6 +160,9 @@ class InventoryWorker
                         $stockItem->setIsInStock((bool)$finalQty);
                         $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
                     }
+                    $order->setState('closed')->setStatus('closed');
+                    $order->save();
+                    
             }
         }
         }
