@@ -96,14 +96,15 @@ class Transaction
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
         $status = $this->spotiiApiConfig->getPaidOrderStatus();
-        $this->spotiiHelper->logSpotiiActions("cron ".$status);
+        $this->spotiiHelper->logSpotiiActions("cron ".$status." type ".gettype($value));
         try {
             $ordersCollection = $this->orderFactory->create()
                ->addFieldToFilter(
                     'status',
                     [
-                        'eq' => $status
-                    ]
+                     'eq' => $status,
+                     'eq' => 'paymentauthorised'
+                     ]
                 )
                 ->addAttributeToFilter(
                     'created_at',
