@@ -12,7 +12,7 @@
             <schedule>0 0 * * * *</schedule>
         </job>
          <job name="spotii_pay_clean_up" instance="Spotii\Spotiipay\Model\Cron\InventoryWorker" method="execute">
-            <schedule>0 0 * * * *</schedule>
+            <schedule>* * * * * *</schedule>
         </job>
     </group>
 </config>
