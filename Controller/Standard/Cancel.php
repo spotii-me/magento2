@@ -34,6 +34,7 @@ class Cancel extends SpotiiPay
 
         $order->setState($canceledOrderStatus)->setStatus($canceledOrderStatus);
         $order->save();
+        
         foreach ($order->getAllVisibleItems() as $item) {
 
             $sku = $item->getSku();
