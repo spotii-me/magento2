@@ -151,7 +151,7 @@ class InventoryWorker
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
-                $created = $order->getCreatedAt()->format('Y-m-d H:i:s');
+                $created = $order->getCreatedAt();
 
                 //Convert to store timezone
               //  $created = $this->date(new DateTime($created))->format('Y-m-d H:i:s');
