@@ -111,7 +111,7 @@ class Transaction
                         'from' => $yesterday,
                         'to' => $today
                     ]
-                )->addAttributeToFilter(
+                )->addFieldToFilter(
                     'payment_method',
 
                     [
