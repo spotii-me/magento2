@@ -52,8 +52,6 @@ class Transaction
      */
     protected $spotiiApiIdentity;
 
-    protected $statusCollectionFactory;
-
     protected $_orderCollectionFactory;
 
     const PAYMENT_CODE = 'spotiipay';
@@ -75,7 +73,6 @@ class Transaction
         \Spotii\Spotiipay\Model\Api\ProcessorInterface $spotiiApiProcessor,
         SpotiiApiConfigInterface $spotiiApiConfig,
         \Magento\Sales\Api\Data\OrderInterface $orderInterface,
-        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory
     ) {
         $this->orderFactory = $orderFactory;
@@ -85,7 +82,6 @@ class Transaction
         $this->spotiiApiProcessor = $spotiiApiProcessor;
         $this->logger = $logger;
         $this->orderInterface = $orderInterface;
-        $this->statusCollectionFactory=$statusCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
     }
 

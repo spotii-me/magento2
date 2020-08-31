@@ -24,11 +24,6 @@ class InventoryWorker
     /**
      * @var SpotiiApiConfigInterface
      */
-    private $spotiiApiConfig;
-    /**
-     * @var \Spotii\Spotiipay\Model\Api\ProcessorInterface
-     */
-    private $spotiiApiProcessor;
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -52,8 +47,6 @@ class InventoryWorker
      */
     protected $spotiiApiIdentity;
 
-    protected $statusCollectionFactory;
-
     protected $_orderCollectionFactory;
 
     protected $stockRegistry;
@@ -76,10 +69,8 @@ class InventoryWorker
         SpotiiHelper $spotiiHelper,
         ConfigInterface $config,
         \Psr\Log\LoggerInterface $logger,
-        \Spotii\Spotiipay\Model\Api\ProcessorInterface $spotiiApiProcessor,
         SpotiiApiConfigInterface $spotiiApiConfig,
         \Magento\Sales\Api\Data\OrderInterface $orderInterface,
-        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\Stdlib\DateTime\DateTime $date
@@ -88,10 +79,8 @@ class InventoryWorker
         $this->spotiiHelper = $spotiiHelper;
         $this->config = $config;
         $this->spotiiApiConfig = $spotiiApiConfig;
-        $this->spotiiApiProcessor = $spotiiApiProcessor;
         $this->logger = $logger;
         $this->orderInterface = $orderInterface;
-        $this->statusCollectionFactory=$statusCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->stockRegistry = $stockRegistry;
         $this->date = $date;
@@ -105,7 +94,7 @@ class InventoryWorker
         $this->spotiiHelper->logSpotiiActions("****Inventory clean up process start****");
         $today = date("Y-m-d H:i:s");
         $this->spotiiHelper->logSpotiiActions("Current date : $today");
-        $yesterday = date("Y-m-d H:i:s", strtotime("-1 days -1 hours"));
+        $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
 
         $hourAgo = date("Y-m-d H:i:s", strtotime("-1 hours"));
@@ -153,14 +142,7 @@ class InventoryWorker
                 $paymentMethod =$payment->getMethod();
                 $created = $order->getCreatedAt();
 
-                //Convert to store timezone
-                $created = $this->date(new \DateTime($created));
-
-                //To print or display this you can use following.
-                //Feel free to tweak the format
-                $dateAsString = $created->format('Y-m-d H:i:s');
-                $this->spotiiHelper->logSpotiiActions("out ".$orderIncrementId.' '.$created.''.$paymentMethod);
-                if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $dateAsString){
+                    if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $created){
                     $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
                     foreach ($order->getAllVisibleItems() as $item) {
                         $sku = $item->getSku();
