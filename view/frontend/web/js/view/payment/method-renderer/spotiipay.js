@@ -156,7 +156,7 @@ function onCheckout() {
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
-  //console.log('Message - ', message);
+  console.log('Message - ', message);
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;

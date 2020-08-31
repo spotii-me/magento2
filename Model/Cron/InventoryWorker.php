@@ -24,11 +24,6 @@ class InventoryWorker
     /**
      * @var SpotiiApiConfigInterface
      */
-    private $spotiiApiConfig;
-    /**
-     * @var \Spotii\Spotiipay\Model\Api\ProcessorInterface
-     */
-    private $spotiiApiProcessor;
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -52,8 +47,6 @@ class InventoryWorker
      */
     protected $spotiiApiIdentity;
 
-    protected $statusCollectionFactory;
-
     protected $_orderCollectionFactory;
 
     protected $stockRegistry;
@@ -76,10 +69,8 @@ class InventoryWorker
         SpotiiHelper $spotiiHelper,
         ConfigInterface $config,
         \Psr\Log\LoggerInterface $logger,
-        \Spotii\Spotiipay\Model\Api\ProcessorInterface $spotiiApiProcessor,
         SpotiiApiConfigInterface $spotiiApiConfig,
         \Magento\Sales\Api\Data\OrderInterface $orderInterface,
-        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\Stdlib\DateTime\DateTime $date
@@ -88,10 +79,8 @@ class InventoryWorker
         $this->spotiiHelper = $spotiiHelper;
         $this->config = $config;
         $this->spotiiApiConfig = $spotiiApiConfig;
-        $this->spotiiApiProcessor = $spotiiApiProcessor;
         $this->logger = $logger;
         $this->orderInterface = $orderInterface;
-        $this->statusCollectionFactory=$statusCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->stockRegistry = $stockRegistry;
         $this->date = $date;

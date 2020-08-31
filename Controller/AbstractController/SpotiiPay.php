@@ -92,7 +92,6 @@ abstract class SpotiiPay extends Action
 
     protected $stockRegistry;
 
-    protected $statusCollectionFactory;
     /**
      * Spotiipay constructor.
      * @param \Magento\Framework\App\Action\Context $context
@@ -134,7 +133,6 @@ abstract class SpotiiPay extends Action
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         SpotiiApiConfigInterface $spotiiApiIdentity,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
-        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
 
     )
     {
@@ -157,7 +155,6 @@ abstract class SpotiiPay extends Action
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->spotiiApiIdentity = $spotiiApiIdentity;
         $this->stockRegistry = $stockRegistry;
-        $this->statusCollectionFactory=$statusCollectionFactory;
         parent::__construct($context);
     }
 
