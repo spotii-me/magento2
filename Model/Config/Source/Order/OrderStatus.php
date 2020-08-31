@@ -20,7 +20,6 @@ class OrderStatus extends OrderStatusInterface implements \Magento\Framework\Opt
      */
     public function toOptionArray()
     {
-        $options = $this->statusCollectionFactory->create()->toOptionArray();        
-        return $options;
+        return $this->statusCollectionFactory->create()->toOptionArray();        
     }
 }
