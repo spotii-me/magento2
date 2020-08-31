@@ -99,17 +99,24 @@ class Transaction
         $this->spotiiHelper->logSpotiiActions("cron ".$status." type ".gettype($status));
         try {
             $ordersCollection = $this->orderFactory->create()
-              // ->addFieldToFilter(
-              //      'status',
-              //       ['eq' => 'paymentauthorised']
-               // )
+                ->addFieldToFilter(
+                    'status',
+                     ['in' => 'paymentauthorised']
+                )
                 ->addAttributeToFilter(
                     'created_at',
                     [
                         'from' => $yesterday,
                         'to' => $today
                     ]
-                )->getCollection()->addAttributeToSelect('increment_id');
+                )->addFieldToFilter('created_at',
+                ['gteq' => $from]
+                )
+                ->addFieldToFilter('created_at',
+                ['lteq' => $to]
+                )
+                ->getCollection()->addAttributeToSelect('increment_id');
+                       
                 $ordersCollection->getSelect()
                 ->join(
                     ["sop" => "sales_order_payment"],
