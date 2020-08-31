@@ -108,13 +108,12 @@ class InventoryWorker
         $hourAgo = date('Y-m-d H:i:s', strtotime($hourAgo));
 
         $today = date('Y-m-d H:i:s', strtotime($today));
-        $status = $this->spotiiApiConfig->getNewOrderStatus();
 
         try {
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
                 'status',
-                ['eq' => $status]
+                ['eq' => 'pending']
                 )->addFieldToFilter(
                  'created_at',
                 ['gteq' => $yesterday]

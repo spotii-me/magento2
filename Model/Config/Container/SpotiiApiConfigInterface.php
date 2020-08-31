@@ -64,21 +64,4 @@ interface SpotiiApiConfigInterface extends IdentityInterface
      */
     public function getPaymentAction();
 
-    /**
-     * Get new order status
-     * @return mixed
-     */
-    public function getNewOrderStatus();
-    
-    /**
-     * Get paid order status
-     * @return mixed
-     */
-    public function getPaidOrderStatus();
-
-    /**
-     * Get canceled order status
-     * @return mixed
-     */
-    public function getCanceledOrderStatus();
 }

@@ -79,9 +79,7 @@ class Redirect extends SpotiiPay
         );
         
      
-        $this->spotiiHelper->logSpotiiActions("new : ".$this->spotiiApiIdentity->getNewOrderStatus()." paid : ".$this->spotiiApiIdentity->getPaidOrderStatus()." Canceled : ".$this->spotiiApiIdentity->getCanceledOrderStatus());
-        $newOrderStatus = $this->spotiiApiIdentity->getNewOrderStatus();
-        $order->setState($newOrderStatus)->setStatus($newOrderStatus);
+        $order->setState('new')->setStatus('pending');
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
 

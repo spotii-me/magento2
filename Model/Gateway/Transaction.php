@@ -100,13 +100,13 @@ class Transaction
         $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
-        $status = $this->spotiiApiConfig->getPaidOrderStatus();
-        $this->spotiiHelper->logSpotiiActions("cron ".$status." type ".gettype($status));
+
         try {
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
                 'status',
-                ['eq' => $status]
+                ['eq' => 'paymentauthorised',
+                 'eq' => 'processing']
                 )->addFieldToFilter(
                  'created_at',
                 ['gteq' => $yesterday]
