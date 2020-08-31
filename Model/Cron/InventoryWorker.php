@@ -58,6 +58,8 @@ class InventoryWorker
 
     protected $stockRegistry;
 
+    protected $date;
+
     const PAYMENT_CODE = 'spotiipay';
     /**
      * Transaction constructor.
@@ -79,7 +81,8 @@ class InventoryWorker
         \Magento\Sales\Api\Data\OrderInterface $orderInterface,
         \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
-        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
+        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
+        \Magento\Framework\Stdlib\DateTime\DateTime $date
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -91,6 +94,7 @@ class InventoryWorker
         $this->statusCollectionFactory=$statusCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->stockRegistry = $stockRegistry;
+        $this->date = $date;
     }
 
     /**
@@ -150,14 +154,14 @@ class InventoryWorker
                 $created = $order->getCreatedAt();
 
                 //Convert to store timezone
-                $created = $this->timezone->date(new \DateTime($created));
+                $created = $this->date(new \DateTime($created));
 
                 //To print or display this you can use following.
                 //Feel free to tweak the format
                 $dateAsString = $created->format('Y-m-d H:i:s');
 
                 if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $dateAsString){
-                    $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId);
+                    $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
                     foreach ($order->getAllVisibleItems() as $item) {
                         $sku = $item->getSku();
                         $qtyOrdered = $item->getQtyOrdered();
@@ -175,7 +179,7 @@ class InventoryWorker
                     $order->save();
                     
             }else if($paymentMethod == self::PAYMENT_CODE){
-                $this->spotiiHelper->logSpotiiActions("Order not cleaned up ".$orderIncrementId);
+                $this->spotiiHelper->logSpotiiActions("Order not cleaned up ".$orderIncrementId.' '.$created);
             }
         }
         }
