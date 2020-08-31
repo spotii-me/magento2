@@ -99,7 +99,6 @@ class Transaction
         $this->spotiiHelper->logSpotiiActions("cron ".$status);
         try {
             $ordersCollection = $this->orderFactory->create()
-               ->addFieldToSelect('*')
                ->addFieldToFilter(
                     'status',
                     [
