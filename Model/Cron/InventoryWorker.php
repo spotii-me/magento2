@@ -5,7 +5,7 @@
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
 
-namespace Spotii\Spotiipay\Model\Gateway;
+namespace Spotii\Spotiipay\Model\Cron;
 
 use Spotii\Spotiipay\Helper\Data as SpotiiHelper;
 use Spotii\Spotiipay\Model\Api\ConfigInterface;
@@ -15,7 +15,7 @@ use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
  * Class Transaction
  * @package Spotii\Spotiipay\Model\Gateway
  */
-class Transaction
+class InventoryWorker
 {
     /**
      * @var \Magento\Sales\Model\OrderFactory
