@@ -132,8 +132,7 @@ abstract class SpotiiPay extends Action
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         SpotiiApiConfigInterface $spotiiApiIdentity,
-        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
-
+        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
     )
     {
         $this->_customerSession = $customerSession;
