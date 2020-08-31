@@ -151,14 +151,14 @@ class InventoryWorker
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
-                $created = $order->getCreatedAt();
+                $created = $order->getCreatedAt()->format('Y-m-d H:i:s');
 
                 //Convert to store timezone
-                $created = $this->date(new \DateTime($created));
+              //  $created = $this->date(new DateTime($created))->format('Y-m-d H:i:s');
 
                 //To print or display this you can use following.
                 //Feel free to tweak the format
-                $dateAsString = $created->format('Y-m-d H:i:s');
+                //$dateAsString = $created->format('Y-m-d H:i:s');
                 $this->spotiiHelper->logSpotiiActions("out ".$orderIncrementId.' '.$created.''.$paymentMethod);
                 if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $dateAsString){
                     $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
