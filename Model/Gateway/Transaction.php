@@ -122,7 +122,7 @@ class Transaction
                 )
                 ->where('sop.method = ?','spotiipay');*/
 
-                $this->_orderCollectionFactory->create()
+                $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
                 'status',
                 ['eq' => 'paymentauthorised']
