@@ -102,7 +102,6 @@ class Transaction
                ->addFieldToFilter(
                     'status',
                     [
-                     'eq' => $status,
                      'eq' => 'paymentauthorised'
                      ]
                 )
