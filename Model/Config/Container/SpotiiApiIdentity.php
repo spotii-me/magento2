@@ -20,10 +20,7 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     const XML_PATH_MERCHANT_ID = 'payment/spotiipay/merchant_id';
     const XML_PATH_LOG_TRACKER = 'payment/spotiipay/log_tracker';
     const XML_PATH_PAYMENT_ACTION = 'payment/spotiipay/payment_action';
-    const XML_PATH_NEW_ORDER_STATUS = 'payment/spotiipay/new_order_status';
-    const XML_PATH_PAID_ORDER_STATUS = 'payment/spotiipay/paid_order_status';
-    const XML_PATH_CANCELED_ORDER_STATUS = 'payment/spotiipay/canceled_order_status';
-
+    
     
     private $checkoutUrlLive = "https://api.spotii.me";
     private $checkoutUrlSandbox = "https://api.sandbox.spotii.me";
@@ -72,39 +69,6 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     {
         return $this->getConfigValue(
             self::XML_PATH_PAYMENT_MODE,
-            $this->getStore()->getStoreId()
-        );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getNewOrderStatus()
-    {
-        return $this->getConfigValue(
-            self::XML_PATH_NEW_ORDER_STATUS,
-            $this->getStore()->getStoreId()
-        );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getPaidOrderStatus()
-    {
-        return $this->getConfigValue(
-            self::XML_PATH_PAID_ORDER_STATUS,
-            $this->getStore()->getStoreId()
-        );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getCanceledOrderStatus()
-    {
-        return $this->getConfigValue(
-            self::XML_PATH_CANCELED_ORDER_STATUS,
             $this->getStore()->getStoreId()
         );
     }

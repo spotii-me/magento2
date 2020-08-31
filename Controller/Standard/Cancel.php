@@ -30,10 +30,9 @@ class Cancel extends SpotiiPay
 
         if($paymentSubmitted == '1'){
 
-        $canceledOrderStatus = $this->spotiiApiIdentity->getCanceledOrderStatus();
-
-        $order->setState($canceledOrderStatus)->setStatus($canceledOrderStatus);
+        $order->setState("canceled")->setStatus("canceled");
         $order->save();
+        
         foreach ($order->getAllVisibleItems() as $item) {
 
             $sku = $item->getSku();
