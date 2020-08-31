@@ -126,7 +126,6 @@ class InventoryWorker
                 ['lteq' => $today]
                 )->addAttributeToSelect('increment_id');
                 
-
                 $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
  
                 $this->cleanOrders($ordersCollection, $hourAgo);
@@ -159,7 +158,7 @@ class InventoryWorker
                 //To print or display this you can use following.
                 //Feel free to tweak the format
                 $dateAsString = $created->format('Y-m-d H:i:s');
-
+                $this->spotiiHelper->logSpotiiActions("out ".$orderIncrementId.' '.$created);
                 if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $dateAsString){
                     $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
                     foreach ($order->getAllVisibleItems() as $item) {
