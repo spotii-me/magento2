@@ -53,6 +53,9 @@ class Transaction
     protected $spotiiApiIdentity;
 
     protected $statusCollectionFactory;
+
+    protected $_orderCollectionFactory;
+
     const PAYMENT_CODE = 'spotiipay';
     /**
      * Transaction constructor.
@@ -72,7 +75,8 @@ class Transaction
         \Spotii\Spotiipay\Model\Api\ProcessorInterface $spotiiApiProcessor,
         SpotiiApiConfigInterface $spotiiApiConfig,
         \Magento\Sales\Api\Data\OrderInterface $orderInterface,
-        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory
+        \Magento\Sales\Model\ResourceModel\Order\Status\CollectionFactory $statusCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -82,6 +86,7 @@ class Transaction
         $this->logger = $logger;
         $this->orderInterface = $orderInterface;
         $this->statusCollectionFactory=$statusCollectionFactory;
+        $this->_orderCollectionFactory = $orderCollectionFactory;
     }
 
     /**
@@ -98,24 +103,37 @@ class Transaction
         $status = $this->spotiiApiConfig->getPaidOrderStatus();
         $this->spotiiHelper->logSpotiiActions("cron ".$status." type ".gettype($status));
         try {
-            $ordersCollection = $this->orderFactory->create()
+           /* $ordersCollection = $this->orderFactory->create()
             ->addFieldToFilter(
                 'status', 'paymentauthorised'
             )->getCollection()->addAttributeToSelect('increment_id');
-            /*->addFieldToFilter('created_at',
+            ->addFieldToFilter('created_at',
             ['gteq' => $yesterday]
             )
             ->addFieldToFilter('created_at',
             ['lteq' => $today]
-            )*/
+            )
                    
-              /*  $ordersCollection->getSelect()
+                $ordersCollection->getSelect()
                 ->join(
                     ["sop" => "sales_order_payment"],
                     'main_table.entity_id = sop.parent_id',
                     array('method')
                 )
                 ->where('sop.method = ?','spotiipay');*/
+
+                $this->_orderCollectionFactory->create()
+                ->addFieldToFilter(
+                'status',
+                ['eq' => 'paymentauthorised']
+                )->addFieldToFilter(
+                 'created_at',
+                ['gteq' => $yesterday]
+                )->addFieldToFilter(
+                'created_at',
+                ['lteq' => $today]
+                )->addAttributeToSelect('increment_id');
+                
 
                 $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
  
