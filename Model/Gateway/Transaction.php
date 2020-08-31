@@ -96,8 +96,10 @@ class Transaction
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
         $status = $this->spotiiApiConfig->getPaidOrderStatus();
+        $this->spotiiHelper->logSpotiiActions("cron ".$status);
         try {
             $ordersCollection = $this->orderFactory->create()
+               ->addFieldToSelect('*')
                ->addFieldToFilter(
                     'status',
                     [
@@ -111,13 +113,15 @@ class Transaction
                         'from' => $yesterday,
                         'to' => $today
                     ]
-                )->addFieldToFilter(
-                    'payment_method',
+                )->getCollection()->addAttributeToSelect('increment_id');
+                $ordersCollection->getSelect()
+                ->join(
+                    ["sop" => "sales_order_payment"],
+                    'main_table.entity_id = sop.parent_id',
+                    array('method')
+                )
+                ->where('sop.method = ?','spotiipay');
 
-                    [
-                        'eq' => 'spotiipay'
-                    ])
-                    ->getCollection()->addAttributeToSelect('increment_id');
                 $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
  
             $body = $this->_buildOrderPayLoad($ordersCollection);
