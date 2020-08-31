@@ -144,6 +144,7 @@ class InventoryWorker
      */
     private function cleanOrders($ordersCollection = null, $hourAgo)
     {
+        try{
         if ($ordersCollection) {
             foreach ($ordersCollection as $orderObj) {
                 $orderIncrementId = $orderObj->getIncrementId();
@@ -182,5 +183,11 @@ class InventoryWorker
             }
         }
         }
+    } catch (\Exception $e) {
+        $this->spotiiHelper->logSpotiiActions("Error while cleaning up orders by Spotii" . $e->getMessage());
     }
+
+    }
+
+
 }
