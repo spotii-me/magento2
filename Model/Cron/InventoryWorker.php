@@ -101,11 +101,15 @@ class InventoryWorker
         $this->spotiiHelper->logSpotiiActions("****Inventory clean up process start****");
         $today = date("Y-m-d H:i:s");
         $this->spotiiHelper->logSpotiiActions("Current date : $today");
-        $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
+        $yesterday = date("Y-m-d H:i:s", strtotime("-1 days -1 hours"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
+
+        $hourAgo = date("Y-m-d H:i:s", strtotime("-1 hours"));
+        $hourAgo = date('Y-m-d H:i:s', strtotime($hourAgo));
+
         $today = date('Y-m-d H:i:s', strtotime($today));
         $status = $this->spotiiApiConfig->getNewOrderStatus();
-        $this->spotiiHelper->logSpotiiActions("cron ".$status." type ".gettype($status));
+
         try {
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
@@ -122,7 +126,7 @@ class InventoryWorker
 
                 $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
  
-                $this->cleanOrders($ordersCollection);
+                $this->cleanOrders($ordersCollection, $hourAgo);
             
             $this->spotiiHelper->logSpotiiActions("****Inventory clean up process end****");
         } catch (\Exception $e) {
@@ -136,7 +140,7 @@ class InventoryWorker
      * @param null $ordersCollection
      * @return array
      */
-    private function cleanOrders($ordersCollection = null)
+    private function cleanOrders($ordersCollection = null, $hourAgo)
     {
         if ($ordersCollection) {
             foreach ($ordersCollection as $orderObj) {
@@ -144,9 +148,17 @@ class InventoryWorker
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
-                $this->spotiiHelper->logSpotiiActions("Orders ".$orderIncrementId);
-                if($paymentMethod == self::PAYMENT_CODE){
-                
+                $created = $order->getCreatedAt();
+
+                //Convert to store timezone
+                $created = $this->timezone->date(new \DateTime($created));
+
+                //To print or display this you can use following.
+                //Feel free to tweak the format
+                $dateAsString = $created->format('Y-m-d H:i:s');
+
+                if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $dateAsString){
+                    $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId);
                     foreach ($order->getAllVisibleItems() as $item) {
                         $sku = $item->getSku();
                         $qtyOrdered = $item->getQtyOrdered();
@@ -163,6 +175,8 @@ class InventoryWorker
                     $order->setState('closed')->setStatus('closed');
                     $order->save();
                     
+            }else if($paymentMethod == self::PAYMENT_CODE){
+                $this->spotiiHelper->logSpotiiActions("Order not cleaned up ".$orderIncrementId);
             }
         }
         }
