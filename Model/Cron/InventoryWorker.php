@@ -94,7 +94,7 @@ class InventoryWorker
         $this->spotiiHelper->logSpotiiActions("****Inventory clean up process start****");
         $today = date("Y-m-d H:i:s");
         $this->spotiiHelper->logSpotiiActions("Current date : $today");
-        $yesterday = date("Y-m-d H:i:s", strtotime("-1 days -1 hours"));
+        $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
 
         $hourAgo = date("Y-m-d H:i:s", strtotime("-1 hours"));
