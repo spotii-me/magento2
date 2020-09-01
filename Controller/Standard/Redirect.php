@@ -79,7 +79,7 @@ class Redirect extends SpotiiPay
         );
         
         $newOrderStatus = $this->spotiiApiIdentity->getNewOrderStatus();
-        $order->setState($newOrderStatus)->setStatus($newOrderStatus);
+        $order->setState('new')->setStatus($newOrderStatus);
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
 

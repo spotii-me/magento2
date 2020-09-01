@@ -103,25 +103,6 @@ class Transaction
         $status = $this->spotiiApiConfig->getPaidOrderStatus();
         $this->spotiiHelper->logSpotiiActions("cron ".$status." type ".gettype($status));
         try {
-           /* $ordersCollection = $this->orderFactory->create()
-            ->addFieldToFilter(
-                'status', 'paymentauthorised'
-            )->getCollection()->addAttributeToSelect('increment_id');
-            ->addFieldToFilter('created_at',
-            ['gteq' => $yesterday]
-            )
-            ->addFieldToFilter('created_at',
-            ['lteq' => $today]
-            )
-                   
-                $ordersCollection->getSelect()
-                ->join(
-                    ["sop" => "sales_order_payment"],
-                    'main_table.entity_id = sop.parent_id',
-                    array('method')
-                )
-                ->where('sop.method = ?','spotiipay');*/
-
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
                 'status',
@@ -134,7 +115,6 @@ class Transaction
                 ['lteq' => $today]
                 )->addAttributeToSelect('increment_id');
                 
-
                 $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
  
             $body = $this->_buildOrderPayLoad($ordersCollection);
@@ -166,10 +146,10 @@ class Transaction
                 $orderIncrementId = $orderObj->getIncrementId();
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
-                $billing = $order->getBillingAddress();
                 $paymentMethod =$payment->getMethod();
-                
-                $this->spotiiHelper->logSpotiiActions("Orders ".$orderIncrementId);
+                if( $paymentMethod == 'spotiipay'){
+                $billing = $order->getBillingAddress();
+                $this->spotiiHelper->logSpotiiActions("Order sent ".$orderIncrementId);
                 $orderForSpotii = [
                     'order_number' => $orderIncrementId,
                     'payment_method' => $paymentMethod,
@@ -189,6 +169,7 @@ class Transaction
                 array_push($body, $orderForSpotii);
             }
         }
+    }
         return $body;
     }
 }
