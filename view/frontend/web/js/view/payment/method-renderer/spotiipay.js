@@ -197,7 +197,8 @@ window.closeIFrameOnCompleteOrder = function(message) {
     case failedCheckOutStatus: {
       if(hidePopup && popup){
         popup=false;
-        closeIFrame();
+        document.getElementById("closeiframebtn").click();
+        console.log('here');
       }
       if(!isFail){
       isFail = true;
@@ -206,7 +207,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
 
       document.getElementById('closeiframebtn').onclick = function() {
         var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
-        console.log('rejectUrlSubmitted '+rejectUrlSubmitted);
+        console.log('rejectUrlSubmitted 1'+rejectUrlSubmitted);
         location.href = rejectUrlSubmitted; 
       };
       removeOverlay();
@@ -225,7 +226,6 @@ window.closeIFrameOnCompleteOrder = function(message) {
       break;
     }
   }
-  //document.getElementById('closeiframebtn').click();
 };
 
 define([
