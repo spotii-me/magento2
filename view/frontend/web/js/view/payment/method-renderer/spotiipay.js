@@ -158,7 +158,7 @@ function onCheckout() {
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
-  console.log('Message - ', message);
+  //console.log('Message - ', message);
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
@@ -199,18 +199,18 @@ window.closeIFrameOnCompleteOrder = function(message) {
       if(hidePopup && popup){
         popup=false;
         document.getElementById("closeiframebtn").click();
-        console.log('here');
+        //console.log('here');
       }
       if(!isFail){
       isFail = true;
       isDeclined = true;
-      console.log('failedCheckOutStatus');  
+      //console.log('failedCheckOutStatus');  
 
       document.getElementById('closeiframebtn').onclick = function() {
         if(buttonCalledOnce){
           buttonCalledOnce = false;
           var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
-          console.log('rejectUrlSubmitted 1'+rejectUrlSubmitted);
+          //console.log('rejectUrlSubmitted 1'+rejectUrlSubmitted);
           location.href = rejectUrlSubmitted; 
       }
       };
