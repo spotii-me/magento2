@@ -15,7 +15,9 @@ var jsonData;
 var rejectUrl;
 var confirmUrl;
 const root=document.getElementsByTagName('body')[0];
-
+var hidePopup;
+var popup = true;
+var buttonOnce = true;
 //Build fancybox component
 var button1 = document.createElement('button');
 button1.style.display='none';
@@ -160,6 +162,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
+  hidePopup = message.hidePopup;
   //console.log('Order state - ', status);
   //console.log('Order confirmUrl - ', confirmUrl);
   //console.log('Order rejectUrl - ', rejectUrl);
@@ -194,16 +197,22 @@ window.closeIFrameOnCompleteOrder = function(message) {
       break;
     }
     case failedCheckOutStatus: {
+      if(hidePopup && popup){
+        popup = false;
+        document.getElementById('closeiframebtn').click();
+      }
       if(!isFail){
       isFail = true;
       console.log('failedCheckOutStatus');
       isDeclined = true;
-      var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
+
+        document.getElementById('closeiframebtn').onclick = function() {
+          if(buttonOnce){
+            buttonOnce=false;
+        var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
         console.log('rejectUrlSubmitted '+rejectUrlSubmitted);
         location.href = rejectUrlSubmitted; 
-      document.getElementById('closeiframebtn').onclick = function() {
-        closeIFrame();
-        location.href = rejectUrlSubmitted; 
+        }
       };
       removeOverlay();
       
