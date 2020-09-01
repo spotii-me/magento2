@@ -208,9 +208,10 @@ window.closeIFrameOnCompleteOrder = function(message) {
 
       document.getElementById('closeiframebtn').onclick = function() {
         if(buttonCalledOnce){
-        var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
-        console.log('rejectUrlSubmitted 1'+rejectUrlSubmitted);
-        location.href = rejectUrlSubmitted; 
+          buttonCalledOnce = false;
+          var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
+          console.log('rejectUrlSubmitted 1'+rejectUrlSubmitted);
+          location.href = rejectUrlSubmitted; 
       }
       };
       removeOverlay();
