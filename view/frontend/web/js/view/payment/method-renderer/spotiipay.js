@@ -196,6 +196,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
     }
     case failedCheckOutStatus: {
       if(hidePopup){
+        hidePopup=false;
         closeIFrame();
         var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
         console.log('rejectUrlSubmitted '+rejectUrlSubmitted);

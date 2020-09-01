@@ -14,7 +14,7 @@
     </group>
     <group id="spotii_pay_clean_up">
          <job name="spotii_pay_clean_up" instance="Spotii\Spotiipay\Model\Cron\InventoryWorker" method="execute">
-            <schedule>5 * * * * *</schedule>
+            <schedule>* * * * * *</schedule>
         </job>
     </group>
 </config>
