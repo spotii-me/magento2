@@ -15,6 +15,7 @@ var jsonData;
 var rejectUrl;
 var confirmUrl;
 var popup = true;
+var buttonCalledOnce = true;
 const root=document.getElementsByTagName('body')[0];
 
 //Build fancybox component
@@ -206,9 +207,11 @@ window.closeIFrameOnCompleteOrder = function(message) {
       console.log('failedCheckOutStatus');  
 
       document.getElementById('closeiframebtn').onclick = function() {
+        if(buttonCalledOnce){
         var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
         console.log('rejectUrlSubmitted 1'+rejectUrlSubmitted);
         location.href = rejectUrlSubmitted; 
+      }
       };
       removeOverlay();
     }
