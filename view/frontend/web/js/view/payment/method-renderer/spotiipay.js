@@ -155,23 +155,18 @@ function onCheckout() {
     }
   });
 }
-
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
-  //console.log('Message - ', message);
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
   hidePopup = message.hidePopup;
-  //console.log('Order state - ', status);
-  //console.log('Order confirmUrl - ', confirmUrl);
-  //console.log('Order rejectUrl - ', rejectUrl);
-
+ console.log('message '+ message);
+  
   switch (status) {
     case successCheckOutStatus: {
       if(!isSuccess){
         isSuccess = true;
-      //console.log('successCheckOutStatus');
       var params = confirmUrl.split('/');
       var reference = params[params.length-2];
       var ids = reference.split('-');
@@ -189,7 +184,6 @@ window.closeIFrameOnCompleteOrder = function(message) {
       });
       location.href = confirmUrl; 
       document.getElementById('closeiframebtn').onclick = function() {
-        closeIFrame();
         location.href = confirmUrl; 
       };
       removeOverlay();
@@ -203,34 +197,28 @@ window.closeIFrameOnCompleteOrder = function(message) {
       }
       if(!isFail){
       isFail = true;
-      //console.log('failedCheckOutStatus');
       isDeclined = true;
 
         document.getElementById('closeiframebtn').onclick = function() {
           if(buttonOnce){
            buttonOnce=false;
         var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
-        //console.log('rejectUrlSubmitted '+rejectUrlSubmitted);
         location.href = rejectUrlSubmitted; 
         }
       };
-      removeOverlay();
-      
     }
+      removeOverlay(); 
       break;
     }
     case submittedCheckOutStatus: {
-     //console.log('submittedCheckOutStatus');
       removeOverlay();
       break;
     }
     default: {
-     // console.log('None status ');
       removeOverlay();
       break;
     }
   }
-  //document.getElementById('closeiframebtn').click();
 };
 
 define([
