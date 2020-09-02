@@ -15,7 +15,7 @@ var jsonData;
 var rejectUrl;
 var confirmUrl;
 const root=document.getElementsByTagName('body')[0];
-var hidePopup;
+var hidePopup=false;
 var popup = true;
 var buttonOnce = true;
 //Build fancybox component
@@ -155,14 +155,18 @@ function onCheckout() {
     }
   });
 }
+
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
+  console.log('Message - ', message);
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
   hidePopup = message.hidePopup;
- console.log('message '+ message);
-  
+  console.log('Order state - ', status);
+  console.log('Order confirmUrl - ', confirmUrl);
+  console.log('Order rejectUrl - ', rejectUrl);
+  console.log('Order hidePopup - ', hidePopup);
   switch (status) {
     case successCheckOutStatus: {
       if(!isSuccess){
@@ -184,6 +188,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
       });
       location.href = confirmUrl; 
       document.getElementById('closeiframebtn').onclick = function() {
+        closeIFrame();
         location.href = confirmUrl; 
       };
       removeOverlay();
@@ -206,8 +211,9 @@ window.closeIFrameOnCompleteOrder = function(message) {
         location.href = rejectUrlSubmitted; 
         }
       };
+      removeOverlay();
+      
     }
-      removeOverlay(); 
       break;
     }
     case submittedCheckOutStatus: {

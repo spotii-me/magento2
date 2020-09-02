@@ -81,7 +81,7 @@ class Redirect extends SpotiiPay
         $newOrderStatus = $this->spotiiApiIdentity->getNewOrderStatus();
         $order->setState('new')->setStatus($newOrderStatus);
         $order->save(); // **
-        $this->_checkoutSession->setLastQuoteId($quoteId);
+        //$this->_checkoutSession->setLastQuoteId($quoteId);
 
     }catch (\Magento\Framework\Exception\LocalizedException $e) {
         $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
