@@ -158,15 +158,12 @@ function onCheckout() {
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
-  console.log('Message - ', message);
+
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
   hidePopup = message.hidePopup;
-  console.log('Order state - ', status);
-  console.log('Order confirmUrl - ', confirmUrl);
-  console.log('Order rejectUrl - ', rejectUrl);
-  console.log('Order hidePopup - ', hidePopup);
+
   switch (status) {
     case successCheckOutStatus: {
       if(!isSuccess){
@@ -180,7 +177,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
         'ecommerce': {
           'purchase': {
             'actionField': {
-              'id': id,                         // Transaction ID. Required for purchases and refunds.
+              'id': id,                // Transaction ID. Required for purchases and refunds.
               'affiliation': 'Spotii',
             }
           }
@@ -207,8 +204,8 @@ window.closeIFrameOnCompleteOrder = function(message) {
         document.getElementById('closeiframebtn').onclick = function() {
           if(buttonOnce){
            buttonOnce=false;
-        var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
-        location.href = rejectUrlSubmitted; 
+           var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
+           location.href = rejectUrlSubmitted; 
         }
       };
       removeOverlay();
