@@ -114,8 +114,6 @@ class Transaction
                 'created_at',
                 ['lteq' => $today]
                 )->addAttributeToSelect('increment_id');
-                
-                $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
  
             $body = $this->_buildOrderPayLoad($ordersCollection);
             $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
