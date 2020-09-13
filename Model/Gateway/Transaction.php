@@ -110,7 +110,7 @@ class Transaction
                 'sales_order_address.country_id ') 
                 ->addFieldToFilter('country_id', 
                     array('IN' => 'AE')
-                /->addFieldToFilter(
+                )->addFieldToFilter(
                 'status',
                 ['eq' => $status]
                 )->addFieldToFilter(
