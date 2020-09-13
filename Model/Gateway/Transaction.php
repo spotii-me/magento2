@@ -103,8 +103,13 @@ class Transaction
         $status = $this->spotiiApiConfig->getPaidOrderStatus();
         $this->spotiiHelper->logSpotiiActions("cron ".$status." type ".gettype($status));
         try {
-                $ordersCollection = $this->_orderCollectionFactory->create()
-                ->addFieldToFilter(
+                $ordersCollection = $this->_orderCollectionFactory->create()->join(
+                'sales_order_address',
+                'sales_order_address.parent_id=main_table.entity_id',
+                'sales_order_address.country_id ') 
+                ->addFieldToFilter('country_id', 
+                    array('IN' => 'UAE')
+                )->addFieldToFilter(
                 'status',
                 ['eq' => $status]
                 )->addFieldToFilter(
