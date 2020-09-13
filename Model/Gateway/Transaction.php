@@ -101,15 +101,16 @@ class Transaction
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
         $status = $this->spotiiApiConfig->getPaidOrderStatus();
-        $this->spotiiHelper->logSpotiiActions("cron ".$status." type ".gettype($status));
+        
         try {
-                $ordersCollection = $this->_orderCollectionFactory->create()->join(
+                $ordersCollection = $this->_orderCollectionFactory->create()
+                ->join(
                 'sales_order_address',
                 'sales_order_address.parent_id=main_table.entity_id',
                 'sales_order_address.country_id ') 
                 ->addFieldToFilter('country_id', 
-                    array('IN' => 'UAE')
-                )->addFieldToFilter(
+                    array('IN' => 'AE')
+                /->addFieldToFilter(
                 'status',
                 ['eq' => $status]
                 )->addFieldToFilter(
@@ -119,7 +120,7 @@ class Transaction
                 'created_at',
                 ['lteq' => $today]
                 )->addAttributeToSelect('increment_id');
- 
+            $this->spotiiHelper->logSpotiiActions("cron "+$ordersCollection);
             $body = $this->_buildOrderPayLoad($ordersCollection);
             $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
             $authToken = $this->config->getAuthToken();
@@ -150,9 +151,10 @@ class Transaction
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
-                if( $paymentMethod == 'spotiipay'){
                 $billing = $order->getBillingAddress();
-                $this->spotiiHelper->logSpotiiActions("Order sent ".$orderIncrementId);
+                if( $paymentMethod == 'spotiipay'/* && $billing->getCountryId() =="UAE"*/){
+                
+                $this->spotiiHelper->logSpotiiActions("Order sent ".$orderIncrementId+" "+$billing->getCountryId());
                 $orderForSpotii = [
                     'order_number' => $orderIncrementId,
                     'payment_method' => $paymentMethod,
@@ -170,6 +172,8 @@ class Transaction
                     'merchant_id' => $this->spotiiApiConfig->getMerchantId()
                 ];
                 array_push($body, $orderForSpotii);
+            }else{
+                $this->spotiiHelper->logSpotiiActions("Order not sent ".$orderIncrementId);
             }
         }
     }
