@@ -120,7 +120,7 @@ class Transaction
                 'created_at',
                 ['lteq' => $today]
                 )->addAttributeToSelect('increment_id');
-            $this->spotiiHelper->logSpotiiActions("cron "+$ordersCollection);
+            $this->spotiiHelper->logSpotiiActions("cron "+sizeof($ordersCollection));
             $body = $this->_buildOrderPayLoad($ordersCollection);
             $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
             $authToken = $this->config->getAuthToken();
