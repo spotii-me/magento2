@@ -104,13 +104,13 @@ class Transaction
         
         try {
                 $ordersCollection = $this->_orderCollectionFactory->create()
-                ->join(
+                /*->join(
                 'sales_order_address',
                 'sales_order_address.parent_id=main_table.entity_id',
                 'sales_order_address.country_id ') 
                 ->addFieldToFilter('country_id', 
                     array('IN' => 'AE')
-                )->addFieldToFilter(
+                )*/->addFieldToFilter(
                 'status',
                 ['eq' => $status]
                 )->addFieldToFilter(
@@ -120,7 +120,7 @@ class Transaction
                 'created_at',
                 ['lteq' => $today]
                 )->addAttributeToSelect('increment_id');
-            $this->spotiiHelper->logSpotiiActions("cron "+sizeof($ordersCollection));
+            $this->spotiiHelper->logSpotiiActions("cron "+ sizeof($ordersCollection));
             $body = $this->_buildOrderPayLoad($ordersCollection);
             $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
             $authToken = $this->config->getAuthToken();
@@ -152,7 +152,7 @@ class Transaction
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
                 $billing = $order->getBillingAddress();
-                if( $paymentMethod == 'spotiipay'/* && $billing->getCountryId() =="UAE"*/){
+                if( $paymentMethod == 'spotiipay' && $billing->getCountryId() =="AE"){
                 
                 $this->spotiiHelper->logSpotiiActions("Order sent ".$orderIncrementId+" "+$billing->getCountryId());
                 $orderForSpotii = [
