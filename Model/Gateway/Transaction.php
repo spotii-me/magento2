@@ -119,7 +119,8 @@ class Transaction
                 )->addFieldToFilter(
                 'created_at',
                 ['lteq' => $today]
-                )->addAttributeToSelect('increment_id');
+                )->addAttributeToSelect('increment_id')
+                ->group('main_table.entity_id');
              $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
             $body = $this->_buildOrderPayLoad($ordersCollection);
             $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
@@ -172,8 +173,6 @@ class Transaction
                     'merchant_id' => $this->spotiiApiConfig->getMerchantId()
                 ];
                 array_push($body, $orderForSpotii);
-            }else{
-                $this->spotiiHelper->logSpotiiActions("Order not sent ".$orderIncrementId);
             }
         }
     }
