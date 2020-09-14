@@ -152,9 +152,9 @@ class Transaction
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
                 $billing = $order->getBillingAddress();
-                if( $paymentMethod == 'spotiipay' && $billing->getCountryId() =="AE"){
+                if( $paymentMethod == 'spotiipay'){
                 
-                $this->spotiiHelper->logSpotiiActions("Order sent ".$orderIncrementId+" "+$billing->getCountryId());
+                $this->spotiiHelper->logSpotiiActions("Order sent ".$orderIncrementId." ".$billing->getCountryId());
                 $orderForSpotii = [
                     'order_number' => $orderIncrementId,
                     'payment_method' => $paymentMethod,
