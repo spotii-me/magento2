@@ -107,7 +107,8 @@ class Transaction
                 ->join(
                 'sales_order_address',
                 'sales_order_address.parent_id=main_table.entity_id',
-                'sales_order_address.country_id ') 
+                'sales_order_address.country_id ')
+                ->group('main_table.entity_id')
                 ->addFieldToFilter('country_id', 
                     array('IN' => 'AE')
                 )->addFieldToFilter(
@@ -119,8 +120,7 @@ class Transaction
                 )->addFieldToFilter(
                 'created_at',
                 ['lteq' => $today]
-                )->addAttributeToSelect('increment_id')
-                ->group('main_table.entity_id');
+                )->addAttributeToSelect('increment_id');
              $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
             $body = $this->_buildOrderPayLoad($ordersCollection);
             $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
