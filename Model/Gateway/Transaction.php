@@ -167,8 +167,6 @@ class Transaction
                     'merchant_id' => $this->spotiiApiConfig->getMerchantId()
                 ];
                 array_push($body, $orderForSpotii);
-            }else{
-                $this->spotiiHelper->logSpotiiActions("Order not sent ".$orderIncrementId." ".$billing->getCountryId());
             }
         }
     }
