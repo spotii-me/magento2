@@ -233,8 +233,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $precision = \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION;
 
-        //return (round($magentoAmount, $precision) == round($spotiiAmount, $precision)) ? true : false;
-        return true;
+        return (round($magentoAmount, $precision) == round($spotiiAmount, $precision)) ? true : false;
     }
 
     /**

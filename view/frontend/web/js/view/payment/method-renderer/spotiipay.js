@@ -420,9 +420,9 @@ define([
 
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
-      //if (total > 200) 
+      if (total > 200) 
       return true;
-      //else return false;
+      else return false;
     },
 
     placeOrder: function (data, event) {
