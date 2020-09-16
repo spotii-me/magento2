@@ -39,7 +39,7 @@ bodyTag.appendChild(div1);
 var a1 = document.createElement('a');
 a1.id = 'fancy';
 a1.style.display='none';
-a1.classList= 'fancy-box';
+a1.classList= 'fancy-box lightbox';
 a1.textContent ='open fancybox';
 a1.href='';
 div1.appendChild(a1);
@@ -349,10 +349,10 @@ define([
       };
       var renderPopup= function (url) {
 
-      LoadCSS("https://widget.spotii.me/v1/javascript/fancybox-2.0.min.css");
+      LoadCSS("https://demo.chodri.com/iframe-lightbox.css");
       var script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
+      script.src = 'https://demo.chodri.com/iframe-lightbox.js';
       $("head").append(script);
 
       openIframeSpotiiCheckout(url);
@@ -360,8 +360,8 @@ define([
 
    var openIframeSpotiiCheckout= function(checkoutUrl) {
 
-    $('.fancy-box').attr('href', checkoutUrl);
-    openIFrame();
+    $('.fancy-box').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
+    loadIFrame();
    };
 
    if(toggleFlag){
