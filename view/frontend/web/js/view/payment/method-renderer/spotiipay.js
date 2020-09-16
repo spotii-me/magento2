@@ -45,13 +45,13 @@ var LoadCSS = function (filename) {
   fileref.setAttribute("rel", "stylesheet");
   fileref.setAttribute("type", "text/css");
   fileref.setAttribute("href", filename);
-  $("head").append(fileref);
+  document.getElementsByTagName("head")[0].appendChild(fileref);
 };
 LoadCSS("https://demo.chodri.com/iframe-lightbox.css");
 var script = document.createElement('script');
 script.type = 'text/javascript';
 script.src = 'https://demo.chodri.com/iframe-lightbox.js';
-$("head").append(script);
+document.getElementsByTagName('body')[0].appendChild(script);
 //-----------------
 
 //Check if browser support the popup
