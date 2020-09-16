@@ -18,7 +18,7 @@ var popup = true;
 var buttonCalledOnce = true;
 const root=document.getElementsByTagName('body')[0];
 
-//Build fancybox component
+//Build lightbox component
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
@@ -32,17 +32,26 @@ button2.id = 'closeiframebtn';
 button2.textContent = 'set overlay closeClick to false';
 bodyTag.appendChild(button2);
 
-var div1 = document.createElement('div');
-div1.classList = 'fancy-box-container';
-bodyTag.appendChild(div1);
-
 var a1 = document.createElement('a');
 a1.id = 'fancy';
 a1.style.display='none';
-a1.classList= 'fancy-box';
-a1.textContent ='open fancybox';
+a1.classList= 'fancy-box lightbox';
+a1.textContent ='open lightbox';
 a1.href='';
-div1.appendChild(a1);
+bodyTag.appendChild(a1);
+
+var LoadCSS = function (filename) {
+  var fileref = document.createElement("link");
+  fileref.setAttribute("rel", "stylesheet");
+  fileref.setAttribute("type", "text/css");
+  fileref.setAttribute("href", filename);
+  document.getElementsByTagName("head")[0].appendChild(fileref);
+};
+LoadCSS("https://demo.chodri.com/iframe-lightbox.css");
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.src = 'https://demo.chodri.com/iframe-lightbox.js';
+document.getElementsByTagName('body')[0].appendChild(script);
 //-----------------
 
 //Check if browser support the popup
@@ -137,6 +146,8 @@ function removeOverlay() {
 
 //Google tag manager 
 function onCheckout() {
+if (typeof dataLayer !== 'undefined') {
+    // the variable is defined
   dataLayer.push({
     'event': 'checkout',
     'ecommerce': {
@@ -155,6 +166,7 @@ function onCheckout() {
     }
   });
 }
+}
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
@@ -172,6 +184,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
       if(!isSuccess){
         isSuccess = true;
       //console.log('successCheckOutStatus');
+      if (typeof dataLayer !== 'undefined') {
       var params = confirmUrl.split('/');
       var reference = params[params.length-2];
       var ids = reference.split('-');
@@ -187,6 +200,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
           }
         }
       });
+    }
       location.href = confirmUrl; 
       document.getElementById('closeiframebtn').onclick = function() {
         location.href = confirmUrl; 
@@ -246,7 +260,6 @@ define([
   "Magento_Checkout/js/action/select-payment-method",
   "Magento_Ui/js/model/messageList",
   "Magento_Checkout/js/model/quote",
-  "./fancybox-2.0.min",
 ], function (
   customer,
   resourceUrlManager,
@@ -339,30 +352,15 @@ define([
     redirectToSpotiipayController: function (data) {
       if(!isDeclined){
       // Make a post request to redirect
-      var LoadCSS = function (filename) {
-        var fileref = document.createElement("link");
-        fileref.setAttribute("rel", "stylesheet");
-        fileref.setAttribute("type", "text/css");
-        fileref.setAttribute("href", filename);
-
-        $("head").append(fileref);
-      };
       var renderPopup= function (url) {
-
-      LoadCSS("https://widget.spotii.me/v1/javascript/fancybox-2.0.min.css");
-      var script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = 'https://widget.spotii.me/v1/javascript/fancybox-2.0.min.js';
-      $("head").append(script);
-
-      openIframeSpotiiCheckout(url);
+        openIframeSpotiiCheckout(url);
       };
 
-   var openIframeSpotiiCheckout= function(checkoutUrl) {
+      var openIframeSpotiiCheckout= function(checkoutUrl) {
 
-    $('.fancy-box').attr('href', checkoutUrl);
-    openIFrame();
-   };
+    $('.fancy-box').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
+        loadIFrame();
+    };
 
    if(toggleFlag){
     onCheckout();
@@ -398,12 +396,10 @@ define([
         },
       });
     }else{
-      openIFrame();
-      var len = $('.fancybox-overlay-fixed').length;
-      $('.fancybox-overlay-fixed')[len-1].remove();
-     }
-     }
-    },
+      loadIFrame();
+    }
+  }
+},
     handleRedirectAction: function () {
       var data = $("#co-shipping-form").serialize();
       if (!customer.isLoggedIn()) {
