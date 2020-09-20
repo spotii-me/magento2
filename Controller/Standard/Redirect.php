@@ -62,7 +62,9 @@ class Redirect extends SpotiiPay
         $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
         try{
         $tagManagerEnabled = $this->spotiiApiIdentity->getIsTagManagerEnabled();    
-        $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl, "isTagManagerEnabled" => $tagManagerEnabled]);
+        $returnjson["redirectURL"]=$checkoutUrl;
+        $returnjson["isTagManagerEnabled"]=$tagManagerEnabled;
+        $json = $this->_jsonHelper->jsonEncode($returnjson);
         $jsonResult = $this->_resultJsonFactory->create();
         $jsonResult->setData($json);
 
