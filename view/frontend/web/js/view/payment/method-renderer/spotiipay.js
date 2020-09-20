@@ -131,6 +131,7 @@ function showOverlay() {
 
 //Remove the loading page
 function removeOverlay() {
+
   var overlay = document.getElementsByClassName("sptii-overlay")[0];
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
@@ -369,13 +370,13 @@ define([
         data: data,
         success: function (response) {
           toggleFlag = false;
+          // Send this response to spotii api
+          // This would redirect to spotii
+          jsonData = $.parseJSON(response);
           window.TagManagerEnabled= jsonData.isTagManagerEnabled;
           if(window.TagManagerEnabled =="true"){
             onCheckout();
           }
-          // Send this response to spotii api
-          // This would redirect to spotii
-          jsonData = $.parseJSON(response);
           if (jsonData.redirectURL) { 
             if (isMobileSafari()) {
               redirectToSpotiiCheckout(jsonData.redirectURL,2500);

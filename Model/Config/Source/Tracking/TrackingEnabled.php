@@ -5,7 +5,7 @@
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
 
-namespace Spotii\Spotiipay\Model\Config\Tracking\TrackingEnabled;
+namespace Spotii\Spotiipay\Model\Config\Tracking;
 
 /**
  * Class Mode

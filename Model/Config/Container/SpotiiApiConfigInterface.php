@@ -81,4 +81,10 @@ interface SpotiiApiConfigInterface extends IdentityInterface
      * @return mixed
      */
     public function getCanceledOrderStatus();
+
+    /**
+     * Get if tag manager is enabled
+     * @return mixed
+     */
+    public function getIsTagManagerEnabled();
 }
