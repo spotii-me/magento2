@@ -87,7 +87,7 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
      /**
      * @inheritdoc
      */
-    public function getPaidOrderStatus();
+    public function getPaidOrderStatus()
     {
         return $this->getConfigValue(
             self::XML_PATH_PAID_ORDER_STATUS,
@@ -97,7 +97,7 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
  /**
      * @inheritdoc
      */
-    public function getCanceledOrderStatus();
+    public function getCanceledOrderStatus()
     {
         return $this->getConfigValue(
             self::XML_PATH_CANCELED_ORDER_STATUS,
