@@ -23,7 +23,7 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     const XML_PATH_NEW_ORDER_STATUS = 'payment/spotiipay/new_order_status';
     const XML_PATH_PAID_ORDER_STATUS = 'payment/spotiipay/paid_order_status';
     const XML_PATH_CANCELED_ORDER_STATUS = 'payment/spotiipay/canceled_order_status';
-
+    const XML_PATH_TAG_MANAGER = 'payment/spotiipay/tag_manager';
     
     private $checkoutUrlLive = "https://api.spotii.me";
     private $checkoutUrlSandbox = "https://api.sandbox.spotii.me";
@@ -108,6 +108,18 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
             $this->getStore()->getStoreId()
         );
     }
+
+    /**
+         * @inheritdoc
+         */
+        public function getIsTagManagerEnabled()
+        {
+            return $this->getConfigValue(
+                self::XML_PATH_TAG_MANAGER,
+                $this->getStore()->getStoreId()
+            );
+        }
+
 
     /**
      * @inheritdoc

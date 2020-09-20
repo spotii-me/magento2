@@ -168,6 +168,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
     case successCheckOutStatus: {
       if(!isSuccess){
         isSuccess = true;
+        if(window.TagManagerEnabled=="true"){
       var params = confirmUrl.split('/');
       var reference = params[params.length-2];
       var ids = reference.split('-');
@@ -183,6 +184,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
           }
         }
       });
+    }
       location.href = confirmUrl; 
       document.getElementById('closeiframebtn').onclick = function() {
         closeIFrame();
@@ -357,8 +359,7 @@ define([
    };
 
    if(toggleFlag){
-    onCheckout();
-  
+
      var url = mageUrl.build("spotiipay/standard/redirect");
 
       $.ajax({
@@ -368,6 +369,10 @@ define([
         data: data,
         success: function (response) {
           toggleFlag = false;
+          window.TagManagerEnabled= jsonData.isTagManagerEnabled;
+          if(window.TagManagerEnabled =="true"){
+            onCheckout();
+          }
           // Send this response to spotii api
           // This would redirect to spotii
           jsonData = $.parseJSON(response);
