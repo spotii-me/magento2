@@ -146,6 +146,8 @@ function removeOverlay() {
 
 //Google tag manager 
 function onCheckout() {
+if (typeof dataLayer !== 'undefined') {
+    // the variable is defined
   dataLayer.push({
     'event': 'checkout',
     'ecommerce': {
@@ -164,6 +166,7 @@ function onCheckout() {
     }
   });
 }
+}
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
@@ -181,6 +184,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
       if(!isSuccess){
         isSuccess = true;
       //console.log('successCheckOutStatus');
+      if (typeof dataLayer !== 'undefined') {
       var params = confirmUrl.split('/');
       var reference = params[params.length-2];
       var ids = reference.split('-');
@@ -196,6 +200,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
           }
         }
       });
+    }
       location.href = confirmUrl; 
       document.getElementById('closeiframebtn').onclick = function() {
         location.href = confirmUrl; 
