@@ -96,13 +96,12 @@ class Transaction
         $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
-
+        $status = $this->spotiiApiConfig->getPaidOrderStatus();
+        
         try {
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
-                'status',
-                ['eq' => 'paymentauthorised',
-                 'eq' => 'processing']
+                'status', ['eq' => $status]
                 )->addFieldToFilter(
                  'created_at',
                 ['gteq' => $yesterday]
@@ -110,10 +109,8 @@ class Transaction
                 'created_at',
                 ['lteq' => $today]
                 )->addAttributeToSelect('increment_id');
-                
+             $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
 
-                $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
- 
             $body = $this->_buildOrderPayLoad($ordersCollection);
             $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
             $authToken = $this->config->getAuthToken();
@@ -144,9 +141,10 @@ class Transaction
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
-                $this->spotiiHelper->logSpotiiActions("Orders ".$orderIncrementId);
-                if($paymentMethod == self::PAYMENT_CODE){
                 $billing = $order->getBillingAddress();
+                if( $paymentMethod == 'spotiipay' && $billing->getCountryId()=="AE"){
+                
+                $this->spotiiHelper->logSpotiiActions("Order sent ".$orderIncrementId." ".$billing->getCountryId());
                 $orderForSpotii = [
                     'order_number' => $orderIncrementId,
                     'payment_method' => $paymentMethod,
@@ -165,8 +163,8 @@ class Transaction
                 ];
                 array_push($body, $orderForSpotii);
             }
-            }
         }
+    }
         return $body;
     }
 }

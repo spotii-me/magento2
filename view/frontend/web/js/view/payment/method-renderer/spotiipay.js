@@ -15,10 +15,10 @@ var jsonData;
 var rejectUrl;
 var confirmUrl;
 var popup = true;
-var buttonCalledOnce = true;
 const root=document.getElementsByTagName('body')[0];
-
-//Build lightbox component
+var hidePopup=false;
+var buttonOnce = true;
+//Build fancybox component
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
@@ -170,14 +170,11 @@ if (typeof dataLayer !== 'undefined') {
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
-  //console.log('Message - ', message);
+
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
-  var hidePopup = message.hidePopup;
-  //console.log('Order state - ', status);
-  //console.log('Order confirmUrl - ', confirmUrl);
-  //console.log('Order rejectUrl - ', rejectUrl);
+  hidePopup = message.hidePopup;
 
   switch (status) {
     case successCheckOutStatus: {
@@ -194,7 +191,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
         'ecommerce': {
           'purchase': {
             'actionField': {
-              'id': id,                         // Transaction ID. Required for purchases and refunds.
+              'id': id,                // Transaction ID. Required for purchases and refunds.
               'affiliation': 'Spotii',
             }
           }
@@ -211,22 +208,19 @@ window.closeIFrameOnCompleteOrder = function(message) {
     }
     case failedCheckOutStatus: {
       if(hidePopup && popup){
-        popup=false;
-        document.getElementById("closeiframebtn").click();
-        //console.log('here');
+        popup = false;
+        document.getElementById('closeiframebtn').click();
       }
       if(!isFail){
       isFail = true;
       isDeclined = true;
-      //console.log('failedCheckOutStatus');  
 
-      document.getElementById('closeiframebtn').onclick = function() {
-        if(buttonCalledOnce){
-          buttonCalledOnce = false;
-          var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
-          //console.log('rejectUrlSubmitted 1'+rejectUrlSubmitted);
-          location.href = rejectUrlSubmitted; 
-      }
+        document.getElementById('closeiframebtn').onclick = function() {
+          if(buttonOnce){
+           buttonOnce=false;
+           var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
+           location.href = rejectUrlSubmitted; 
+        }
       };
       removeOverlay();
     }
@@ -234,12 +228,10 @@ window.closeIFrameOnCompleteOrder = function(message) {
       break;
     }
     case submittedCheckOutStatus: {
-     //console.log('submittedCheckOutStatus');
       removeOverlay();
       break;
     }
     default: {
-     // console.log('None status ');
       removeOverlay();
       break;
     }
@@ -363,6 +355,7 @@ define([
     };
 
    if(toggleFlag){
+     
     onCheckout();
   
      var url = mageUrl.build("spotiipay/standard/redirect");
@@ -424,7 +417,8 @@ define([
 
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
-      if (total > 200) return true;
+      if (total > 200) 
+      return true;
       else return false;
     },
 
