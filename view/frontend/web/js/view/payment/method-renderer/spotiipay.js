@@ -293,10 +293,12 @@ define([
     getGrandTotal: function () {
       var total = quote.getCalculatedTotal();
       var format = window.checkoutConfig.priceFormat.pattern;
-
+      console.log(total);
+      console.log(format);
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
+          console.log(response);
           var amount = response.base_grand_total;
           var installmentFee = response.base_grand_total / 4;
           var installmentFeeLast =
