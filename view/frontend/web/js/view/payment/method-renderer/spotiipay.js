@@ -299,7 +299,7 @@ define([
         .done(function (response) {
 
           var amount = response.base_grand_total;
-          window.currency = response.base_currency_code;
+          var currency = response.base_currency_code;
           var installmentFee = response.base_grand_total / 4;
           var installmentFeeLast =
             amount -
@@ -332,7 +332,7 @@ define([
             )
           );
 
-          return format.replace(/%s/g, amount);
+          return [format.replace(/%s/g, amount), currency];
         })
         .fail(function (response) {
           //do your error handling
@@ -425,8 +425,10 @@ define([
     },
 
     isTotalValid: function () {
-      let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
-      switch(window.currency){
+      var formattedAmount =this.getGrandTotal();
+      let total = formattedAmount[0] /*? formattedAmount[0] : window.checkoutConfig.quoteData.grand_total*/;
+      let currency =formattedAmount[1];
+      switch(currency){
         case "USD":
           total= total*3.6730;
 
@@ -435,7 +437,7 @@ define([
           total= total*0.9506;
           break;
       }
-      console.log(total+window.currency);
+      console.log(total+currency);
       if (total > 200) return true;
       else return false;
     },
