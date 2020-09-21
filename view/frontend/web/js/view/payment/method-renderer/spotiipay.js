@@ -293,13 +293,13 @@ define([
     getGrandTotal: function () {
       var total = quote.getCalculatedTotal();
       var format = window.checkoutConfig.priceFormat.pattern;
-      console.log(total);
-      console.log(format);
+
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
-          console.log(response);
+
           var amount = response.base_grand_total;
+          window.currency = response.base_currency_code;
           var installmentFee = response.base_grand_total / 4;
           var installmentFeeLast =
             amount -
@@ -426,6 +426,14 @@ define([
 
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
+      switch(window.currency){
+        case "USD":
+          total= total*3.6730;
+          break;
+        case "SAR":
+          total= total*0.9506;
+          break;
+      }
       if (total > 200) return true;
       else return false;
     },
