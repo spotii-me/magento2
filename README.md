@@ -10,7 +10,7 @@ Use this extention for seamless integration with Spotii as payment gateway and y
 5. `php bin/magento cache:clean`
 
 ### Manual Setup
-1. Sign up for Spotii account at `https://dashboard.sandbox.spotii.me/merchant/signup/`
+1. Sign up for Spotii account at `https://dashboard.dev.spotii.me/merchant/signup/`
 2. In your Magento 2 `[ROOT]/app/code/` create folder called `Spotii/Spotiipay`.
 3. Download and extract files from this repo to the folder.
 4. Open the command line.

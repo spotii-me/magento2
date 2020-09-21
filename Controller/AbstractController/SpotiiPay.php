@@ -17,6 +17,7 @@ use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
  */
 abstract class SpotiiPay extends Action
 {
+
     /**
      * @var \Magento\Customer\Model\Session
      */
@@ -89,6 +90,8 @@ abstract class SpotiiPay extends Action
      */
     protected $spotiiApiIdentity;
 
+    protected $stockRegistry;
+
     /**
      * Spotiipay constructor.
      * @param \Magento\Framework\App\Action\Context $context
@@ -128,7 +131,8 @@ abstract class SpotiiPay extends Action
         \Magento\Quote\Model\QuoteManagement $quoteManagement,
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
-        SpotiiApiConfigInterface $spotiiApiIdentity
+        SpotiiApiConfigInterface $spotiiApiIdentity,
+        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
     )
     {
         $this->_customerSession = $customerSession;
@@ -149,6 +153,7 @@ abstract class SpotiiPay extends Action
         $this->_orderSender = $orderSender;
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->spotiiApiIdentity = $spotiiApiIdentity;
+        $this->stockRegistry = $stockRegistry;
         parent::__construct($context);
     }
 
@@ -161,4 +166,9 @@ abstract class SpotiiPay extends Action
             $this->_checkoutSession->getLastRealOrderId()
         );
     }
+
+    public function canRefund() {
+        return true;
+    }
 }
+  

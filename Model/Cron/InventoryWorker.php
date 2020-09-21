@@ -5,7 +5,7 @@
  * @copyright   Copyright (c) Spotii (https://www.spotii.me/)
  */
 
-namespace Spotii\Spotiipay\Model\Gateway;
+namespace Spotii\Spotiipay\Model\Cron;
 
 use Spotii\Spotiipay\Helper\Data as SpotiiHelper;
 use Spotii\Spotiipay\Model\Api\ConfigInterface;
@@ -15,7 +15,7 @@ use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
  * Class Transaction
  * @package Spotii\Spotiipay\Model\Gateway
  */
-class Transaction
+class InventoryWorker
 {
     /**
      * @var \Magento\Sales\Model\OrderFactory
@@ -24,11 +24,6 @@ class Transaction
     /**
      * @var SpotiiApiConfigInterface
      */
-    private $spotiiApiConfig;
-    /**
-     * @var \Spotii\Spotiipay\Model\Api\ProcessorInterface
-     */
-    private $spotiiApiProcessor;
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -54,6 +49,10 @@ class Transaction
 
     protected $_orderCollectionFactory;
 
+    protected $stockRegistry;
+
+    protected $date;
+
     const PAYMENT_CODE = 'spotiipay';
     /**
      * Transaction constructor.
@@ -70,39 +69,44 @@ class Transaction
         SpotiiHelper $spotiiHelper,
         ConfigInterface $config,
         \Psr\Log\LoggerInterface $logger,
-        \Spotii\Spotiipay\Model\Api\ProcessorInterface $spotiiApiProcessor,
         SpotiiApiConfigInterface $spotiiApiConfig,
         \Magento\Sales\Api\Data\OrderInterface $orderInterface,
-        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
+        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
+        \Magento\Framework\Stdlib\DateTime\DateTime $date
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
         $this->config = $config;
         $this->spotiiApiConfig = $spotiiApiConfig;
-        $this->spotiiApiProcessor = $spotiiApiProcessor;
         $this->logger = $logger;
         $this->orderInterface = $orderInterface;
         $this->_orderCollectionFactory = $orderCollectionFactory;
+        $this->stockRegistry = $stockRegistry;
+        $this->date = $date;
     }
 
     /**
      * Send orders to Spotii
      */
-    public function sendOrdersToSpotii()
+    public function execute()
     {
-        $this->spotiiHelper->logSpotiiActions("****Order sync process start****");
+        $this->spotiiHelper->logSpotiiActions("****Inventory clean up process start****");
         $today = date("Y-m-d H:i:s");
         $this->spotiiHelper->logSpotiiActions("Current date : $today");
         $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
+
+        $hourAgo = date("Y-m-d H:i:s", strtotime("-1 hours"));
+        $hourAgo = date('Y-m-d H:i:s', strtotime($hourAgo));
+
         $today = date('Y-m-d H:i:s', strtotime($today));
 
         try {
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
                 'status',
-                ['eq' => 'paymentauthorised',
-                 'eq' => 'processing']
+                ['eq' => 'pending']
                 )->addFieldToFilter(
                  'created_at',
                 ['gteq' => $yesterday]
@@ -111,21 +115,13 @@ class Transaction
                 ['lteq' => $today]
                 )->addAttributeToSelect('increment_id');
                 
-
                 $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
  
-            $body = $this->_buildOrderPayLoad($ordersCollection);
-            $url = $this->spotiiApiConfig->getSpotiiBaseUrl() . '/v1.0/merchant' . '/magento/orders';
-            $authToken = $this->config->getAuthToken();
-            $this->spotiiApiProcessor->call(
-                $url,
-                $authToken,
-                $body,
-                \Magento\Framework\HTTP\ZendClient::POST
-            );
-            $this->spotiiHelper->logSpotiiActions("****Order sync process end****");
+                $this->cleanOrders($ordersCollection, $hourAgo);
+            
+            $this->spotiiHelper->logSpotiiActions("****Inventory clean up process end****");
         } catch (\Exception $e) {
-            $this->spotiiHelper->logSpotiiActions("Error while sending order to Spotii" . $e->getMessage());
+            $this->spotiiHelper->logSpotiiActions("Error while cleaning up orders by Spotii" . $e->getMessage());
         }
     }
 
@@ -135,38 +131,45 @@ class Transaction
      * @param null $ordersCollection
      * @return array
      */
-    private function _buildOrderPayLoad($ordersCollection = null)
+    private function cleanOrders($ordersCollection = null, $hourAgo)
     {
-        $body = [];
+        try{
         if ($ordersCollection) {
             foreach ($ordersCollection as $orderObj) {
                 $orderIncrementId = $orderObj->getIncrementId();
                 $order = $this->orderInterface->loadByIncrementId($orderIncrementId);
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
-                $this->spotiiHelper->logSpotiiActions("Orders ".$orderIncrementId);
-                if($paymentMethod == self::PAYMENT_CODE){
-                $billing = $order->getBillingAddress();
-                $orderForSpotii = [
-                    'order_number' => $orderIncrementId,
-                    'payment_method' => $paymentMethod,
-                    'amount' => strval(round($order->getGrandTotal(), \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION)),
-                    'currency' => $order->getOrderCurrencyCode(),
-                    'reference' => $payment->getLastTransId(),
-                    'customer_email' => $billing->getEmail(),
-                    'customer_phone' => $billing->getTelephone(),
-                    'billing_address1' => $billing->getStreetLine(1),
-                    'billing_address2' => $billing->getStreetLine(2),
-                    'billing_city' => $billing->getCity(),
-                    'billing_state' => $billing->getRegionCode(),
-                    'billing_postcode' => $billing->getPostcode(),
-                    'billing_country' => $billing->getCountryId(),
-                    'merchant_id' => $this->spotiiApiConfig->getMerchantId()
-                ];
-                array_push($body, $orderForSpotii);
-            }
+                $created = $order->getCreatedAt();
+
+                    if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $created){
+                    $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
+                    foreach ($order->getAllVisibleItems() as $item) {
+                        $sku = $item->getSku();
+                        $qtyOrdered = $item->getQtyOrdered();
+                
+                        $stockItem = $this->stockRegistry->getStockItemBySku($sku);
+                
+                        $qtyInStock= $stockItem->getQty();
+                        $finalQty = $qtyInStock +$qtyOrdered;
+                
+                        $stockItem->setQty($finalQty);
+                        $stockItem->setIsInStock((bool)$finalQty);
+                        $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
+                    }
+                    $order->setState('closed')->setStatus('closed');
+                    $order->save();
+                    
+            }else if($paymentMethod == self::PAYMENT_CODE){
+                $this->spotiiHelper->logSpotiiActions("Order not cleaned up ".$orderIncrementId.' '.$created);
             }
         }
-        return $body;
+        }
+    } catch (\Exception $e) {
+        $this->spotiiHelper->logSpotiiActions("Error while cleaning up orders by Spotii" . $e->getMessage());
     }
+
+    }
+
+
 }

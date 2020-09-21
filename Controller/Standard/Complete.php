@@ -20,43 +20,43 @@ class Complete extends SpotiiPay
      */
     public function execute()
     {
-        $redirect = 'checkout/cart';
+        $redirect = 'checkout/onepage/success';
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
-            $quote = $this->_checkoutSession->getQuote();
-            $payment = $quote->getPayment();
-            $reference = $payment->getAdditionalInformation(\Spotii\Spotiipay\Model\SpotiiPay::ADDITIONAL_INFORMATION_KEY_ORDERID);
-            $orderId = $quote->getReservedOrderId();
-            $this->spotiiHelper->logSpotiiActions("Order ID from quote : $orderId.");
 
-            $this->_checkoutSession
-                ->setLastQuoteId($quote->getId())
-                ->setLastSuccessQuoteId($quote->getId())
-                ->clearHelperData();
-            $this->spotiiHelper->logSpotiiActions("Set data on checkout session");
-            
-            $quote->collectTotals()->save();
-            $this->spotiiHelper->logSpotiiActions("**Saved Data on Quote**");
-            $order = $this->_quoteManagement->submit($quote);
-            $this->spotiiHelper->logSpotiiActions("**Quote Updated**");
-            $this->spotiiHelper->logSpotiiActions("Order created");
+            $orderId = $this->getRequest()->getParam("id");
+            $reference = $this->getRequest()->getParam("magento_spotii_id");
+            $quoteId = $this->getRequest()->getParam("quote_id");
+
+            $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
+            $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
+            $order->setState('processing')->setStatus('paymentauthorised');
+            $order->save();
 
             if ($order) {
-                $this->_checkoutSession->setLastOrderId($order->getId())
-                    ->setLastRealOrderId($order->getIncrementId())
-                    ->setLastOrderStatus($order->getStatus());
-                $this->_spotiipayModel->createTransaction($order, $reference, $quote);
+                
+                $this->_spotiipayModel->createTransaction(
+                    $order,
+                    $reference,
+                    \Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE
+                );
+                // $quote->collectTotals()->save();          
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email
-                try {
+               try {
                     $this->_orderSender->send($order);
                 } catch (\Exception $e) {
-                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
-                }
+                   $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
+                }; 
 
-                $this->messageManager->addSuccess("Spotiipay Transaction Completed");
-                $redirect = 'checkout/onepage/success';
+                $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
+                $this->_checkoutSession->setLastQuoteId($quoteId);
+                $this->_checkoutSession->setLastOrderId($order->getEntityId());
+                $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
+                $this->getResponse()->setRedirect(
+                    $this->_url->getUrl('checkout/onepage/success')
+               );
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
@@ -69,6 +69,8 @@ class Complete extends SpotiiPay
                 $e->getMessage()
             );
         }
-        $this->_redirect($redirect);
+        $this->getResponse()->setRedirect(
+            $this->_url->getUrl($redirect)
+       );
     }
 }

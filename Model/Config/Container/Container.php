@@ -44,6 +44,8 @@ abstract class Container implements IdentityInterface
      */
     protected $customerEmail;
 
+    
+
     /**
      * @param ScopeConfigInterface $scopeConfig
      * @param StoreManagerInterface $storeManager

@@ -21,7 +21,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     const PAYMENT_CODE = 'spotiipay';
     const ADDITIONAL_INFORMATION_KEY_ORDERID = 'spotii_order_id';
     const SPOTII_CAPTURE_EXPIRY = 'spotii_capture_expiry';
-
+    
     /**
      * @var string
      */
@@ -30,6 +30,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @var bool
      */
     protected $_isGateway = true;
+
+    protected $_isOffline = false;
+
     /**
      * @var bool
      */
@@ -226,11 +229,30 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param float $spotiiAmount
      * @return bool
      */
-    public function isOrderAmountMatched($magentoAmount, $spotiiAmount)
+    public function isOrderAmountMatched($magentoAmount, $spotiiAmount, $magentoCurrency, $spotiiCurrency)
     {
         $precision = \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION;
-
-        return (round($magentoAmount, $precision) == round($spotiiAmount, $precision)) ? true : false;
+  
+            if ($spotiiCurrency != $magentoCurrency){
+                 if($spotiiCurrency == "AED"){
+                 switch($magentoCurrency){
+                     case "USD":
+                        $magentoAmount=(round($magentoAmount, $precision))*3.6730 ;
+                     break;
+                     case "SAR":
+                         $magentoAmount=(round($magentoAmount, $precision))*0.9506 ;
+                     break;
+                 }
+              }  
+                 if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) <6)){
+                     return true;
+                 }
+        
+             }else if (round($spotiiAmount, $precision) == round($magentoAmount, $precision)){
+                     return true;
+             }else {
+                     return false;
+             }
     }
 
     /**
@@ -246,6 +268,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $this->spotiiHelper->logSpotiiActions("****Authorization start****");
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        $currency =$payment->getOrder()->getGlobalCurrencyCode();
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
@@ -253,10 +276,13 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $spotiiOrderTotal = isset($result['total']) ?
                                 $result['total'] :
                                 null;
+        $spotiiOrderCurr = isset($result['currency']) ?
+        $result['currency'] :
+        null;
         $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
-
+        $this->spotiiHelper->logSpotiiActions("Spotii Order Currency : $spotiiOrderCurr");
         if ($spotiiOrderTotal != null
-        && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal)) {
+        && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal, $currency, $spotiiOrderCurr)) {
             $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         } else {
@@ -276,22 +302,33 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
+        $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+    }
+
+    public function capturePostSpotii(\Magento\Payment\Model\InfoInterface $payment, $amount)
+    {
         $this->spotiiHelper->logSpotiiActions("****Capture at Magento start****");
         if ($amount <= 0) {
             throw new LocalizedException(__('Invalid amount for capture.'));
         }
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        $currency =$payment->getOrder()->getGlobalCurrencyCode();
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
+        
         $result = $this->getSpotiiOrderInfo($reference);
         $spotiiOrderTotal = isset($result['total']) ?
                                 $result['total'] :
                                 null;
+        $spotiiOrderCurr = isset($result['currency']) ?
+        $result['currency'] :
+        null;
         $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
 
         if ($spotiiOrderTotal != null
-            && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal)) {
+            && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal, $currency, $spotiiOrderCurr)) {
             $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         }
@@ -395,6 +432,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @return $this
      * @throws LocalizedException
      */
+    
+    
+    public function processBeforeRefund($invoice, $payment){}
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $this->spotiiHelper->logSpotiiActions("****Refund Start****");
@@ -427,6 +467,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException($message);
         }
     }
+    public function processCreditmemo($creditmemo, $payment){}
 
     /**
      * Create transaction
@@ -434,7 +475,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param $reference
      * @return mixed
      */
-    public function createTransaction($order, $reference, $quote)
+    public function createTransaction($order, $reference, $type)
     {
         $this->spotiiHelper->logSpotiiActions("****Transaction start****");
         $this->spotiiHelper->logSpotiiActions("Order Id : " . $order->getId());
@@ -445,25 +486,42 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $formattedPrice = $order->getBaseCurrency()->formatTxt(
             $order->getGrandTotal()
         );
-        $message = __('The authorized amount is %1.', $formattedPrice);
+       
+        if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
+            $message = __('Order placed for amount %1.', $formattedPrice);
+            $transactionId = $reference;
+        } else {
+            $message = __('Payment processed for amount %1.', $formattedPrice);
+            $transactionId = $reference . '-' . $type;
+        }
         $this->spotiiHelper->logSpotiiActions($message);
         $transaction = $this->_transactionBuilder->setPayment($payment)
             ->setOrder($order)
-            ->setTransactionId($reference)
+            ->setTransactionId($transactionId)
             ->setFailSafe(true)
-            ->build(\Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE);
+            ->build($type);
 
+        if($order->getStatus() =="paymentauthorised"){
         $payment->addTransactionCommentsToOrder(
             $transaction,
             $message
-        );
+       );
+    }
         $payment->setParentTransactionId(null);
         $payment->save();
-        $quote->collectTotals()->save();
+        // $quote->collectTotals()->save();
         $order->save();
         $transactionId = $transaction->save()->getTransactionId();
         $this->spotiiHelper->logSpotiiActions("Transaction Id : $transactionId");
         $this->spotiiHelper->logSpotiiActions("****Transaction End****");
         return $transactionId;
+    }
+
+    public function canRefund() {
+        return true;
+    }
+
+    public function isOffline() {
+        return false;
     }
 }

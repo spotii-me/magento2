@@ -20,14 +20,61 @@ class Cancel extends SpotiiPay
      */
     public function execute()
     {
-        $order = $this->getOrder();
-        $order->registerCancellation("Returned from Spotiipay without completing payment.");
-        $this->spotiiHelper->logSpotiiActions(
-            "Returned from Spotiipay without completing payment. Order cancelled."
-        );
+     try{
+         
+        //$order = $this->getOrder();
+        $orderId = $this->getRequest()->getParam("id");
+        $reference = $this->getRequest()->getParam("magento_spotii_id");
+        $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
+        $paymentSubmitted = $this->getRequest()->getParam("submitted");
+
+        if($paymentSubmitted == '1'){
+
+        $order->setState("canceled")->setStatus("canceled");
+        $order->save();
+        
+        foreach ($order->getAllVisibleItems() as $item) {
+
+            $sku = $item->getSku();
+            $qtyOrdered = $item->getQtyOrdered();
+
+            $stockItem = $this->stockRegistry->getStockItemBySku($sku);
+
+            $qtyInStock= $stockItem->getQty();
+            $finalQty = $qtyInStock +$qtyOrdered;
+
+            $stockItem->setQty($finalQty);
+            $stockItem->setIsInStock((bool)$finalQty);
+            $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
+        }
+        
+        $this->messageManager->addError("<b>Order Cancelled!</b><br> Your payment with Spotii cannot be completed as requested.");
+        $order->registerCancellation("Returned from Spotii with completeing payment, order canceled.");
+        $this->spotiiHelper->logSpotiiActions("Returned from Spotii without completeing payment, order canceled.");
         $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
-            $this->_url->getUrl('checkout')
+            $this->_url->getUrl('checkout/onepage/failure')
         );
+    }else{
+        $order->registerCancellation("Abandoned Cart");
+        $this->spotiiHelper->logSpotiiActions("Abandoned Cart");
+        $this->_checkoutSession->restoreQuote();
+        $this->getResponse()->setRedirect(
+            $this->_url->getUrl('checkout/onepage/failure') 
+        );
+    }
+     }catch (\Magento\Framework\Exception\LocalizedException $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
+        );
+      } catch (\Exception $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
+        );
+    }
+
+
     }
 }

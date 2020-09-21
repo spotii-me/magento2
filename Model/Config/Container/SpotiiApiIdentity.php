@@ -20,12 +20,13 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     const XML_PATH_MERCHANT_ID = 'payment/spotiipay/merchant_id';
     const XML_PATH_LOG_TRACKER = 'payment/spotiipay/log_tracker';
     const XML_PATH_PAYMENT_ACTION = 'payment/spotiipay/payment_action';
-
-    private $liveCheckoutUrl = "https://api.spotii.me";
-    private $sandboxCheckoutUrl = "https://api.sandbox.spotii.me";
     
-    private $liveAuthUrl = "https://auth.spotii.me";
-    private $sandboxAuthtUrl = "https://auth.sandbox.spotii.me";
+    
+    private $checkoutUrlLive = "https://api.spotii.me";
+    private $checkoutUrlSandbox = "https://api.sandbox.spotii.me";
+
+    private $authUrlLive = "https://auth.spotii.me";
+    private $authtUrlSandbox = "https://auth.sandbox.spotii.me";
 
     /**
      * @inheritdoc
@@ -91,10 +92,10 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
         $paymentMode = $this->getPaymentMode();
         switch ($paymentMode) {
             case 'live':
-                return $this->liveCheckoutUrl;
+                return $this->checkoutUrlLive;
                 break;
             case 'sandbox':
-                return $this->sandboxCheckoutUrl;
+                return $this->checkoutUrlSandbox;
                 break;
             default:
                 break;
@@ -109,10 +110,10 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
         $paymentMode = $this->getPaymentMode();
         switch ($paymentMode) {
             case 'live':
-                return $this->liveAuthUrl;
+                return $this->authUrlLive;
                 break;
             case 'sandbox':
-                return $this->sandboxAuthtUrl;
+                return $this->authtUrlSandbox;
                 break;
             default:
                 break;

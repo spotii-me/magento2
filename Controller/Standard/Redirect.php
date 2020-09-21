@@ -53,15 +53,46 @@ class Redirect extends SpotiiPay
         }
         $payment = $quote->getPayment();
         $payment->setMethod('spotiipay');
+        $payment->save();
         $quote->reserveOrderId();
         $quote->setPayment($payment);
         $quote->save();
         $this->_checkoutSession->replaceQuote($quote);
         $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
         $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
+        try{
         $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
         $jsonResult = $this->_resultJsonFactory->create();
         $jsonResult->setData($json);
+
+        // Create "pending" order before redirect to Spotii
+        $quoteId = $quote->getId();
+              // **
+        $quote->collectTotals()->save();   
+        $order = $this->_quoteManagement->submit($quote);
+        
+        $reference = $payment->getAdditionalInformation('spotii_order_id');
+        $this->_spotiipayModel->createTransaction(
+            $order,
+            $reference,
+            \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
+        );
+        
+        $order->setState('new')->setStatus('pending');
+        $order->save(); // **
+        $this->_checkoutSession->setLastQuoteId($quoteId);
+
+    }catch (\Magento\Framework\Exception\LocalizedException $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
+        );
+    } catch (\Exception $e) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->messageManager->addError(
+            $e->getMessage()
+        );
+    }
         return $jsonResult;
     }
 }
