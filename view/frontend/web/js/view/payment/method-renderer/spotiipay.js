@@ -429,11 +429,13 @@ define([
       switch(window.currency){
         case "USD":
           total= total*3.6730;
+
           break;
         case "SAR":
           total= total*0.9506;
           break;
       }
+      console.log(total+window.currency);
       if (total > 200) return true;
       else return false;
     },
