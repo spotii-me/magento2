@@ -12,7 +12,7 @@ namespace Spotii\Spotiipay\Model\Config\Source\Store;
  * Class Mode
  * @package Spotii\Spotiipay\Model\Config\Source\Payment
  */
-abstract class StoreId {
+abstract class StoreIdInterface {
 
 public function __construct(
 \Magento\Store\Model\StoreManagerInterface $storeManager
