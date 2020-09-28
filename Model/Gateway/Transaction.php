@@ -109,8 +109,7 @@ class Transaction
                 )->addFieldToFilter(
                 'created_at',
                 ['lteq' => $today]
-                )->setStoreId($storeId)
-                ->addStoreFilter($storeId)
+                )->addWebsiteFilter($storeId)
                 ->addAttributeToSelect('increment_id');
              $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
 
