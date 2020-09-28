@@ -18,7 +18,7 @@ class StoreId extends StoreIdInterface implements \Magento\Framework\Option\Arra
 public function toOptionArray(){
 
     $storeManagerDataList = $this->_storeManager->getStores();
-     $options = array();
+    $options = array();
      
      foreach ($storeManagerDataList as $key => $value) {
                $options[] = ['label' => $value['name'].' - '.$value['code'], 'value' => $key];
