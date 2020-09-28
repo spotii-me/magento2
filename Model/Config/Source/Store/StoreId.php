@@ -12,10 +12,11 @@ namespace Spotii\Spotiipay\Model\Config\Source\Store;
  * Class Mode
  * @package Spotii\Spotiipay\Model\Config\Source\Payment
  */
-class StoreId extends StoreIdInterface implements \Magento\Framework\Option\ArrayInterface{
+class StoreId extends StoreIdInterface implements \Magento\Framework\Option\ArrayInterface
+{
 
 private function toOptionArray(){
-    
+
     $storeManagerDataList = $this->_storeManager->getStores();
      $options = array();
      

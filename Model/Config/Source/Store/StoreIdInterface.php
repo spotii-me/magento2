@@ -14,8 +14,10 @@ namespace Spotii\Spotiipay\Model\Config\Source\Store;
  */
 abstract class StoreIdInterface {
 
+    protected $_storeManager;
+    
 public function __construct(
-\Magento\Store\Model\StoreManagerInterface $storeManager
+    \Magento\Store\Model\StoreManagerInterface $storeManager
 ) {
 
      $this->_storeManager = $storeManager;
