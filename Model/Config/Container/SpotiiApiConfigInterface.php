@@ -80,4 +80,10 @@ interface SpotiiApiConfigInterface extends IdentityInterface
      * @return mixed
      */
     public function getCanceledOrderStatus();
+
+    /**
+     * Get store ID
+     * @return mixed
+     */
+    public function getStoreIdConfig();
 }

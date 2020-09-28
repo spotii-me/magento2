@@ -97,7 +97,7 @@ class Transaction
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
         $today = date('Y-m-d H:i:s', strtotime($today));
         $status = $this->spotiiApiConfig->getPaidOrderStatus();
-        
+        $storeId = $this->spotiiApiConfig->getStoreIdConfig();
         try {
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
@@ -108,7 +108,8 @@ class Transaction
                 )->addFieldToFilter(
                 'created_at',
                 ['lteq' => $today]
-                )->addAttributeToSelect('increment_id');
+                )->addStoreFilter($storeId)
+                ->addAttributeToSelect('increment_id');
              $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
 
             $body = $this->_buildOrderPayLoad($ordersCollection);
@@ -142,7 +143,7 @@ class Transaction
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
                 $billing = $order->getBillingAddress();
-                if( $paymentMethod == 'spotiipay' && $billing->getCountryId()=="AE"){
+                if( $paymentMethod == 'spotiipay' /*&& $billing->getCountryId()=="AE"*/){
                 
                 $this->spotiiHelper->logSpotiiActions("Order sent ".$orderIncrementId." ".$billing->getCountryId());
                 $orderForSpotii = [
