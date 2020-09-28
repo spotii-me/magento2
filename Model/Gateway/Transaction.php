@@ -98,6 +98,7 @@ class Transaction
         $today = date('Y-m-d H:i:s', strtotime($today));
         $status = $this->spotiiApiConfig->getPaidOrderStatus();
         $storeId = $this->spotiiApiConfig->getStoreIdConfig();
+        $this->spotiiHelper->logSpotiiActions($storeId);
         try {
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
