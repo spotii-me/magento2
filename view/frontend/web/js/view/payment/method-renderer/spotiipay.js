@@ -404,15 +404,42 @@ define([
     },
 
     continueToSpotiipay: function () {
-      
-      if (
-        this.validate() &&
-        additionalValidators.validate() &&
-        this.isTotalValid() && this.isInStock()
-      ) {
-        showOverlay();
-        this.handleRedirectAction();
+      var url = mageUrl.build("spotiipay/standard/checkinventory");
+      var finalResult = [];
+      var itemsFromQuote = window.checkoutConfig.quoteItemData;
+      for (var i = 0; i < itemsFromQuote.length; i++) {
+        var tempQty = itemsFromQuote[i].qty;
+        var tempSku = itemsFromQuote[i].sku;
+        finalResult.push({ qty: tempQty, sku: tempSku });
       }
+      var jsonString = JSON.stringify(finalResult);
+      console.log(jsonString);
+      $.ajax({
+        url: url,
+        method: "post",
+        showLoader: true,
+        //async: true,
+        data: { "items": jsonString },
+        success: function (response) {
+          console.log(response);
+          var jsonItems = $.parseJSON(response);
+          //return jsonItems.isInStock;
+          console.log("instock", jsonItems.isInStock);
+          if (
+            this.validate() &&
+            additionalValidators.validate() &&
+            this.isTotalValid() && jsonItems.isInStock
+          ) {
+            showOverlay();
+            this.handleRedirectAction();
+          }
+          else {
+            console.log("redirect failed");
+          }
+        }
+      });
+
+      
 
     },
     isInStock: function () {
@@ -430,7 +457,7 @@ define([
         url: url,
         method: "post",
         showLoader: true,
-        //async: false,
+        async: true,
         data: { "items": jsonString },
         done: function (response) {
           console.log(response);
