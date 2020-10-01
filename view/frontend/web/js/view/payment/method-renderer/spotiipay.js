@@ -432,7 +432,6 @@ define([
         showLoader: true,
         data: {"items":jsonString},
         success: function (response) {
-          if(response.isInStock){
             console.log(response);
             var jsonItems = $.parseJSON(response);
             console.log(jsonItems.isInStock);
@@ -441,7 +440,6 @@ define([
             }else{
               return false;
             }
-          }
           }
       });
     },
