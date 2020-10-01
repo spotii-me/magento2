@@ -405,7 +405,7 @@ define([
 
     continueToSpotiipay: function () {
 
-      showOverlay();
+
       if (
         this.validate() &&
         additionalValidators.validate() &&
@@ -413,10 +413,11 @@ define([
         this.isInStock()
       ) {
         this.handleRedirectAction();
+        showOverlay();
       } 
     },
     isInStock: function(){
-      var url = mageUrl.build("Helper/CheckInventory");
+      var url = mageUrl.build("potiipay/helper/checkinventory");
 
       var data = window.checkoutConfig.quoteData.quoteItemData;
       console.log(data);
