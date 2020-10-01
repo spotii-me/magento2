@@ -418,7 +418,7 @@ define([
     isInStock: function(){
       var url = mageUrl.build("spotiipay/standard/checkinventory");
 
-      var data = window.checkoutConfig.quoteData.quoteItemData;
+      var data =  window.checkoutConfig.quoteItemData;
       console.log(data);
       $.ajax({
         url: url,
