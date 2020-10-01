@@ -416,6 +416,7 @@ define([
       } 
     },
     isInStock: function(){
+      var flag = false;
       var url = mageUrl.build("spotiipay/standard/checkinventory");
       var finalResult=[];
       var itemsFromQuote =  window.checkoutConfig.quoteItemData;
@@ -434,14 +435,10 @@ define([
         success: function (response) {
             console.log(response);
             var jsonItems = $.parseJSON(response);
-            console.log(jsonItems.isInStock);
-            if(jsonItems.isInStock){
-              return true;
-            }else{
-              return false;
-            }
+            flag= jsonItems.isInStock
           }
       });
+      return flag;
     },
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
