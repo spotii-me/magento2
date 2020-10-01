@@ -403,17 +403,20 @@ define([
       this.redirectToSpotiipayController(data);
     },
 
-    continueToSpotiipay: function () {
-      console.log("isInStock ", this.isInStock());
+    inventoryChecked: function(flag){
       if (
         this.validate() &&
         additionalValidators.validate() &&
-        this.isTotalValid()/* &&
-        this.isInStock()*/
+        this.isTotalValid() && flag
       ) {
         showOverlay();
         this.handleRedirectAction();
-      } 
+      }
+
+    },
+    continueToSpotiipay: function () {
+      this.isInStock();
+       
     },
     isInStock: function(){
       var url = mageUrl.build("spotiipay/standard/checkinventory");
@@ -434,7 +437,7 @@ define([
         success: function (response) {
             console.log(response);
             var jsonItems = $.parseJSON(response);
-            return jsonItems.isInStock;
+            inventoryChecked(jsonItems.isInStock);
           }
       });
       //console.log(flag);
