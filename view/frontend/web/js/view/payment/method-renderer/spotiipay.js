@@ -409,12 +409,36 @@ define([
       if (
         this.validate() &&
         additionalValidators.validate() &&
-        this.isTotalValid()
+        this.isTotalValid() &&
+        this.isInStock()
       ) {
         this.handleRedirectAction();
       } 
     },
+    isInStock: function(){
+      var url = mageUrl.build("Helper/CheckInventory");
 
+      var data = window.checkoutConfig.quoteData.quoteItemData;
+      console.log(data);
+      $.ajax({
+        url: url,
+        method: "post",
+        showLoader: true,
+        data: "items="+data,
+        success: function (response) {
+          if(response.isInStock){
+            console.log(response);
+            console.log(response.isInStock);
+            return true;
+          }
+          else{
+            console.log(response);
+            console.log(response.isInStock);
+            return false;
+          }
+          }
+      });
+    },
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
       if (total > 200) 

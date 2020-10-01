@@ -150,7 +150,6 @@ abstract class SpotiiPay extends Action
         $this->_invoiceService = $invoiceService;
         $this->_transactionFactory = $transactionFactory;
         $this->_logger = $logger;
-        $this->_jsonHelper = $jsonHelper;
         $this->_quoteManagement = $quoteManagement;
         $this->_transactionBuilder = $transactionBuilder;
         $this->_orderSender = $orderSender;

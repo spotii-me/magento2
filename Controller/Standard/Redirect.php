@@ -78,7 +78,8 @@ class Redirect extends SpotiiPay
         $qtyInStock= $stockItem->getQty();
         if($qtyInStock < $qtyOrdered){
             $message = __('One or more items in the cart are out of stock.');
-            throw new LocalizedException($message);
+            throw new Exception($message);
+            $this->messageManager->addError($message);
         }
         }
 
