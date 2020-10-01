@@ -435,7 +435,7 @@ define([
           }
           else {
             console.log("redirect failed");
-            getQtyInvaildText();
+            x.getQtyInvaildText();
           }
         }
       });
