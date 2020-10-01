@@ -414,6 +414,8 @@ define([
       }
       var jsonString = JSON.stringify(finalResult);
       console.log(jsonString);
+      var x = this;
+      var y = additionalValidators;
       $.ajax({
         url: url,
         method: "post",
@@ -426,12 +428,12 @@ define([
           //return jsonItems.isInStock;
           console.log("instock", jsonItems.isInStock);
           if (
-            this.validate() &&
-            additionalValidators.validate() &&
-            this.isTotalValid() && jsonItems.isInStock
+            x.validate() &&
+            y.validate() &&
+            x.isTotalValid() && jsonItems.isInStock
           ) {
             showOverlay();
-            this.handleRedirectAction();
+            x.handleRedirectAction();
           }
           else {
             console.log("redirect failed");
