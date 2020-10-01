@@ -408,8 +408,8 @@ define([
       if (
         this.validate() &&
         additionalValidators.validate() &&
-        this.isTotalValid() &&
-        this.isInStock()
+        this.isTotalValid() /*&&
+        this.isInStock()*/
       ) {
         showOverlay();
         this.handleRedirectAction();
