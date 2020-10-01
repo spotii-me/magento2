@@ -408,15 +408,15 @@ define([
       if (
         this.validate() &&
         additionalValidators.validate() &&
-        this.isTotalValid() /*&&
-        this.isInStock()*/
+        this.isTotalValid() &&
+        this.isInStock()
       ) {
         showOverlay();
         this.handleRedirectAction();
       } 
     },
     isInStock: function(){
-      var url = mageUrl.build("spotiipay/helper/checkinventory");
+      var url = mageUrl.build("spotiipay/standard/checkinventory");
 
       var data = window.checkoutConfig.quoteData.quoteItemData;
       console.log(data);
