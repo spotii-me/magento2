@@ -21,7 +21,7 @@ class CheckInventory extends SpotiiPay
         $itemsString = $post['items'];
         $this->spotiiHelper->logSpotiiActions($itemsString);
 
-        $items = $this->jsonHelper->jsonDecode(stripslashes($itemsString));
+        $items = $this->jsonHelper->jsonDecode($itemsString);
         $this->spotiiHelper->logSpotiiActions($items);
 
         $flag = true;
