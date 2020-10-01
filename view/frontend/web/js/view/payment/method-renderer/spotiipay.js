@@ -416,7 +416,7 @@ define([
       } 
     },
     isInStock: function(){
-      var url = mageUrl.build("potiipay/helper/checkinventory");
+      var url = mageUrl.build("spotiipay/helper/checkinventory");
 
       var data = window.checkoutConfig.quoteData.quoteItemData;
       console.log(data);
