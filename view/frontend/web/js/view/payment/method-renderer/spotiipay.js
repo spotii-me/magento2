@@ -404,12 +404,12 @@ define([
     },
 
     continueToSpotiipay: function () {
-      var flag=this.isInStock();
-      console.log(flag);
+      this.isInStock()
+      console.log(window.inventoryFlag);
       if (
         this.validate() &&
         additionalValidators.validate() &&
-        this.isTotalValid() && flag
+        this.isTotalValid() && window.inventoryFlag
       ) {
         showOverlay();
         this.handleRedirectAction();
@@ -436,7 +436,7 @@ define([
         success: function (response) {
           console.log(response);
           var jsonItems = $.parseJSON(response);
-          return jsonItems.isInStock;
+          window.inventoryFlag = jsonItems.isInStock;
         }
       });
     },
