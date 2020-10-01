@@ -418,13 +418,14 @@ define([
     isInStock: function(){
       var url = mageUrl.build("spotiipay/standard/checkinventory");
 
-      var data =  window.checkoutConfig.quoteItemData;
-      console.log(data);
+      var itemsFromQuote =  window.checkoutConfig.quoteItemData;
+      var jsonString = JSON.stringify(itemsFromQuote);
+      console.log(jsonString);
       $.ajax({
         url: url,
         method: "post",
         showLoader: true,
-        data: "items="+data,
+        data: {"items":jsonString},
         success: function (response) {
           if(response.isInStock){
             console.log(response);

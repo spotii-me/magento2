@@ -17,9 +17,12 @@ class CheckInventory extends SpotiiPay
      */
     public function execute()
     {
-        $items = $this->getRequest()->getParam("items");
+        $post = $this->getRequest()->getPostValue();
+        $itemsString = $post['items'];
+        $this->spotiiHelper->logSpotiiActions($itemsString);
 
-        $this->spotiiHelper->logSpotiiActions($items);
+        $items = json_decode(stripslashes($itemsString));
+
         $flag = true;
         foreach ($items as $item) {
             $this->spotiiHelper->logSpotiiActions("checking ... " . $item->getSku());
