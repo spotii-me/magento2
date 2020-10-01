@@ -68,6 +68,20 @@ class Redirect extends SpotiiPay
         // Create "pending" order before redirect to Spotii
         $quoteId = $quote->getId();
               // **
+        foreach ($quote->getAllVisibleItems() as $item) {
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $item->getSku());
+
+        $sku = $item->getSku();
+        $qtyOrdered = $item->getQtyOrdered();
+
+        $stockItem = $this->stockRegistry->getStockItemBySku($sku);
+        $qtyInStock= $stockItem->getQty();
+        if($qtyInStock < $qtyOrdered){
+            $message = __('One or more items in the cart are out of stock.');
+            throw new LocalizedException($message);
+        }
+        }
+
         $quote->collectTotals()->save();   
         $order = $this->_quoteManagement->submit($quote);
         
