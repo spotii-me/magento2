@@ -340,7 +340,9 @@ define([
     getTotalInvalidText: function () {
       return (this.isTotalValid() ? '' : "You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
     },
-
+    getQtyInvaildText: function () {
+      document.getElementById('total-benchmark-info').textContent = "One or more of the items in your cart are out of stock.";
+    },
     redirectToSpotiipayController: function (data) {
       if (!isDeclined) {
         // Make a post request to redirect
@@ -413,7 +415,6 @@ define([
         finalResult.push({ qty: tempQty, sku: tempSku });
       }
       var jsonString = JSON.stringify(finalResult);
-      console.log(jsonString);
       var x = this;
       var y = additionalValidators;
       $.ajax({
@@ -423,10 +424,7 @@ define([
         //async: true,
         data: { "items": jsonString },
         success: function (response) {
-          console.log(response);
           var jsonItems = $.parseJSON(response);
-          //return jsonItems.isInStock;
-          console.log("instock", jsonItems.isInStock);
           if (
             x.validate() &&
             y.validate() &&
@@ -437,37 +435,12 @@ define([
           }
           else {
             console.log("redirect failed");
+            getQtyInvaildText();
           }
         }
       });
-
-      
-
     },
-    isInStock: function () {
-      var url = mageUrl.build("spotiipay/standard/checkinventory");
-      var finalResult = [];
-      var itemsFromQuote = window.checkoutConfig.quoteItemData;
-      for (var i = 0; i < itemsFromQuote.length; i++) {
-        var tempQty = itemsFromQuote[i].qty;
-        var tempSku = itemsFromQuote[i].sku;
-        finalResult.push({ qty: tempQty, sku: tempSku });
-      }
-      var jsonString = JSON.stringify(finalResult);
-      console.log(jsonString);
-      $.ajax({
-        url: url,
-        method: "post",
-        showLoader: true,
-        async: true,
-        data: { "items": jsonString },
-        done: function (response) {
-          console.log(response);
-          var jsonItems = $.parseJSON(response);
-          return jsonItems.isInStock;
-        }
-      });
-    },
+
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
       if (total > 200)
