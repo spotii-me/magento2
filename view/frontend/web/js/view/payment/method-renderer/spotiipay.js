@@ -405,15 +405,14 @@ define([
 
     continueToSpotiipay: function () {
 
-
       if (
         this.validate() &&
         additionalValidators.validate() &&
         this.isTotalValid() &&
         this.isInStock()
       ) {
-        this.handleRedirectAction();
         showOverlay();
+        this.handleRedirectAction();
       } 
     },
     isInStock: function(){
