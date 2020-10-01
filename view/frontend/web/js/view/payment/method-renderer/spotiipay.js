@@ -420,8 +420,8 @@ define([
       var finalResult=[];
       var itemsFromQuote =  window.checkoutConfig.quoteItemData;
       for(var i=0; i<itemsFromQuote.length;i++){
-        tempQty=itemsFromQuote[i].qty;
-        tempSku=itemsFromQuote[i].sku;
+        var tempQty=itemsFromQuote[i].qty;
+        var tempSku=itemsFromQuote[i].sku;
         finalResult.push({qty:tempQty,sku:tempSku});
       }
       var jsonString = JSON.stringify(finalResult);
