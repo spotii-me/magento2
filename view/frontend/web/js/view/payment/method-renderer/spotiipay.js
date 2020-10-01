@@ -435,7 +435,7 @@ define([
         success: function (response) {
             console.log(response);
             var jsonItems = $.parseJSON(response);
-            flag= jsonItems.isInStock
+            flag= jsonItems.isInStock;
           }
       });
       return flag;
