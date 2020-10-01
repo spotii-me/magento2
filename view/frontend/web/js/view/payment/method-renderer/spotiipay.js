@@ -404,7 +404,16 @@ define([
     },
 
     continueToSpotiipay: function () {
-      this.isInStock();
+      var response = this.isInStock();
+      var jsonItems = $.parseJSON(response);
+      if (
+        this.validate() &&
+        additionalValidators.validate() &&
+        this.isTotalValid() && jsonItems.isInStock
+      ) {
+        showOverlay();
+        this.handleRedirectAction();
+      }
     },
     isInStock: function () {
       var url = mageUrl.build("spotiipay/standard/checkinventory");
@@ -421,25 +430,10 @@ define([
         url: url,
         method: "post",
         showLoader: true,
-        data: { "items": jsonString },
-        success: function (response) {
-          console.log(response);
-          var jsonItems = $.parseJSON(response);
-          this.inventoryChecked(jsonItems.isInStock);
-        }
-      });
+        data: { "items": jsonString }
+      }).responseText;
     },
-    inventoryChecked: function (flag) {
-      if (
-        this.validate() &&
-        additionalValidators.validate() &&
-        this.isTotalValid() && flag
-      ) {
-        showOverlay();
-        this.handleRedirectAction();
-      }
-
-    },
+    
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
       if (total > 200)
