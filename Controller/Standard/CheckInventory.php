@@ -2,7 +2,7 @@
 
 namespace Spotii\Spotiipay\Controller\Standard;
 
-use Magento\Framework\App\Action\Action;
+use Spotii\Spotiipay\Controller\AbstractController\SpotiiPay;
 
 /**
  * Spotii Helper
