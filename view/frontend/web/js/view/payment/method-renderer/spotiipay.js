@@ -434,13 +434,13 @@ define([
         success: function (response) {
           if(response.isInStock){
             console.log(response);
-            jsonData = $.parseJSON(response);
-            console.log(jsonData.isInStock);
-            return true;
-          }
-          else{
-            console.log(response);
-            return false;
+            var jsonItems = $.parseJSON(response);
+            console.log(jsonItems.isInStock);
+            if(jsonItems.isInStock){
+              return true;
+            }else{
+              return false;
+            }
           }
           }
       });
