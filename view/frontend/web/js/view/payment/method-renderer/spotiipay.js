@@ -417,9 +417,14 @@ define([
     },
     isInStock: function(){
       var url = mageUrl.build("spotiipay/standard/checkinventory");
-
+      var finalResult=[];
       var itemsFromQuote =  window.checkoutConfig.quoteItemData;
-      var jsonString = JSON.stringify(itemsFromQuote);
+      for(var i=0; i<itemsFromQuote.length;i++){
+        tempQty=itemsFromQuote[i].qty;
+        tempSku=itemsFromQuote[i].sku;
+        finalResult.push({qty:tempQty,sku:tempSku});
+      }
+      var jsonString = JSON.stringify(finalResult);
       console.log(jsonString);
       $.ajax({
         url: url,
