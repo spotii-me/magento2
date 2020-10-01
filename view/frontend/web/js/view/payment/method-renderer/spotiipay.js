@@ -426,14 +426,14 @@ define([
       }
       var jsonString = JSON.stringify(finalResult);
       console.log(jsonString);
-      $.ajax({
+      return $.ajax({
         url: url,
         method: "post",
         showLoader: true,
         data: { "items": jsonString }
       }).responseText;
     },
-    
+
     isTotalValid: function () {
       let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
       if (total > 200)
