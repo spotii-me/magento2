@@ -431,7 +431,7 @@ define([
         url: url,
         method: "post",
         showLoader: true,
-        async: false,
+        //async: false,
         data: { "items": jsonString },
         success: function (response) {
           console.log(response);
