@@ -99,7 +99,7 @@ class Redirect extends SpotiiPay
         $order->setState('new')->setStatus($newOrderStatus);
         $order->save(); // **
         //$this->_checkoutSession->setLastQuoteId($quoteId);
-
+        return $jsonResult;
     }catch (\Magento\Framework\Exception\LocalizedException $e) {
         $this->spotiiHelper->logSpotiiActions("Redirect Exception1: " . $e->getMessage());
         $this->messageManager->addError(
@@ -111,8 +111,7 @@ class Redirect extends SpotiiPay
             $e->getMessage()
         );
     }
-       $this->spotiiHelper->logSpotiiActions("available: " . $available);
-        return ($available ? $jsonResult : exit('One or more items in the cart are out of stock.'));
+        exit('One or more items in the cart are out of stock.');
         //return ($jsonResult);
     }
 }
