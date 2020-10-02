@@ -60,6 +60,7 @@ class Redirect extends SpotiiPay
         $this->_checkoutSession->replaceQuote($quote);
         $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
         $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
+        $available = true;
         try{
         $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
         $jsonResult = $this->_resultJsonFactory->create();
@@ -68,7 +69,6 @@ class Redirect extends SpotiiPay
         // Create "pending" order before redirect to Spotii
         $quoteId = $quote->getId();
               // **
-        $available = true;
         foreach ($quote->getAllVisibleItems() as $item) {
         $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $item->getSku());
 
@@ -112,7 +112,7 @@ class Redirect extends SpotiiPay
         );
     }
        $this->spotiiHelper->logSpotiiActions("available: " . $available);
-        return ($available ? $jsonResult : null);
+        return ($available ? $jsonResult : exit('One or more items in the cart are out of stock.'));
         //return ($jsonResult);
     }
 }
