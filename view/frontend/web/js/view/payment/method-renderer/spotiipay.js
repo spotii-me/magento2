@@ -361,7 +361,7 @@ define([
           onCheckout();
 
           var url = mageUrl.build("spotiipay/standard/redirect");
-
+          var x = this;
           $.ajax({
             url: url,
             method: "post",
@@ -371,6 +371,7 @@ define([
               toggleFlag = false;
               // Send this response to spotii api
               // This would redirect to spotii
+              try{
               jsonData = $.parseJSON(response);
               if (jsonData.redirectURL) {
                 if (isMobileSafari()) {
@@ -388,7 +389,10 @@ define([
                   message: jsonData["message"],
                 });
               }
-            },
+            }catch(e){
+              removeOverlay();
+              x.getQtyInvaildText();
+            }},
           });
         } else {
           loadIFrame();
