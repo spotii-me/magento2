@@ -229,11 +229,30 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param float $spotiiAmount
      * @return bool
      */
-    public function isOrderAmountMatched($magentoAmount, $spotiiAmount)
+    public function isOrderAmountMatched($magentoAmount, $spotiiAmount, $magentoCurrency, $spotiiCurrency)
     {
         $precision = \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION;
-
-        return (round($magentoAmount, $precision) == round($spotiiAmount, $precision)) ? true : false;
+  
+            if ($spotiiCurrency != $magentoCurrency){
+                 if($spotiiCurrency == "AED"){
+                 switch($magentoCurrency){
+                     case "USD":
+                        $magentoAmount=(round($magentoAmount, $precision))*3.6730 ;
+                     break;
+                     case "SAR":
+                         $magentoAmount=(round($magentoAmount, $precision))*0.9506 ;
+                     break;
+                 }
+              }  
+                 if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) <6)){
+                     return true;
+                 }
+        
+             }else if (round($spotiiAmount, $precision) == round($magentoAmount, $precision)){
+                     return true;
+             }else {
+                     return false;
+             }
     }
 
     /**
