@@ -329,7 +329,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
 
 
         if ($spotiiOrderTotal != null
-            && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal)) {
+            && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal, $currency, $spotiiOrderCurr)) {
             $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         }
