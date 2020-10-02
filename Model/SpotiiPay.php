@@ -249,6 +249,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $this->spotiiHelper->logSpotiiActions("****Authorization start****");
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        $currency =$payment->getOrder()->getGlobalCurrencyCode();
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
@@ -256,10 +257,13 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $spotiiOrderTotal = isset($result['total']) ?
                                 $result['total'] :
                                 null;
+        $spotiiOrderCurr = isset($result['currency']) ?
+        $result['currency'] :
+        null;
         $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
-
+        $this->spotiiHelper->logSpotiiActions("Spotii Order Currency : $spotiiOrderCurr");
         if ($spotiiOrderTotal != null
-        && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal)) {
+        && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal, $currency, $spotiiOrderCurr)) {
             $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         } else {
@@ -290,6 +294,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException(__('Invalid amount for capture.'));
         }
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        $currency =$payment->getOrder()->getGlobalCurrencyCode();
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
@@ -298,7 +303,11 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $spotiiOrderTotal = isset($result['total']) ?
                                 $result['total'] :
                                 null;
+        $spotiiOrderCurr = isset($result['currency']) ?
+        $result['currency'] :
+        null;
         $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
+
 
         if ($spotiiOrderTotal != null
             && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal)) {

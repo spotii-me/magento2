@@ -446,9 +446,18 @@ define([
     },
 
     isTotalValid: function () {
-      let total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
-      if (total > 200)
-        return true;
+      var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
+      var curr = window.checkoutConfig.quoteData.global_currency_code;
+      switch(curr){
+        case "USD":
+          total= total*3.6730;
+          break;
+        case "SAR":
+          total= total*0.9506;
+          break;
+      }
+      console.log(total+curr);
+      if (total > 200) return true;
       else return false;
     },
 
