@@ -101,16 +101,17 @@ class Redirect extends SpotiiPay
         //$this->_checkoutSession->setLastQuoteId($quoteId);
 
     }catch (\Magento\Framework\Exception\LocalizedException $e) {
-        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception1: " . $e->getMessage());
         $this->messageManager->addError(
             $e->getMessage()
         );
     } catch (\Exception $e) {
-        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+        $this->spotiiHelper->logSpotiiActions("Redirect Exception2: " . $e->getMessage());
         $this->messageManager->addError(
             $e->getMessage()
         );
     }
+       $this->spotiiHelper->logSpotiiActions("available: " . $available);
         return ($available ? $jsonResult : null);
         //return ($jsonResult);
     }
