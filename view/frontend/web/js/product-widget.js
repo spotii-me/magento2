@@ -8,8 +8,14 @@ define([
     'ko',
     'uiComponent',
     'domReady!',
-    'Magento_Catalog/js/product/storage/storage-service'
-], function ($, ko, Component,storage) {
+    'Magento_Catalog/js/product/storage/storage-service',
+    'underscore',
+    'mageUtils',
+    'mage/translate',
+    'Magento_Catalog/js/product/storage/ids-storage',
+    'Magento_Catalog/js/product/storage/data-storage',
+    'Magento_Catalog/js/product/storage/ids-storage-compare'
+], function ($, ko, Component,storage, _, utils, $t, IdsStorage, DataStore, IdsStorageCompare) {
     'use strict';
 
     return Component.extend({
@@ -31,6 +37,7 @@ define([
         },
 
         initIdsStorage: function(){
+            console.log(storage.getStorage(this.identifiersConfig.namespace));
             storage.onStorageInit(this.identifiersConfig.namespace, this.idsStorageHandler.bind(this));
             return this;
         },
