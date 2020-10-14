@@ -6,6 +6,9 @@
  */
 ?>
 <script type="text/x-magento-init">
+var flag = false;
+console.log(flag);
+if(flag){
     {
         "*": {
             "productWidget": {
@@ -13,4 +16,5 @@
             }
         }
     }
+}else{console.log("not rendered");}
 </script>
