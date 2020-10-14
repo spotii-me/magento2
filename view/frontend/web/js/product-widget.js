@@ -8,12 +8,11 @@ define([
     'ko',
     'uiComponent',
     'domReady!',
-    'Magento_Catalog/js/product/storage/storage-service',
-    "mage/storage",
+    'Magento_Catalog/js/product/storage/storage-service'
 ], function ($, ko, Component,storage) {
     'use strict';
 
-    return Component.extend({
+    return /*Component.extend(*/{
         initialize: function () {
             //initialize parent Component
             this._super();
@@ -58,5 +57,5 @@ define([
 
             console.log("dom loaded");
         }
-    });
+    }/*)*/;
 });
