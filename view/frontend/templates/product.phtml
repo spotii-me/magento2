@@ -6,15 +6,12 @@
  */
 ?>
 <script type="text/x-magento-init">
-var flag = true;
-console.log(flag);
-if(flag){
     {
         "*": {
             "productWidget": {
-                "jsConfig" : <?php echo json_encode($this->getJsConfig()) ?>
+                "jsConfig" : <?php echo json_encode($this->getJsConfig()) ?>,
+                "showSpotii": true
             }
         }
     }
-}else{console.log("not rendered");}
 </script>
