@@ -17,6 +17,7 @@ define([
             //initialize parent Component
             this._super();
             this.processSpotiiDocument();
+            this.initIdsStorage();
         },
         
         identifiersConfig: {
