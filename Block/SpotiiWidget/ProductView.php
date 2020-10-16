@@ -17,7 +17,6 @@ use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
  */
 class ProductView extends Template
 {
-    protected $spotiiHelper;
     protected $_registry;
     const MIN_PRICE = 0;
     const MAX_PRICE = 100000;
@@ -45,13 +44,11 @@ class ProductView extends Template
         ProductWidgetConfigInterface $productWidgetConfig,
         SpotiiApiConfigInterface $spotiiApiConfig,
         \Magento\Framework\Registry $registry,
-        \Spotii\Spotiipay\Helper\Data $spotiiHelper,
         array $data
     ) {
         $this->productWidgetConfig = $productWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
         $this->_registry = $registry;
-        $this->spotiiHelper = $spotiiHelper;
         parent::__construct($context, $data);
     }
 
@@ -63,9 +60,8 @@ class ProductView extends Template
     public function getJsConfig()
     {
         $product = $this->_registry->registry('current_product');
-        $this->spotiiHelper->logSpotiiActions($product ->getId());
         $isAvaliableOnSpotii=$product->getAttributeText('spotii_product');
-        $this->spotiiHelper->logSpotiiActions($isAvaliableOnSpotii);
+        if($isAvaliableOnSpotii=="Yes"){
         $result = [
             'targetXPath' => $this->productWidgetConfig->getTargetXPath(),
             'renderToPath' => $this->productWidgetConfig->getRenderToPath(),
@@ -87,5 +83,7 @@ class ProductView extends Template
             }
         }
         return $result;
+    }else
+    return [];
     }
 }

@@ -29,7 +29,7 @@ class Cart extends Template
      * @var SpotiiApiConfigInterface
      */
     private $spotiiApiConfig;
-
+    protected $cart;
     /**
      * ProductWidget constructor.
      *
@@ -42,10 +42,12 @@ class Cart extends Template
         Template\Context $context,
         CartWidgetConfigInterface $cartWidgetConfig,
         SpotiiApiConfigInterface $spotiiApiConfig,
+        \Magento\Checkout\Model\Cart $cart,
         array $data
     ) {
         $this->cartWidgetConfig = $cartWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
+        $this->cart = $cart;
         parent::__construct($context, $data);
     }
 
@@ -56,6 +58,16 @@ class Cart extends Template
      */
     public function getJsConfig()
     {
+        $showWidget = true;
+
+        foreach ($this->cart->getQuote()->getAllVisibleItems() as $item) {
+
+            $isAvaliableOnSpotii=$item->getAttributeText('spotii_product');
+            if($isAvaliableOnSpotii=="No"){
+                $showWidget = false;
+            }
+        }
+        if($showWidget){
         $result = [
             'targetXPath' => $this->cartWidgetConfig->getTargetXPath(),
             'renderToPath' => $this->cartWidgetConfig->getRenderToPath(),
@@ -77,5 +89,7 @@ class Cart extends Template
             }
         }
         return $result;
+    }else
+    return [];
     }
 }
