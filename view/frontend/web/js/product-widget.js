@@ -65,37 +65,62 @@ define([
     });
 });*/
 define([
-    'Magento_Catalog/js/product/storage/storage-service'
-]), function(storage){
-    'use strict';
-
-    return {
-
-        identifiersConfig: {
-            namespace: 'product_data_storage'
+  "underscore",
+  "uiElement",
+  "Magento_Catalog/js/product/storage/storage-service",
+], function (_, Element, storage) {
+  "use strict";
+  return Element.extend({
+    defaults: {
+      identifiersConfig: { namespace: "recently_viewed_product" },
+      productStorageConfig: {
+        namespace: "product_data_storage",
+        updateRequestConfig: { method: "GET", dataType: "json" },
+        className: "DataStorage",
+      },
+    },
+    initialize: function () {
+      this._super().initIdsStorage().initDataStorage();
+      return this;
+    },
+    initIdsStorage: function () {
+      storage.onStorageInit(
+        this.identifiersConfig.namespace,
+        this.idsStorageHandler.bind(this)
+      );
+      console.log(storage)
+      return this;
+    },
+    initDataStorage: function () {
+      storage.onStorageInit(
+        this.productStorageConfig.namespace,
+        this.dataStorageHandler.bind(this)
+      );
+      return this;
+    },
+    dataStorageHandler: function (dataStorage) {
+      this.productStorage = dataStorage;
+      this.productStorage.add(this.data.items);
+    },
+    idsStorageHandler: function (idsStorage) {
+      this.idsStorage = idsStorage;
+      this.idsStorage.add(this.getIdentifiers());
+      console.log(idsStorage)
+    },
+    getIdentifiers: function () {
+        console.log("here")
+      var result = {};
+      _.each(
+        this.data.items,
+        function (item, key) {
+          result[key] = {
+            added_at: new Date().getTime() / 1000,
+            product_id: key,
+          };
         },
-
-        productStorageConfig: {
-            namespace: 'product_data_storage',
-            customerDataProvider: 'product_data_storage',
-            className: 'DataStorage'
-        },
-
-        initIdsStorage: function(){
-            storage.onStorageInit(this.identifiersConfig.namespace, this.idsStorageHandler.bind(this));
-            return this;
-        },
-
-        idsStorageHandler: function(idsStorage){
-            this.productStorage = storage.createStorage(this.productStorageConfig);
-            this.productStorage.data.subscribe(this.dataCollectionHandler.bind(this));
-            console.log(this.productStorage);
-        },
-        dataCollectionHandler: function(data){
-            console.log("data");
-            console.log(data);
-        }
-
-    }
-
-}
+        this
+      );
+      return result;
+    },
+  });
+});
