@@ -7,12 +7,12 @@ define([
     'jquery',
     'ko',
     'uiComponent',
-    'domReady!',
-    'Magento_Catalog/js/product/storage/storage-service'
-], function ($, ko, Component,storage) {
+    'domReady!'/*,
+    'Magento_Catalog/js/product/storage/storage-service'*/
+], function ($, ko, Component/*,storage*/) {
     'use strict';
 
-    return /*Component.extend(*/{
+    return Component.extend({
         initialize: function () {
             //initialize parent Component
             this._super();
@@ -20,7 +20,7 @@ define([
             //this.initIdsStorage();
         },
         
-        identifiersConfig: {
+       /* identifiersConfig: {
             namespace: 'product_data_storage'
         },
 
@@ -38,7 +38,7 @@ define([
         idsStorageHandler: function(idsStorage){
             this.productStorage = storage.createStorage(this.productStorageConfig);
             console.log(this.productStorage);
-        },
+        },*/
         processSpotiiDocument: function() {
             console.log("rendering started");
             var self = this;
@@ -57,5 +57,5 @@ define([
 
             console.log("dom loaded");
         }
-    }/*)*/;
+    });
 });
