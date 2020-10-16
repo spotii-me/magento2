@@ -104,23 +104,12 @@ define([
     },
     idsStorageHandler: function (idsStorage) {
       this.idsStorage = idsStorage;
-      this.idsStorage.add(this.getIdentifiers());
       console.log(idsStorage)
+      this.productStorage.data.subscribe(this.dataCollectionHandler.bind(this));
     },
-    getIdentifiers: function () {
-        console.log("here")
-      var result = {};
-      _.each(
-        this.data.items,
-        function (item, key) {
-          result[key] = {
-            added_at: new Date().getTime() / 1000,
-            product_id: key,
-          };
-        },
-        this
-      );
-      return result;
-    },
+    dataCollectionHandler: function(data){
+        console.log("data");
+        console.log(data);
+    }
   });
 });
