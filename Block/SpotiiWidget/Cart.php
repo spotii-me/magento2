@@ -30,6 +30,7 @@ class Cart extends Template
      */
     private $spotiiApiConfig;
     protected $cart;
+    private $productRepository; 
     /**
      * ProductWidget constructor.
      *
@@ -44,12 +45,14 @@ class Cart extends Template
         SpotiiApiConfigInterface $spotiiApiConfig,
         \Magento\Checkout\Model\Cart $cart,
         \Spotii\Spotiipay\Helper\Data $spotiiHelper,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         array $data
     ) {
         $this->cartWidgetConfig = $cartWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
-        $this->spotiiHelper = $spotiiHelper;
         $this->cart = $cart;
+        $this->spotiiHelper = $spotiiHelper;
+        $this->productRepository = $productRepository;
         parent::__construct($context, $data);
     }
 
@@ -64,8 +67,9 @@ class Cart extends Template
         $showWidget = true;
 
         foreach ($this->cart->getQuote()->getAllVisibleItems() as $item) {
-            $this->spotiiHelper->logSpotiiActions($item->getId());
-            $isAvaliableOnSpotii=$item->getAttributeText('spotii_product');
+            $this->spotiiHelper->logSpotiiActions($item->getSku());
+            $product= $this->productRepository->get($item->getSku());
+            $isAvaliableOnSpotii=$product->getAttributeText('spotii_product');
             $this->spotiiHelper->logSpotiiActions($isAvaliableOnSpotii);
             if($isAvaliableOnSpotii=="No"){
                 $showWidget = false;
@@ -97,3 +101,4 @@ class Cart extends Template
     return [];
     }
 }
+ 
