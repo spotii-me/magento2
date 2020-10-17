@@ -15,29 +15,29 @@ var jsonData;
 var rejectUrl;
 var confirmUrl;
 var popup = true;
-var buttonCalledOnce = true;
-const root=document.getElementsByTagName('body')[0];
-
-//Build lightbox component
+const root = document.getElementsByTagName('body')[0];
+var hidePopup = false;
+var buttonOnce = true;
+//Build fancybox component
 var button1 = document.createElement('button');
-button1.style.display='none';
+button1.style.display = 'none';
 button1.id = 'closeclick';
 button1.textContent = 'set overlay closeClick to false';
-var bodyTag=document.getElementsByTagName('body')[0];
+var bodyTag = document.getElementsByTagName('body')[0];
 bodyTag.appendChild(button1);
 
 var button2 = document.createElement('button');
-button2.style.display='none';
+button2.style.display = 'none';
 button2.id = 'closeiframebtn';
 button2.textContent = 'set overlay closeClick to false';
 bodyTag.appendChild(button2);
 
 var a1 = document.createElement('a');
 a1.id = 'fancy';
-a1.style.display='none';
-a1.classList= 'fancy-box lightbox';
-a1.textContent ='open lightbox';
-a1.href='';
+a1.style.display = 'none';
+a1.classList = 'fancy-box lightbox';
+a1.textContent = 'open lightbox';
+a1.href = '';
 bodyTag.appendChild(a1);
 
 var LoadCSS = function (filename) {
@@ -57,7 +57,7 @@ document.getElementsByTagName('body')[0].appendChild(script);
 //Check if browser support the popup
 const thirdPartySupported = root => {
   return new Promise((resolve, reject) => {
-    const receiveMessage = function(evt) {
+    const receiveMessage = function (evt) {
       if (evt.data === 'MM:3PCunsupported') {
         reject();
       } else if (evt.data === 'MM:3PCsupported') {
@@ -74,8 +74,8 @@ const thirdPartySupported = root => {
 };
 
 //Redirect to Spotii
-const redirectToSpotiiCheckout = function(checkoutUrl, timeout) {
-  setTimeout(function() {
+const redirectToSpotiiCheckout = function (checkoutUrl, timeout) {
+  setTimeout(function () {
     window.location = checkoutUrl;
   }, timeout); // 'milli-seconds'
 };
@@ -92,15 +92,15 @@ function createElement(tagName, attributes, content) {
   const el = document.createElement(tagName);
 
   if (attributes) {
-      Object.keys(attributes).forEach(function(attr) {
-          el[attr] = attributes[attr];
-      });
+    Object.keys(attributes).forEach(function (attr) {
+      el[attr] = attributes[attr];
+    });
   }
 
   if (content && content.nodeType === Node.ELEMENT_NODE) {
-      el.appendChild(content);
+    el.appendChild(content);
   } else {
-      el.innerHTML = content;
+    el.innerHTML = content;
   }
 
   return el;
@@ -110,7 +110,7 @@ function Spinner() {
   const span = createElement('span');
   span.className = 'sptii-loading-icon';
   span.innerHTML =
-      '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 1024 1024"><path d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 0 0-94.3-139.9 437.71 437.71 0 0 0-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z" fill="orange" /></svg>';
+    '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 1024 1024"><path d="M988 548c-19.9 0-36-16.1-36-36 0-59.4-11.6-117-34.6-171.3a440.45 440.45 0 0 0-94.3-139.9 437.71 437.71 0 0 0-139.9-94.3C629 83.6 571.4 72 512 72c-19.9 0-36-16.1-36-36s16.1-36 36-36c69.1 0 136.2 13.5 199.3 40.3C772.3 66 827 103 874 150c47 47 83.9 101.8 109.7 162.7 26.7 63.1 40.2 130.2 40.2 199.3.1 19.9-16 36-35.9 36z" fill="orange" /></svg>';
   return span;
 }
 function Logo() {
@@ -120,8 +120,8 @@ function Logo() {
 }
 function SpinTextNode() {
   const text = isMobileSafari() ? 'Redirecting you to Spotii...' : 'Checking your payment status with Spotii...';
-  const first= createElement('p', {}, text);
-  const cont = createElement('span', {className: 'sptii-text'}, first);
+  const first = createElement('p', {}, text);
+  const cont = createElement('span', { className: 'sptii-text' }, first);
   const spinner = createElement('span', { className: 'sptii-loading' }, Spinner());
   const spinText = createElement('span', { className: 'sptii-spinnerText' }, cont);
   spinText.appendChild(spinner);
@@ -131,7 +131,7 @@ function SpinTextNode() {
 
 //Show the loading page
 function showOverlay() {
-  const overlay = createElement('div', {className: 'sptii-overlay'}, '');
+  const overlay = createElement('div', { className: 'sptii-overlay' }, '');
   const logo = createElement('span', { className: 'sptii-logo' }, Logo());
   document.getElementsByTagName("body")[0].appendChild(overlay);
   overlay.appendChild(logo);
@@ -146,100 +146,92 @@ function removeOverlay() {
 
 //Google tag manager 
 function onCheckout() {
-if (typeof dataLayer !== 'undefined') {
+  if (typeof dataLayer !== 'undefined') {
     // the variable is defined
-  dataLayer.push({
-    'event': 'checkout',
-    'ecommerce': {
-      'checkout': {
-        'actionField': {'step': 3, 'option': 'Spotiipay'}
-     }
-    }
-  }
-  );
-  dataLayer.push({
-    'event': 'checkoutOption',
-    'ecommerce': {
-      'checkout_option': {
-        'actionField': {'step': 3, 'option': 'Spotiipay'}
+    dataLayer.push({
+      'event': 'checkout',
+      'ecommerce': {
+        'checkout': {
+          'actionField': { 'step': 3, 'option': 'Spotiipay' }
+        }
       }
     }
-  });
-}
+    );
+    dataLayer.push({
+      'event': 'checkoutOption',
+      'ecommerce': {
+        'checkout_option': {
+          'actionField': { 'step': 3, 'option': 'Spotiipay' }
+        }
+      }
+    });
+  }
 }
 
 //Handle the response Decline/Accept
-window.closeIFrameOnCompleteOrder = function(message) {
-  //console.log('Message - ', message);
+window.closeIFrameOnCompleteOrder = function (message) {
+
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
-  var hidePopup = message.hidePopup;
-  //console.log('Order state - ', status);
-  //console.log('Order confirmUrl - ', confirmUrl);
-  //console.log('Order rejectUrl - ', rejectUrl);
+  hidePopup = message.hidePopup;
 
   switch (status) {
     case successCheckOutStatus: {
-      if(!isSuccess){
+      if (!isSuccess) {
         isSuccess = true;
-      //console.log('successCheckOutStatus');
-      if (typeof dataLayer !== 'undefined') {
-      var params = confirmUrl.split('/');
-      var reference = params[params.length-2];
-      var ids = reference.split('-');
-      var id = ids[1];
-      dataLayer.push({
-        'event': 'purchase',
-        'ecommerce': {
-          'purchase': {
-            'actionField': {
-              'id': id,                         // Transaction ID. Required for purchases and refunds.
-              'affiliation': 'Spotii',
+        //console.log('successCheckOutStatus');
+        if (typeof dataLayer !== 'undefined') {
+          var params = confirmUrl.split('/');
+          var reference = params[params.length - 2];
+          var ids = reference.split('-');
+          var id = ids[1];
+          dataLayer.push({
+            'event': 'purchase',
+            'ecommerce': {
+              'purchase': {
+                'actionField': {
+                  'id': id,                // Transaction ID. Required for purchases and refunds.
+                  'affiliation': 'Spotii',
+                }
+              }
             }
-          }
+          });
         }
-      });
-    }
-      location.href = confirmUrl; 
-      document.getElementById('closeiframebtn').onclick = function() {
-        location.href = confirmUrl; 
-      };
-      removeOverlay();
-    }
+        location.href = confirmUrl;
+        document.getElementById('closeiframebtn').onclick = function () {
+          location.href = confirmUrl;
+        };
+        removeOverlay();
+      }
       break;
     }
     case failedCheckOutStatus: {
-      if(hidePopup && popup){
-        popup=false;
-        document.getElementById("closeiframebtn").click();
-        //console.log('here');
+      if (hidePopup && popup) {
+        popup = false;
+        document.getElementById('closeiframebtn').click();
       }
-      if(!isFail){
-      isFail = true;
-      isDeclined = true;
-      //console.log('failedCheckOutStatus');  
+      if (!isFail) {
+        isFail = true;
+        isDeclined = true;
 
-      document.getElementById('closeiframebtn').onclick = function() {
-        if(buttonCalledOnce){
-          buttonCalledOnce = false;
-          var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
-          //console.log('rejectUrlSubmitted 1'+rejectUrlSubmitted);
-          location.href = rejectUrlSubmitted; 
+        document.getElementById('closeiframebtn').onclick = function () {
+          if (buttonOnce) {
+            buttonOnce = false;
+            var rejectUrlSubmitted = rejectUrl.substring(0, rejectUrl.length - 2) + "1/";
+            location.href = rejectUrlSubmitted;
+          }
+        };
+        removeOverlay();
       }
-      };
-      removeOverlay();
-    }
-    
+
       break;
     }
     case submittedCheckOutStatus: {
-     //console.log('submittedCheckOutStatus');
       removeOverlay();
       break;
     }
     default: {
-     // console.log('None status ');
       removeOverlay();
       break;
     }
@@ -304,14 +296,14 @@ define([
             installmentFee.toFixed(
               window.checkoutConfig.priceFormat.precision
             ) *
-              3;
+            3;
 
           $(".spotii-grand-total").text(
             "Total : " +
-              format.replace(
-                /%s/g,
-                amount.toFixed(window.checkoutConfig.priceFormat.precision)
-              )
+            format.replace(
+              /%s/g,
+              amount.toFixed(window.checkoutConfig.priceFormat.precision)
+            )
           );
           $(".spotii-installment-amount").text(
             format.replace(
@@ -346,60 +338,67 @@ define([
       return "Payment Schedule";
     },
     getTotalInvalidText: function () {
-        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
+      return (this.isTotalValid() ? '' : "You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
     },
-    
+    getQtyInvaildText: function () {
+      document.getElementById('total-benchmark-info').textContent = "One or more of the items in your cart are out of stock.";
+    },
     redirectToSpotiipayController: function (data) {
-      if(!isDeclined){
-      // Make a post request to redirect
-      var renderPopup= function (url) {
-        openIframeSpotiiCheckout(url);
-      };
+      if (!isDeclined) {
+        // Make a post request to redirect
+        var renderPopup = function (url) {
+          openIframeSpotiiCheckout(url);
+        };
 
-      var openIframeSpotiiCheckout= function(checkoutUrl) {
+        var openIframeSpotiiCheckout = function (checkoutUrl) {
 
-    $('.fancy-box').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
-        loadIFrame();
-    };
+          $('.fancy-box').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
+          loadIFrame();
+        };
 
-   if(toggleFlag){
-    onCheckout();
-  
-     var url = mageUrl.build("spotiipay/standard/redirect");
+        if (toggleFlag) {
 
-      $.ajax({
-        url: url,
-        method: "post",
-        showLoader: true,
-        data: data,
-        success: function (response) {
-          toggleFlag = false;
-          // Send this response to spotii api
-          // This would redirect to spotii
-          jsonData = $.parseJSON(response);
-          if (jsonData.redirectURL) { 
-            if (isMobileSafari()) {
-              redirectToSpotiiCheckout(jsonData.redirectURL,2500);
-            } else  {
-            thirdPartySupported(root).then( () => {
-            renderPopup(jsonData.redirectURL);
-          })
-            .catch(() => {
-              redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
-            });
-          }       
-          } else if (typeof jsonData["message"] !== "undefined") {
-            globalMessageList.addErrorMessage({
-              message: jsonData["message"],
-            });
-          }
-        },
-      });
-    }else{
-      loadIFrame();
-    }
-  }
-},
+          onCheckout();
+
+          var url = mageUrl.build("spotiipay/standard/redirect");
+          var x = this;
+          $.ajax({
+            url: url,
+            method: "post",
+            showLoader: true,
+            data: data,
+            success: function (response) {
+              toggleFlag = false;
+              // Send this response to spotii api
+              // This would redirect to spotii
+              try{
+              jsonData = $.parseJSON(response);
+              if (jsonData.redirectURL) {
+                if (isMobileSafari()) {
+                  redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
+                } else {
+                  thirdPartySupported(root).then(() => {
+                    renderPopup(jsonData.redirectURL);
+                  })
+                    .catch(() => {
+                      redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
+                    });
+                }
+              } else if (typeof jsonData["message"] !== "undefined") {
+                globalMessageList.addErrorMessage({
+                  message: jsonData["message"],
+                });
+              }
+            }catch(e){
+              removeOverlay();
+              x.getQtyInvaildText();
+            }},
+          });
+        } else {
+          loadIFrame();
+        }
+      }
+    },
     handleRedirectAction: function () {
       var data = $("#co-shipping-form").serialize();
       if (!customer.isLoggedIn()) {
@@ -411,15 +410,42 @@ define([
     },
 
     continueToSpotiipay: function () {
-
-      showOverlay();
-      if (
-        this.validate() &&
-        additionalValidators.validate() &&
-        this.isTotalValid()
-      ) {
-        this.handleRedirectAction();
-      } 
+      var url = mageUrl.build("spotiipay/standard/checkinventory");
+      var finalResult = [];
+      var itemsFromQuote = window.checkoutConfig.quoteItemData;
+      for (var i = 0; i < itemsFromQuote.length; i++) {
+        var tempQty = itemsFromQuote[i].qty;
+        var tempSku = itemsFromQuote[i].sku;
+        finalResult.push({ qty: tempQty, sku: tempSku });
+      }
+      var jsonString = JSON.stringify(finalResult);
+      var x = this;
+      var y = additionalValidators;
+      $.ajax({
+        url: url,
+        method: "post",
+        showLoader: true,
+        //async: true,
+        data: { "items": jsonString },
+        success: function (response) {
+          var jsonItems = $.parseJSON(response);
+          if(!jsonItems.isAvailableOnSpotii){
+            console.log("service not available");
+          }
+          else if (
+            x.validate() &&
+            y.validate() &&
+            x.isTotalValid() && jsonItems.isInStock
+          ) {
+            showOverlay();
+            x.handleRedirectAction();
+          }
+          else {
+            console.log("redirect failed");
+            x.getQtyInvaildText();
+          }
+        }
+      });
     },
 
     isTotalValid: function () {
@@ -443,4 +469,3 @@ define([
     },
   });
 });
-
