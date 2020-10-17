@@ -47,16 +47,11 @@ var LoadCSS = function (filename) {
   fileref.setAttribute("href", filename);
   document.getElementsByTagName("head")[0].appendChild(fileref);
 };
-var LoadJS = function (filename) {
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src = filename;
-  document.getElementsByTagName('body')[0].appendChild(script);
-};
 LoadCSS("https://demo.chodri.com/iframe-lightbox.css");
-LoadJS('https://demo.chodri.com/iframe-lightbox.js');
-//LoadJS('/product-storage.js');
-
+var script = document.createElement('script');
+script.type = 'text/javascript';
+script.src = 'https://demo.chodri.com/iframe-lightbox.js';
+document.getElementsByTagName('body')[0].appendChild(script);
 //-----------------
 
 //Check if browser support the popup
@@ -298,7 +293,7 @@ define([
     getGrandTotal: function () {
       var total = quote.getCalculatedTotal();
       var format = window.checkoutConfig.priceFormat.pattern;
-      console.log(storage);
+
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
