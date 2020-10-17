@@ -20,7 +20,6 @@ class Cart extends Template
     const MIN_PRICE = 0;
     const MAX_PRICE = 100000;
     const WIDGET_TYPE = "cart";
-    protected $spotiiHelper;
     /**
      * @var CartWidgetConfigInterface
      */
@@ -44,14 +43,12 @@ class Cart extends Template
         CartWidgetConfigInterface $cartWidgetConfig,
         SpotiiApiConfigInterface $spotiiApiConfig,
         \Magento\Checkout\Model\Cart $cart,
-        \Spotii\Spotiipay\Helper\Data $spotiiHelper,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         array $data
     ) {
         $this->cartWidgetConfig = $cartWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
         $this->cart = $cart;
-        $this->spotiiHelper = $spotiiHelper;
         $this->productRepository = $productRepository;
         parent::__construct($context, $data);
     }
@@ -63,14 +60,11 @@ class Cart extends Template
      */
     public function getJsConfig()
     {
-        $this->spotiiHelper->logSpotiiActions("cart");
         $showWidget = true;
-
+        
         foreach ($this->cart->getQuote()->getAllVisibleItems() as $item) {
-            $this->spotiiHelper->logSpotiiActions($item->getSku());
             $product= $this->productRepository->get($item->getSku());
             $isAvaliableOnSpotii=$product->getAttributeText('spotii_product');
-            $this->spotiiHelper->logSpotiiActions($isAvaliableOnSpotii);
             if($isAvaliableOnSpotii=="No"){
                 $showWidget = false;
             }
