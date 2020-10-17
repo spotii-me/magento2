@@ -37,7 +37,8 @@ class CheckInventory extends SpotiiPay
             if($qtyInStock < $qtyOrdered){
                $flag = false ;            
             }
-            if($item->getAttributeText('spotii_product')=="No"){
+            $product = $this->productRepository->get($sku);;
+            if($product->getAttributeText('spotii_product')=="No"){
                 $isAvailable=false;
             }
             }

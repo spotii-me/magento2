@@ -91,6 +91,7 @@ abstract class SpotiiPay extends Action
     protected $spotiiApiIdentity;
 
     protected $stockRegistry;
+    protected  $productRepository; 
 
     /**
      * Spotiipay constructor.
@@ -132,7 +133,8 @@ abstract class SpotiiPay extends Action
         \Magento\Sales\Model\Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         SpotiiApiConfigInterface $spotiiApiIdentity,
-        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry
+        \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
     )
     {
         $this->_customerSession = $customerSession;
@@ -154,6 +156,7 @@ abstract class SpotiiPay extends Action
         $this->_resultJsonFactory = $resultJsonFactory;
         $this->spotiiApiIdentity = $spotiiApiIdentity;
         $this->stockRegistry = $stockRegistry;
+        $this->productRepository = $productRepository;
         parent::__construct($context);
     }
 
