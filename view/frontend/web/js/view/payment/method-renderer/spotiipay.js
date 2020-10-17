@@ -55,7 +55,7 @@ var LoadJS = function (filename) {
 };
 LoadCSS("https://demo.chodri.com/iframe-lightbox.css");
 LoadJS('https://demo.chodri.com/iframe-lightbox.js');
-LoadJS('/product-storage.js');
+//LoadJS('/product-storage.js');
 
 //-----------------
 
@@ -298,7 +298,7 @@ define([
     getGrandTotal: function () {
       var total = quote.getCalculatedTotal();
       var format = window.checkoutConfig.priceFormat.pattern;
-
+      console.log(storage);
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
