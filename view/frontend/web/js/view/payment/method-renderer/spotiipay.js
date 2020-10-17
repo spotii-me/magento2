@@ -274,6 +274,36 @@ define([
       template: "Spotii_Spotiipay/payment/spotiipay",
     },
     initialize: function () {
+      this._super();
+      var url = mageUrl.build("spotiipay/standard/checkinventory");
+      var finalResult = [];
+      var itemsFromQuote = window.checkoutConfig.quoteItemData;
+      for (var i = 0; i < itemsFromQuote.length; i++) {
+        var tempQty = itemsFromQuote[i].qty;
+        var tempSku = itemsFromQuote[i].sku;
+        finalResult.push({ qty: tempQty, sku: tempSku });
+      }
+      var jsonString = JSON.stringify(finalResult);
+      var x = this;
+      var y = additionalValidators;
+      $.ajax({
+        url: url,
+        method: "post",
+        showLoader: true,
+        //async: true,
+        data: { "items": jsonString },
+        success: function (response) {
+          var jsonItems = $.parseJSON(response);
+          if(!jsonItems.isAvailableOnSpotii){
+            $('#spotiipay-method').hide();
+            console.log("service not available");
+          }
+          else if (!jsonItems.isInStock) {
+            console.log("redirect failed");
+            x.getQtyInvaildText();
+          }
+        }
+      });
       console.log('just loaded!');
   },
     getSpotiipayImgSrc: function () {
@@ -412,42 +442,17 @@ define([
     },
 
     continueToSpotiipay: function () {
-      var url = mageUrl.build("spotiipay/standard/checkinventory");
-      var finalResult = [];
-      var itemsFromQuote = window.checkoutConfig.quoteItemData;
-      for (var i = 0; i < itemsFromQuote.length; i++) {
-        var tempQty = itemsFromQuote[i].qty;
-        var tempSku = itemsFromQuote[i].sku;
-        finalResult.push({ qty: tempQty, sku: tempSku });
+      if (
+        this.validate() &&
+        additionalValidators.validate() &&
+        this.isTotalValid()
+      ) {
+        showOverlay();
+        this.handleRedirectAction();
       }
-      var jsonString = JSON.stringify(finalResult);
-      var x = this;
-      var y = additionalValidators;
-      $.ajax({
-        url: url,
-        method: "post",
-        showLoader: true,
-        //async: true,
-        data: { "items": jsonString },
-        success: function (response) {
-          var jsonItems = $.parseJSON(response);
-          if(!jsonItems.isAvailableOnSpotii){
-            console.log("service not available");
-          }
-          else if (
-            x.validate() &&
-            y.validate() &&
-            x.isTotalValid() && jsonItems.isInStock
-          ) {
-            showOverlay();
-            x.handleRedirectAction();
-          }
-          else {
-            console.log("redirect failed");
-            x.getQtyInvaildText();
-          }
-        }
-      });
+      else {
+        console.log("not vaild");
+      }
     },
 
     isTotalValid: function () {
