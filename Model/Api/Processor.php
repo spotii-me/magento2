@@ -89,8 +89,8 @@ class Processor implements ProcessorInterface
                 'url' => $url,
                 'body' => $body
             ];
-            $this->spotiiHelper->logSpotiiActions($body);
-            $this->spotiiHelper->logSpotiiActions(gettype());
+            $this->spotiiHelper->logSpotiiActions($requestLog);
+            $this->spotiiHelper->logSpotiiActions(gettype($body));
             $this->curl->setTimeout(ApiParamsInterface::TIMEOUT);
             $this->curl->addHeader("Content-Type", ApiParamsInterface::CONTENT_TYPE_JSON);
             $this->curl->addHeader("Accept", ApiParamsInterface::CONTENT_TYPE_JSON);
