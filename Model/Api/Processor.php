@@ -95,7 +95,9 @@ class Processor implements ProcessorInterface
             $this->curl->addHeader("Accept", ApiParamsInterface::CONTENT_TYPE_JSON);
             switch ($method) {
                 case 'POST':
+                    $this->spotiiHelper->logSpotiiActions("before post");
                     $this->curl->post($url, $this->jsonHelper->jsonEncode($body));
+                    $this->spotiiHelper->logSpotiiActions("after post");
                     break;
                 case 'GET':
                     $this->curl->get($url);
