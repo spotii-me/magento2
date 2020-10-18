@@ -108,7 +108,7 @@ class Processor implements ProcessorInterface
             }
 
             $response = $this->curl->getBody();
-
+            $this->spotiiHelper->logSpotiiActions($response);
             $responseLog = [
                 'type' => 'Response',
                 'method' => $method,
