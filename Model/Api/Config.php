@@ -101,7 +101,9 @@ class Config implements ConfigInterface
                 ZendClient::POST
             );
             $this->spotiiHelper->logSpotiiActions("getAuthToken processed");
+            $this->spotiiHelper->logSpotiiActions($response);
             $body = $this->jsonHelper->jsonDecode($response);
+            $this->spotiiHelper->logSpotiiActions($body);
             return $body['token'];
         } catch (\Exception $e) {
             $this->spotiiHelper->logSpotiiActions($e->getMessage());
