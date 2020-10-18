@@ -97,7 +97,7 @@ class Processor implements ProcessorInterface
             switch ($method) {
                 case 'POST':
                     $this->spotiiHelper->logSpotiiActions("before post");
-                $this->curl->post($url, /*$this->jsonHelper->jsonEncode(*/$body/*)*/);
+                $this->curl->post($url, json_encode($body));
                     $this->spotiiHelper->logSpotiiActions("after post");
                     break;
                 case 'GET':
