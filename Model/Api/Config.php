@@ -92,6 +92,7 @@ class Config implements ConfigInterface
             "public_key" => $publicKey,
             "private_key" => $privateKey
         ];
+        $this->spotiiHelper->logSpotiiActions("getAuthToken");
         try {
             $response = $this->apiProcessor->call(
                 $url,
@@ -99,6 +100,7 @@ class Config implements ConfigInterface
                 $body,
                 ZendClient::POST
             );
+            $this->spotiiHelper->logSpotiiActions("getAuthToken processed");
             $body = $this->jsonHelper->jsonDecode($response);
             return $body['token'];
         } catch (\Exception $e) {
