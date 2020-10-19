@@ -3,14 +3,14 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Magento\Framework\HTTP\Client;
+namespace Spotii\Spotiipay\External;
 
 /**
  * Class to work with HTTP protocol using curl library
  *
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-class Curl_overwrite implements \Magento\Framework\HTTP\ClientInterface
+class Curl implements \Magento\Framework\HTTP\ClientInterface
 {
     /**
      * Hostname

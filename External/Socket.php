@@ -9,7 +9,7 @@
  *
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-namespace Magento\Framework\HTTP\Client;
+namespace Spotii\Spotiipay\External;
 
 /**
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
@@ -17,7 +17,7 @@ namespace Magento\Framework\HTTP\Client;
 /**
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
-class Socket_overwrite implements \Magento\Framework\HTTP\ClientInterface
+class Socket implements \Magento\Framework\HTTP\ClientInterface
 {
     /**
      * Hostname

@@ -8,7 +8,7 @@
 namespace Spotii\Spotiipay\Model\Api;
 
 use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfig;
-use Spotii\Spotiipay\external\Curl_overwrite;
+use Spotii\Spotiipay\External\Curl;
 use Magento\Framework\HTTP\ZendClient;
 use Magento\Framework\Json\Helper\Data as JsonHelper;
 use Psr\Log\LoggerInterface as Logger;
@@ -52,7 +52,7 @@ class Processor implements ProcessorInterface
      * @param ScopeConfig $scopeConfig
      */
     public function __construct(
-        Curl_overwrite $curl,
+        Curl $curl,
         SpotiiHelper $spotiiHelper,
         JsonHelper $jsonHelper,
         Logger $logger,
