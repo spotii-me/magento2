@@ -8,7 +8,7 @@
 namespace Spotii\Spotiipay\Model\Api;
 
 use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfig;
-use Magento\Framework\HTTP\Client\Curl;
+use Spotii\Spotiipay\external\Curl;
 use Magento\Framework\HTTP\ZendClient;
 use Magento\Framework\Json\Helper\Data as JsonHelper;
 use Psr\Log\LoggerInterface as Logger;
@@ -97,7 +97,7 @@ class Processor implements ProcessorInterface
             switch ($method) {
                 case 'POST':
                     $this->spotiiHelper->logSpotiiActions("before post");
-                $this->curl->post($url, json_encode($body));
+                    $this->curl->post($url, $this->jsonHelper->jsonEncode($body));
                     $this->spotiiHelper->logSpotiiActions("after post");
                     break;
                 case 'GET':
