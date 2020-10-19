@@ -17,7 +17,7 @@ namespace Magento\Framework\HTTP\Client;
 /**
  * @SuppressWarnings(PHPMD.UnusedPrivateField)
  */
-class Socket implements \Magento\Framework\HTTP\ClientInterface
+class Socket_overwrite implements \Magento\Framework\HTTP\ClientInterface
 {
     /**
      * Hostname

@@ -10,7 +10,7 @@ namespace Magento\Framework\HTTP\Client;
  *
  * @author      Magento Core Team <core@magentocommerce.com>
  */
-class Curl implements \Magento\Framework\HTTP\ClientInterface
+class Curl_overwrite implements \Magento\Framework\HTTP\ClientInterface
 {
     /**
      * Hostname
