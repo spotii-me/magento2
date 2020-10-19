@@ -501,7 +501,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             ->setFailSafe(true)
             ->build($type);
 
-        if($order->getStatus() =="paymentauthorised"){
+        if($order->getStatus() =="complete"){
         $payment->addTransactionCommentsToOrder(
             $transaction,
             $message

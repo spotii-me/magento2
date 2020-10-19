@@ -101,7 +101,7 @@ class Transaction
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
                 'status',
-                ['eq' => 'paymentauthorised',
+                ['eq' => 'complete',
                  'eq' => 'processing']
                 )->addFieldToFilter(
                  'created_at',
