@@ -90,15 +90,12 @@ class Processor implements ProcessorInterface
                 'body' => $body
             ];
             $this->spotiiHelper->logSpotiiActions($requestLog);
-            $this->spotiiHelper->logSpotiiActions(gettype($body));
             $this->curl->setTimeout(ApiParamsInterface::TIMEOUT);
             $this->curl->addHeader("Content-Type", ApiParamsInterface::CONTENT_TYPE_JSON);
             $this->curl->addHeader("Accept", ApiParamsInterface::CONTENT_TYPE_JSON);
             switch ($method) {
                 case 'POST':
-                    $this->spotiiHelper->logSpotiiActions("before post");
                     $this->curl->post($url, $this->jsonHelper->jsonEncode($body));
-                    $this->spotiiHelper->logSpotiiActions("after post");
                     break;
                 case 'GET':
                     $this->curl->get($url);
@@ -108,7 +105,6 @@ class Processor implements ProcessorInterface
             }
 
             $response = $this->curl->getBody();
-            $this->spotiiHelper->logSpotiiActions($response);
             $responseLog = [
                 'type' => 'Response',
                 'method' => $method,
