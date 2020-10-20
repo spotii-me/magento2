@@ -171,6 +171,7 @@ if (typeof dataLayer !== 'undefined') {
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function(message) {
   //console.log('Message - ', message);
+  console.log(typeof message);
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
@@ -178,15 +179,7 @@ window.closeIFrameOnCompleteOrder = function(message) {
   //console.log('Order state - ', status);
   //console.log('Order confirmUrl - ', confirmUrl);
   //console.log('Order rejectUrl - ', rejectUrl);
-  var respone = '{"status":"'+status+'","hidePopup":"'+hidePopup+'","confirmUrl":"'+confirmUrl+'","rejectUrl":"'+rejectUrl+'"}';
-  console.log(respone);
-  responeJSON = JSON.parse(respone);
-  console.log(responeJSON);
-  console.log(responeJSON.status);
-  console.log(responeJSON.hidePopup);
-  console.log(responeJSON.confirmUrl);
-  console.log(responeJSON.rejectUrl);
-  
+
   switch (status) {
     case successCheckOutStatus: {
       if(!isSuccess){
