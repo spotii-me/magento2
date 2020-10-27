@@ -295,7 +295,7 @@ define([
         success: function (response) {
           var jsonItems = $.parseJSON(response);
           var availAmount = parseFloat(jsonItems.availabilityAmount);
-          var grandTotal =window.checkoutConfig.quoteData.grand_total;
+          var grandTotal =parseFloat(window.checkoutConfig.quoteData.grand_total);
           console.log(availAmount+" "+grandTotal)
           if(!jsonItems.isAvailableOnSpotii && grandTotal>availAmount){
             $('#spotiipay-method').remove();
