@@ -297,7 +297,7 @@ define([
           var availAmount = parseFloat(jsonItems.availabilityAmount);
           var grandTotal =parseFloat(window.checkoutConfig.quoteData.grand_total);
           console.log(availAmount+" "+grandTotal)
-          if(!jsonItems.isAvailableOnSpotii && grandTotal>availAmount){
+          if(!jsonItems.isAvailableOnSpotii || grandTotal>availAmount){
             $('#spotiipay-method').remove();
             console.log("service not available");
           }
