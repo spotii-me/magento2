@@ -20,7 +20,7 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     const XML_PATH_MERCHANT_ID = 'payment/spotiipay/merchant_id';
     const XML_PATH_LOG_TRACKER = 'payment/spotiipay/log_tracker';
     const XML_PATH_PAYMENT_ACTION = 'payment/spotiipay/payment_action';
-    
+    const XML_PATH_AVAILABILITY_AMOUNT = 'payment/spotiipay/availability_amount';
     
     private $checkoutUrlLive = "https://api.spotii.me";
     private $checkoutUrlSandbox = "https://api.sandbox.spotii.me";
@@ -138,6 +138,18 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     {
         return $this->getConfigValue(
             self::XML_PATH_PAYMENT_ACTION,
+            $this->getStore()->getStoreId()
+        );
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getAvailabilityAmount(){
+        
+        return $this->getConfigValue(
+            self::XML_PATH_AVAILABILITY_AMOUNT,
             $this->getStore()->getStoreId()
         );
     }

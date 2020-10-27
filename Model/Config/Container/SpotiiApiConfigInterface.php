@@ -64,4 +64,11 @@ interface SpotiiApiConfigInterface extends IdentityInterface
      */
     public function getPaymentAction();
 
+    /**
+     * Get Avaliability Amount
+     * @return mixed
+     */
+    public function getAvailabilityAmount();
+
+
 }

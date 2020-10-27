@@ -47,6 +47,11 @@
                         <comment>Look for this in your Spotii Dashboard</comment>
                         <config_path>payment/spotiipay/public_key</config_path>
                     </field>
+                     <!-- Availability amount -->
+                    <field id="availability_amount" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Maximum availability amount</label>
+                        <config_path>payment/spotiipay/availability_amount</config_path>
+                    </field>
                     <!-- merchant id -->
                     <field id="merchant_id" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Merchant ID</label>

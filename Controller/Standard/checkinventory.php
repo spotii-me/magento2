@@ -17,6 +17,7 @@ class CheckInventory extends SpotiiPay
      */
     public function execute()
     {
+        $availabilityAmount=$this->spotiiApiIdentity->getAvailabilityAmount();
         $post = $this->getRequest()->getPostValue();
         $itemsString = $post['items'];
         $this->spotiiHelper->logSpotiiActions($itemsString);
@@ -42,7 +43,7 @@ class CheckInventory extends SpotiiPay
                 $isAvailable=false;
             }
             }
-            $json = $this->_jsonHelper->jsonEncode(["isInStock" => $flag,"isAvailableOnSpotii"=>$isAvailable]);
+            $json = $this->_jsonHelper->jsonEncode(["isInStock" => $flag,"isAvailableOnSpotii"=>$isAvailable, "availabilityAmount"=> $availabilityAmount]);
             $jsonResult = $this->_resultJsonFactory->create();
             $jsonResult->setData($json);
             return $jsonResult;
