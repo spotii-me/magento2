@@ -61,7 +61,11 @@ class Cart extends Template
     public function getJsConfig()
     {
         $showWidget = true;
-        
+        $grandTotal = floatval($this->cart->getQuote()->getGrandTotal());
+        $limit = floatval($this->$spotiiApiConfig->getAvailabilityAmount());
+        if($grandTotal > $limit){
+            $showWidget = false; 
+        }
         foreach ($this->cart->getQuote()->getAllVisibleItems() as $item) {
             $product= $this->productRepository->get($item->getSku());
             $isAvaliableOnSpotii=$product->getAttributeText('spotii_product');
