@@ -24,8 +24,12 @@ define([
             console.log(self.jsConfig);
             document.spotiiConfig = self.jsConfig;
 
-            if (!document.spotiiConfig) {
+            if (!document.spotiiConfig ) {
                 console.warn('SpotiiPay: document.spotiiConfig is not set, cannot render widget');
+                return;
+            }
+            if(document.spotiiConfig.length==0){
+                console.warn('SpotiiPay: widget not set');
                 return;
             }
 

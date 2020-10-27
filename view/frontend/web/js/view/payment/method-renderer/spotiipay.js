@@ -296,6 +296,15 @@ define([
           var jsonItems = $.parseJSON(response);
           var availAmount = parseFloat(jsonItems.availabilityAmount);
           var grandTotal =parseFloat(window.checkoutConfig.quoteData.grand_total);
+          var curr = window.checkoutConfig.quoteData.quote_currency_code;
+          switch(curr){
+            case "USD":
+              grandTotal= grandTotal*3.6730;
+              break;
+            case "SAR":
+              grandTotal= grandTotal*0.9506;
+              break;
+          }
           console.log(availAmount+" "+grandTotal)
           if(!jsonItems.isAvailableOnSpotii || grandTotal>availAmount){
             $('#spotiipay-method').remove();
@@ -469,7 +478,7 @@ define([
           total= total*0.9506;
           break;
       }
-      console.log(total+curr);
+      //console.log(total+curr);
       if (total > 200) return true;
       else return false;
     },
