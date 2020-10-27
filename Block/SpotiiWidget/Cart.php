@@ -10,6 +10,7 @@ namespace Spotii\Spotiipay\Block\SpotiiWidget;
 use Magento\Framework\View\Element\Template;
 use Spotii\Spotiipay\Model\Config\Container\CartWidgetConfigInterface;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
+use Spotii\Spotiipay\Helper\Data as SpotiiHelper;
 
 /**
  * Class Cart
@@ -30,6 +31,10 @@ class Cart extends Template
     private $spotiiApiConfig;
     protected $cart;
     private $productRepository; 
+        /**
+     * @var SpotiiHelper
+     */
+    protected $spotiiHelper;
     /**
      * ProductWidget constructor.
      *
@@ -44,11 +49,13 @@ class Cart extends Template
         SpotiiApiConfigInterface $spotiiApiConfig,
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        SpotiiHelper $spotiiHelper,
         array $data
     ) {
         $this->cartWidgetConfig = $cartWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
         $this->cart = $cart;
+        $this->spotiiHelper = $spotiiHelper;
         $this->productRepository = $productRepository;
         parent::__construct($context, $data);
     }
@@ -63,8 +70,11 @@ class Cart extends Template
         $showWidget = true;
         $grandTotal = floatval($this->cart->getQuote()->getGrandTotal());
         $limit = floatval($this->$spotiiApiConfig->getAvailabilityAmount());
+        $this->spotiiHelper->logSpotiiActions($grandTotal);
+        $this->spotiiHelper->logSpotiiActions($limit);
         if($grandTotal > $limit){
             $showWidget = false; 
+            $this->spotiiHelper->logSpotiiActions("False");
         }
         foreach ($this->cart->getQuote()->getAllVisibleItems() as $item) {
             $product= $this->productRepository->get($item->getSku());

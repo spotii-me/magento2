@@ -20,11 +20,7 @@ class CheckInventory extends SpotiiPay
         $availabilityAmount=$this->spotiiApiIdentity->getAvailabilityAmount();
         $post = $this->getRequest()->getPostValue();
         $itemsString = $post['items'];
-        $this->spotiiHelper->logSpotiiActions($itemsString);
-
         $items = $this->_jsonHelper->jsonDecode($itemsString);
-        $this->spotiiHelper->logSpotiiActions($items);
-
         $flag = true;
         $isAvailable = true;
         foreach ($items as $item) {
