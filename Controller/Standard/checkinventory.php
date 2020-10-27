@@ -26,9 +26,7 @@ class CheckInventory extends SpotiiPay
         foreach ($items as $item) {
             $sku = $item['sku'];
             $this->spotiiHelper->logSpotiiActions("checking ... " . $sku );
-    
             $qtyOrdered = $item['qty'];
-    
             $stockItem = $this->stockRegistry->getStockItemBySku($sku);
             $qtyInStock= $stockItem->getQty();
             if($qtyInStock < $qtyOrdered){
