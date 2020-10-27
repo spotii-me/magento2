@@ -69,10 +69,10 @@ class Cart extends Template
     {
         $showWidget = true;
         $grandTotal = floatval($this->cart->getQuote()->getGrandTotal());
-        //$limit = floatval($this->$spotiiApiConfig->getAvailabilityAmount());
+        $limit = floatval($this->spotiiApiConfig->getAvailabilityAmount());
         $this->spotiiHelper->logSpotiiActions($grandTotal);
-        //$this->spotiiHelper->logSpotiiActions($limit);> $limit
-        if($grandTotal){
+        $this->spotiiHelper->logSpotiiActions($limit);
+        if($grandTotal> $limit){
             $showWidget = false; 
             $this->spotiiHelper->logSpotiiActions("False");
         }
