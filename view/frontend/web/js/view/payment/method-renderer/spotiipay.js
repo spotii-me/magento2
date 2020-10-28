@@ -450,7 +450,7 @@ define([
 
     isTotalValid: function () {
       var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
-      var curr = window.checkoutConfig.quoteData.base_currency_code;
+      var curr = window.checkoutConfig.quoteData.quote_currency_code;
       switch(curr){
         case "USD":
           total= total*3.6730;
