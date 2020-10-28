@@ -437,6 +437,9 @@ define([
             showOverlay();
             x.handleRedirectAction();
           }
+          else if(!x.isTotalValid()){
+            x.getTotalInvalidText();
+          }
           else {
             console.log("redirect failed");
             x.getQtyInvaildText();
