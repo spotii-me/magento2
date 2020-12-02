@@ -47,10 +47,10 @@ var LoadCSS = function (filename) {
   fileref.setAttribute("href", filename);
   document.getElementsByTagName("head")[0].appendChild(fileref);
 };
-LoadCSS("https://demo.chodri.com/iframe-lightbox.css");
+LoadCSS("https://storage.googleapis.com/widget.spotii.me/v1/javascript/iframe-lightbox.min.css");
 var script = document.createElement('script');
 script.type = 'text/javascript';
-script.src = 'https://demo.chodri.com/iframe-lightbox.js';
+script.src = 'https://storage.googleapis.com/widget.spotii.me/v1/javascript/iframe-lightbox.min.js';
 document.getElementsByTagName('body')[0].appendChild(script);
 //-----------------
 
