@@ -47,10 +47,10 @@ var LoadCSS = function (filename) {
   fileref.setAttribute("href", filename);
   document.getElementsByTagName("head")[0].appendChild(fileref);
 };
-LoadCSS("https://cdn.jsdelivr.net/gh/englishextra/iframe-lightbox@0.2.8/css/iframe-lightbox.min.css");
+LoadCSS("https://widget.spotii.me/v1/javascript/iframe-lightbox.min.css");
 var script = document.createElement('script');
 script.type = 'text/javascript';
-script.src = 'https://cdn.jsdelivr.net/gh/englishextra/iframe-lightbox@0.2.8/js/iframe-lightbox.min.js';
+script.src = 'https://widget.spotii.me/v1/javascript/iframe-lightbox.min.js';
 document.getElementsByTagName('body')[0].appendChild(script);
 //-----------------
 
