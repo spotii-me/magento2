@@ -141,7 +141,7 @@ class SavePlugin
         BackendSession $backendSession,
         Transaction $transaction,
         LoggerInterface $logger,
-        \Spotii\Spotiipay\Helper\Data $spotiiHelper,
+        \Spotii\Spotiipay\Helper\Data $spotiiHelper
     ) {
         $this->spotiiHelper = $spotiiHelper;
         $this->orderRepository = $orderRepository;
