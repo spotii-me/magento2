@@ -105,6 +105,11 @@ class SavePlugin
     private $logger;
 
     /**
+     * @var \Spotii\Spotiipay\Helper\Data
+     */
+    protected $spotiiHelper;
+
+    /**
      *
      * @param SpotiiPay $spotiiPay
      * @param OrderRepositoryInterface $orderRepository
@@ -135,8 +140,10 @@ class SavePlugin
         Validator $formKeyValidator,
         BackendSession $backendSession,
         Transaction $transaction,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        \Spotii\Spotiipay\Helper\Data $spotiiHelper,
     ) {
+        $this->spotiiHelper = $spotiiHelper;
         $this->orderRepository = $orderRepository;
         $this->spotiiPay = $spotiiPay;
         $this->dateTime = $dateTime;
@@ -185,6 +192,7 @@ class SavePlugin
         \Magento\Sales\Controller\Adminhtml\Order\Invoice\Save $subject,
         \Closure $proceed
     ) {
+        $this->spotiiHelper->logSpotiiActions('invoice');
         $orderId = $subject->getRequest()->getParam('order_id');
         $order = $this->orderRepository->get($orderId);
         $this->order = !$this->order ? $order : $this->order;
