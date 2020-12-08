@@ -13,4 +13,7 @@
     <event name="sales_order_place_before">
         <observer name="custom_sales_order_place_before" instance="Spotii\Spotiipay\Observer\SalesOrderPlaceBefore" />
     </event>
+    <event name="sales_complete_order_invoice">
+        <observer name="custom_sales_complete_order_invoice" instance="Spotii\Spotiipay\Observer\SalesOrderInvoice" />
+    </event>
 </config>

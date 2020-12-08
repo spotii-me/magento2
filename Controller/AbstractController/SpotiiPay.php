@@ -10,6 +10,7 @@ namespace Spotii\Spotiipay\Controller\AbstractController;
 use Magento\Framework\App\Action\Action;
 use Magento\Sales\Model\Order;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
+use Magento\Framework\Event\ManagerInterface as EventManager;
 
 /**
  * Class Spotiipay
@@ -89,10 +90,18 @@ abstract class SpotiiPay extends Action
      * @var SpotiiApiConfigInterface
      */
     protected $spotiiApiIdentity;
-
+    /**
+     * @var stockRegistry
+     */
     protected $stockRegistry;
+    /**
+     * @var productRepository
+     */
     protected  $productRepository; 
-
+    /**
+     * @var EventManager
+     */
+    private $eventManager;
     /**
      * Spotiipay constructor.
      * @param \Magento\Framework\App\Action\Context $context
@@ -134,7 +143,8 @@ abstract class SpotiiPay extends Action
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         SpotiiApiConfigInterface $spotiiApiIdentity,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        EventManager $eventManager
     )
     {
         $this->_customerSession = $customerSession;
@@ -157,6 +167,7 @@ abstract class SpotiiPay extends Action
         $this->spotiiApiIdentity = $spotiiApiIdentity;
         $this->stockRegistry = $stockRegistry;
         $this->productRepository = $productRepository;
+        $this->eventManager = $eventManager;
         parent::__construct($context);
     }
 
