@@ -433,7 +433,7 @@ define([
           total= total*0.9506;
           break;
         case "BHD":
-          total= total*9.7670;
+          total= total*9.74;
           break;
       }
       console.log(total+curr);

@@ -243,7 +243,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
                          $magentoAmount=(round($magentoAmount, $precision))*0.9506 ;
                      break;
                      case "BHD":
-                        $magentoAmount=(round($magentoAmount, $precision))*9.7670 ;
+                        $magentoAmount=(round($magentoAmount, $precision))*9.74;
                     break;
                  }
               }  
