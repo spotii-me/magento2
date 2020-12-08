@@ -15,6 +15,7 @@ use Spotii\Spotiipay\Helper\Data;
 use Spotii\Spotiipay\Model\SpotiiPay;
 use \Magento\Quote\Model\QuoteFactory;
 use Magento\Sales\Model\Order;
+use \Magento\Framework\App\ObjectManager;
 /**
  * Class MethodAvailabilityObserver
  * @package Spotii\Spotiipay\Observer
@@ -33,7 +34,7 @@ class SalesOrderInvoice implements ObserverInterface
      * @var spotiiHelper
      */
     protected $spotiiHelper;
-
+    protected $ObjectManager;
      /**
      * Construct
      *
@@ -44,27 +45,29 @@ class SalesOrderInvoice implements ObserverInterface
     public function __construct(
         SpotiiPay $spotiiPayModel,
         Data $spotiiHelper,
-        \Magento\Sales\Model\OrderFactory $orderFactory
+        \Magento\Sales\Model\OrderFactory $orderFactory,
+        ObjectManager $ObjectManager
     ) {
         $this->spotiiPayModel = $spotiiPayModel;
         $this->spotiiHelper = $spotiiHelper;
         $this->orderFactory = $orderFactory;
+        $this->ObjectManager = $ObjectManager;
     }
 
     public function execute($observer)
     {
         $this->spotiiHelper->logSpotiiActions('Start invoice');
         $orderId = $observer->getData('order_id');
-        $order = $this->orderFactory->create()->loadByIncrementId($orderId);
-        //$this->spotiiHelper->logSpotiiActions($order->getId());
-        //$this->spotiiHelper->logSpotiiActions($order->getEntityId());
-        //$this->spotiiHelper->logSpotiiActions($order->getStatus());
+        $order = $objectManager->create('\Magento\Sales\Model\Order')->load($orderId);
+        $this->spotiiHelper->logSpotiiActions($order->getId());
+        $this->spotiiHelper->logSpotiiActions($order->getEntityId());
+        $this->spotiiHelper->logSpotiiActions($order->getStatus());
        
-        $order1 = $observer->getEvent()->getOrder();
+        /*$order1 = $observer->getEvent()->getOrder();
         $this->spotiiHelper->logSpotiiActions($order1->getId());
         $this->spotiiHelper->logSpotiiActions($order1->getEntityId());
         $this->spotiiHelper->logSpotiiActions($order1->getStatus());
-        $this->spotiiHelper->logSpotiiActions($order);
+        $this->spotiiHelper->logSpotiiActions($order);*/
         if (!$order) {
             return $this;
         }
