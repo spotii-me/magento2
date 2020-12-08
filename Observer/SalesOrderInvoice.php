@@ -57,13 +57,13 @@ class SalesOrderInvoice implements ObserverInterface
         $orderId = $observer->getData('order_id');
         $order = $this->orderFactory->create()->loadByIncrementId($orderId);
         $this->spotiiHelper->logSpotiiActions($orderId);
-        $this->spotiiHelper->logSpotiiActions($order->getPayment()->getMethodInstance()->getCode());
+        //$this->spotiiHelper->logSpotiiActions($order->getPayment()->getMethodInstance()->getCode());
         
         if (!$order) {
             return $this;
         }
         $this->spotiiHelper->logSpotiiActions('order exists');
-        if ($order->getStatus() == "paymentauthorised" && $order->getPayment()->getMethodInstance()->getCode() == SpotiiPay::PAYMENT_CODE) 
+        if ($order->getStatus() == "paymentauthorised") 
         {
  
             try {
