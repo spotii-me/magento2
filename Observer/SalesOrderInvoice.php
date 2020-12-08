@@ -58,7 +58,7 @@ class SalesOrderInvoice implements ObserverInterface
     {
         $this->spotiiHelper->logSpotiiActions('Start invoice');
         $orderId = $observer->getData('order_id');
-        $order = $objectManager->create('\Magento\Sales\Model\Order')->load($orderId);
+        $order = $this->objectManager->create('\Magento\Sales\Model\Order')->load($orderId);
         $this->spotiiHelper->logSpotiiActions($order->getId());
         $this->spotiiHelper->logSpotiiActions($order->getEntityId());
         $this->spotiiHelper->logSpotiiActions($order->getStatus());
