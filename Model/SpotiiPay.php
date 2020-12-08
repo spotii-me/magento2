@@ -242,6 +242,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
                      case "SAR":
                          $magentoAmount=(round($magentoAmount, $precision))*0.9506 ;
                      break;
+                     case "BHD":
+                        $magentoAmount=(round($magentoAmount, $precision))*9.7670 ;
+                    break;
                  }
               }  
                  if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) <6)){

@@ -432,6 +432,9 @@ define([
         case "SAR":
           total= total*0.9506;
           break;
+        case "BHD":
+          total= total*9.7670;
+          break;
       }
       console.log(total+curr);
       if (total > 200) return true;
