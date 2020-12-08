@@ -60,7 +60,8 @@ class SalesOrderInvoice implements ObserverInterface
             return $this;
         }
     
-        if ($order->getStatus() == "paymentauthorised" && $order->getPayment()->getMethodInstance()->getCode() == SpotiiPay::PAYMENT_CODE) {
+        if ($order->getStatus() == "paymentauthorised" && $order->getPayment()->getMethodInstance()->getCode() == SpotiiPay::PAYMENT_CODE) 
+        {
  
             try {
                 $this->spotiiHelper->logSpotiiActions('invoice');

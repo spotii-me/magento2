@@ -101,7 +101,7 @@ abstract class SpotiiPay extends Action
     /**
      * @var EventManager
      */
-    private $eventManager;
+    protected $eventManager;
     /**
      * Spotiipay constructor.
      * @param \Magento\Framework\App\Action\Context $context
