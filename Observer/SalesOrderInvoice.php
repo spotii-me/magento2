@@ -53,6 +53,7 @@ class SalesOrderInvoice implements ObserverInterface
 
     public function execute($observer)
     {
+        $this->spotiiHelper->logSpotiiActions('Start invoice');
         $orderId = $observer->getData('order_id');
         $order = $this->orderFactory->create()->loadByIncrementId($orderId);
 
@@ -64,7 +65,7 @@ class SalesOrderInvoice implements ObserverInterface
         {
  
             try {
-                $this->spotiiHelper->logSpotiiActions('invoice');
+                $this->spotiiHelper->logSpotiiActions('Create invoice');
                 if(!$order->canInvoice()) {
                     $order->addStatusHistoryComment('Invoice: Order cannot be invoiced.', false);
                     $order->save();  
