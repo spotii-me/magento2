@@ -34,7 +34,7 @@ class SalesOrderInvoice implements ObserverInterface
      * @var spotiiHelper
      */
     protected $spotiiHelper;
-    protected $objectManager;
+    protected $orderRepository;
      /**
      * Construct
      *
@@ -46,19 +46,22 @@ class SalesOrderInvoice implements ObserverInterface
         SpotiiPay $spotiiPayModel,
         Data $spotiiHelper,
         \Magento\Sales\Model\OrderFactory $orderFactory,
-        ObjectManager $objectManager
+        \Magento\Framework\View\Element\Template\Context $context,
+        \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
+        array $data = []
     ) {
         $this->spotiiPayModel = $spotiiPayModel;
         $this->spotiiHelper = $spotiiHelper;
         $this->orderFactory = $orderFactory;
-        $this->objectManager = $objectManager;
+        $this->orderRepository = $orderRepository;
+        parent::__construct($context, $data);
     }
 
     public function execute($observer)
     {
         $this->spotiiHelper->logSpotiiActions('Start invoice');
         $orderId = $observer->getData('order_id');
-        $order = $this->objectManager->create('\Magento\Sales\Model\Order')->load($orderId);
+        $order = $this->orderRepository->get($orderId);
         $this->spotiiHelper->logSpotiiActions($order->getId());
         $this->spotiiHelper->logSpotiiActions($order->getEntityId());
         $this->spotiiHelper->logSpotiiActions($order->getStatus());
