@@ -56,15 +56,24 @@ class SalesOrderInvoice implements ObserverInterface
         $this->spotiiHelper->logSpotiiActions('Start invoice');
         $orderId = $observer->getData('order_id');
         $order = $this->orderFactory->create()->loadByIncrementId($orderId);
-        $this->spotiiHelper->logSpotiiActions($orderId);
-        //$this->spotiiHelper->logSpotiiActions($order->getPayment()->getMethodInstance()->getCode());
-        
+        $this->spotiiHelper->logSpotiiActions($order->getId());
+        $this->spotiiHelper->logSpotiiActions($order->getEntityId());
+        $this->spotiiHelper->logSpotiiActions($order->getStatus());
+
+        $order1 = $observer->getEvent()->getOrder();
+        $this->spotiiHelper->logSpotiiActions($order1->getId());
+        $this->spotiiHelper->logSpotiiActions($order1->getEntityId());
+        $this->spotiiHelper->logSpotiiActions($order1->getStatus());
+
         if (!$order) {
             return $this;
         }
         $this->spotiiHelper->logSpotiiActions('order exists');
-        $this->spotiiHelper->logSpotiiActions($order->getStatus());
-
+        if (!$order1) {
+            return $this;
+        }
+        $this->spotiiHelper->logSpotiiActions('order1 exists');
+        
         if ($order->getStatus() == "paymentauthorised") 
         {
  
