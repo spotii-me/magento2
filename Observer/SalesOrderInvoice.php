@@ -63,6 +63,8 @@ class SalesOrderInvoice implements ObserverInterface
             return $this;
         }
         $this->spotiiHelper->logSpotiiActions('order exists');
+        $this->spotiiHelper->logSpotiiActions($order->getStatus());
+
         if ($order->getStatus() == "paymentauthorised") 
         {
  
