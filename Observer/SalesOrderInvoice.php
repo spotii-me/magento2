@@ -34,7 +34,7 @@ class SalesOrderInvoice implements ObserverInterface
      * @var spotiiHelper
      */
     protected $spotiiHelper;
-    protected $ObjectManager;
+    protected $objectManager;
      /**
      * Construct
      *
@@ -46,12 +46,12 @@ class SalesOrderInvoice implements ObserverInterface
         SpotiiPay $spotiiPayModel,
         Data $spotiiHelper,
         \Magento\Sales\Model\OrderFactory $orderFactory,
-        ObjectManager $ObjectManager
+        ObjectManager $objectManager
     ) {
         $this->spotiiPayModel = $spotiiPayModel;
         $this->spotiiHelper = $spotiiHelper;
         $this->orderFactory = $orderFactory;
-        $this->ObjectManager = $ObjectManager;
+        $this->objectManager = $objectManager;
     }
 
     public function execute($observer)
