@@ -59,6 +59,7 @@ class SalesOrderInvoice implements ObserverInterface
 
     public function execute($observer)
     {
+        try{
         $this->spotiiHelper->logSpotiiActions('Start invoice');
         $orderId = $observer->getData('order_id');
         $order = $this->orderRepository->get($orderId);
@@ -120,11 +121,14 @@ class SalesOrderInvoice implements ObserverInterface
                     ->save();
                 //END Handle Shipment
             } catch (Exception $e) {
-                $order->addStatusHistoryComment('Invoicer: Exception occurred during automaticallyInvoiceShipCompleteOrder action. Exception message: '.$e->getMessage(), false);
+                $this->spotiiHelper->logSpotiiActions('Order exception in the invoice: '.$e->getMessage());
+                $order->addStatusHistoryComment('Invoicer: Exception occurred during invocing action. Exception message: '.$e->getMessage(), false);
                 $order->save();
             }                
         }
- 
+    } catch (Exception $e) {
+        $this->spotiiHelper->logSpotiiActions('Order exception in the invoice: '.$e->getMessage());
+    }  
 	return $this;        
     }
 }
