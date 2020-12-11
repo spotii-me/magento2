@@ -57,7 +57,7 @@ class Complete extends SpotiiPay
                 $this->getResponse()->setRedirect(
                     $this->_url->getUrl('checkout/onepage/success')
                );
-               $this->eventManager->dispatch('sales_complete_order_invoice', ['order_id' => $order->getEntityId()]);
+               $this->eventManager->dispatch('sales_complete_order_invoice', ['order_id' => $orderId]);
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
