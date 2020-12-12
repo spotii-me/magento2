@@ -79,7 +79,7 @@ class Redirect extends SpotiiPay
         );
         
         $order->setState('new')->setStatus('pending');
-        $order->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, false);
+        //$order->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, false);
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
 

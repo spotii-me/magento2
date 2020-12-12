@@ -75,7 +75,7 @@ class SalesOrderInvoice implements ObserverInterface
                 if(!$order->canInvoice()) {
                     $this->spotiiHelper->logSpotiiActions('Invoice: Order cannot be invoiced.'); 
                 }
-                $order->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, true);
+                //$order->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, true);
                 if($order->canInvoice()) {
                 $this->spotiiHelper->logSpotiiActions('Invoicing..'); 
                 //START Handle Invoice
