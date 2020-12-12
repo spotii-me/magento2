@@ -71,11 +71,13 @@ class SalesOrderInvoice implements ObserverInterface
  
             try {
                 $this->spotiiHelper->logSpotiiActions('Create invoice');
+                
                 if(!$order->canInvoice()) {
-                    $order->addStatusHistoryComment('Invoice: Order cannot be invoiced.', false);
-                    $order->save();  
+                    $this->spotiiHelper->logSpotiiActions('Invoice: Order cannot be invoiced.'); 
                 }
- 
+                $order->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, true);
+                if($order->canInvoice()) {
+                $this->spotiiHelper->logSpotiiActions('Invoicing..'); 
                 //START Handle Invoice
                 $invoice = Mage::getModel('sales/service_order', $order)->prepareInvoice();
  
@@ -84,7 +86,7 @@ class SalesOrderInvoice implements ObserverInterface
  
                 $invoice->getOrder()->setCustomerNoteNotify(true);          
                 $invoice->getOrder()->setIsInProcess(true);
-                $order->addStatusHistoryComment('Invoiced', false);
+                $this->spotiiHelper->logSpotiiActions('Invoiced');
  
                 $transactionSave = Mage::getModel('core/resource_transaction')
                     ->addObject($invoice)
@@ -98,15 +100,16 @@ class SalesOrderInvoice implements ObserverInterface
                 $shipment->register();
  
                 $order->setIsInProcess(true);
-                $order->addStatusHistoryComment('Shipped.', false);
+                $this->spotiiHelper->logSpotiiActions('Shipped.', false);
  
                 $transactionSave = Mage::getModel('core/resource_transaction')
                     ->addObject($shipment)
                     ->addObject($shipment->getOrder())
                     ->save();
                 //END Handle Shipment
+            }
             } catch (Exception $e) {
-                $order->addStatusHistoryComment('Invoicer: Exception occurred during automaticallyInvoiceShipCompleteOrder action. Exception message: '.$e->getMessage(), false);
+                $this->spotiiHelper->logSpotiiActions('Invoicer: Exception occurred during automaticallyInvoiceShipCompleteOrder action. Exception message: '.$e->getMessage(), false);
                 $order->save();
             }                
         }
