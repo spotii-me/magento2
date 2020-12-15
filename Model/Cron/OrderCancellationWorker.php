@@ -108,7 +108,7 @@ class OrderCancellationWorker
         $today = date('Y-m-d H:i:s', strtotime($today));
 
         try {
-            $registry->register('isSecureArea', true);
+            $this->registry->register('isSecureArea', true);
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
                 'status',
