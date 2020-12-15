@@ -159,15 +159,13 @@ class OrderCancellationWorker
                 $created = $order->getCreatedAt();
 
                 if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $created){
-                $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
                 // fix start
                 $invoices = $order->getInvoiceCollection();
-                ///if ($invoices) {
-                    foreach($invoices as $invoice) {
-                        $invoice->cancel();
-                        $this->spotiiHelper->logSpotiiActions("invoice");
-                    }
-                //}
+                $invoiceCollection = $order->getInvoiceCollection();
+                foreach($invoiceCollection as $invoice):
+                    $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_CANCELED);
+                    $this->invoiceRepository->save($invoice);
+                endforeach;
                 $shipments = $order->getShipmentsCollection();
                 if ($shipments)
                 {
@@ -187,10 +185,10 @@ class OrderCancellationWorker
 
                 $this->orderManagement->cancel($order->getId());
                 //$order->cancel();
-                $this->spotiiHelper->logSpotiiActions("order cancelled");
+                $this->spotiiHelper->logSpotiiActions('Order #'.$orderIncrementId.' created at '.$created.' was cleaned up');
 
             }else if($paymentMethod == self::PAYMENT_CODE){
-                $this->spotiiHelper->logSpotiiActions("Order not cleaned up ".$orderIncrementId.' '.$created);
+                $this->spotiiHelper->logSpotiiActions('Order #'.$orderIncrementId.' created at '.$created.' was not cleaned up');
             }
         }
         }
