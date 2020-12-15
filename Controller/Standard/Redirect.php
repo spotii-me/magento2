@@ -70,7 +70,15 @@ class Redirect extends SpotiiPay
               // **
         $quote->collectTotals()->save();   
         $order = $this->_quoteManagement->submit($quote);
-        
+        $invoiceCollection = $order->getInvoiceCollection();
+        foreach($invoiceCollection as $invoice):
+            //var_dump($invoice);
+            $invoiceId =  $invoice->getId();
+            $this->spotiiHelper->logSpotiiActions($invoiceId);
+            $invoiceIncrementId =  $invoice->getIncrementId();
+            $this->spotiiHelper->logSpotiiActions($invoiceIncrementId);
+        endforeach;
+        $this->spotiiHelper->logSpotiiActions('invoice returned');
         $reference = $payment->getAdditionalInformation('spotii_order_id');
         $this->_spotiipayModel->createTransaction(
             $order,
