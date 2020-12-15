@@ -52,6 +52,7 @@ class OrderCancellationWorker
     protected $stockRegistry;
 
     protected $date;
+    protected $registry;
 
     const PAYMENT_CODE = 'spotiipay';
     /**
@@ -73,7 +74,8 @@ class OrderCancellationWorker
         \Magento\Sales\Api\Data\OrderInterface $orderInterface,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
-        \Magento\Framework\Stdlib\DateTime\DateTime $date
+        \Magento\Framework\Stdlib\DateTime\DateTime $date,
+        \Magento\Framework\Registry $registry
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -84,6 +86,7 @@ class OrderCancellationWorker
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->stockRegistry = $stockRegistry;
         $this->date = $date;
+        $this->registry = $registry;
     }
 
     /**
@@ -91,6 +94,8 @@ class OrderCancellationWorker
      */
     public function execute()
     {
+        $registry->register('isSecureArea', true);
+
         $this->spotiiHelper->logSpotiiActions("****Order clean up process start****");
         $today = date("Y-m-d H:i:s");
         $this->spotiiHelper->logSpotiiActions("Current date : $today");
@@ -156,7 +161,7 @@ class OrderCancellationWorker
         }
         }
     } catch (\Exception $e) {
-        $this->spotiiHelper->logSpotiiActions("Error while cleaning up orders by Spotii" . $e->getMessage());
+        $this->spotiiHelper->logSpotiiActions("Error while cleaning up orders by Spotii " . $e->getMessage());
     }
 
     }
