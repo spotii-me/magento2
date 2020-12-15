@@ -94,7 +94,7 @@ class OrderCancellationWorker
      */
     public function execute()
     {
-        $registry->register('isSecureArea', true);
+       
 
         $this->spotiiHelper->logSpotiiActions("****Order clean up process start****");
         $today = date("Y-m-d H:i:s");
@@ -108,6 +108,7 @@ class OrderCancellationWorker
         $today = date('Y-m-d H:i:s', strtotime($today));
 
         try {
+            $registry->register('isSecureArea', true);
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
                 'status',
