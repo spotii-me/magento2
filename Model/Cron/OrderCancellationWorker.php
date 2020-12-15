@@ -10,6 +10,7 @@ namespace Spotii\Spotiipay\Model\Cron;
 use Spotii\Spotiipay\Helper\Data as SpotiiHelper;
 use Spotii\Spotiipay\Model\Api\ConfigInterface;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
+use Magento\Sales\Model\Order\InvoiceRepository;
 
 /**
  * Class Transaction
@@ -53,6 +54,7 @@ class OrderCancellationWorker
 
     protected $date;
     protected $registry;
+    protected $invoiceRepository;
 
     const PAYMENT_CODE = 'spotiipay';
     /**
@@ -75,7 +77,9 @@ class OrderCancellationWorker
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
-        \Magento\Framework\Registry $registry
+        \Magento\Framework\Registry $registry,
+        InvoiceRepository $invoiceRepository
+
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -87,6 +91,8 @@ class OrderCancellationWorker
         $this->stockRegistry = $stockRegistry;
         $this->date = $date;
         $this->registry = $registry;
+        $this->invoiceRepository = $invoiceRepository;
+
     }
 
     /**
@@ -108,7 +114,7 @@ class OrderCancellationWorker
         $today = date('Y-m-d H:i:s', strtotime($today));
 
         try {
-            $this->registry->register('isSecureArea', true);
+                $this->registry->register('isSecureArea', true);
                 $ordersCollection = $this->_orderCollectionFactory->create()
                 ->addFieldToFilter(
                 'status',
@@ -152,7 +158,7 @@ class OrderCancellationWorker
                     $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
                     $invoices = $order->getInvoiceCollection();
                     foreach ($invoices as $invoice){
-                        $invoice->delete();
+                        $this->invoiceRepository->delete($invoice);
                     }
                     $order->cancel()->save(); 
                     
