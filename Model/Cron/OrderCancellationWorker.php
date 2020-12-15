@@ -108,7 +108,7 @@ class OrderCancellationWorker
         $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
 
-        $hourAgo = date("Y-m-d H:i:s", strtotime("-1 hours"));
+        $hourAgo = date("Y-m-d H:i:s", strtotime("-10 minutes"));
         $hourAgo = date('Y-m-d H:i:s', strtotime($hourAgo));
 
         $today = date('Y-m-d H:i:s', strtotime($today));
@@ -158,12 +158,12 @@ class OrderCancellationWorker
                 $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
                 // fix start
                 $invoices = $order->getInvoiceCollection();
-                if ($invoices) {
+                ///if ($invoices) {
                     foreach($invoices as $invoice) {
                         $invoice->delete();
                         $this->spotiiHelper->logSpotiiActions("invoice");
                     }
-                }
+                //}
                 $shipments = $order->getShipmentsCollection();
                 if ($shipments)
                 {
@@ -183,7 +183,7 @@ class OrderCancellationWorker
 
                 $this->orderRepository->delete($order);
                 $this->spotiiHelper->logSpotiiActions("order deleted");
-                
+
             }else if($paymentMethod == self::PAYMENT_CODE){
                 $this->spotiiHelper->logSpotiiActions("Order not cleaned up ".$orderIncrementId.' '.$created);
             }
