@@ -56,6 +56,7 @@ class OrderCancellationWorker
     protected $registry;
     protected $invoiceRepository;
     protected $orderRepository;
+    protected $orderManagement;
     const PAYMENT_CODE = 'spotiipay';
     /**
      * Transaction constructor.
@@ -79,7 +80,8 @@ class OrderCancellationWorker
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
         \Magento\Framework\Registry $registry,
         InvoiceRepository $invoiceRepository,
-        \Magento\Sales\Model\OrderRepository $orderRepository
+        \Magento\Sales\Model\OrderRepository $orderRepository,
+        \Magento\Sales\Api\OrderManagementInterface $orderManagement
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -93,6 +95,8 @@ class OrderCancellationWorker
         $this->registry = $registry;
         $this->invoiceRepository = $invoiceRepository;
         $this->orderRepository = $orderRepository;
+        $this->orderManagement = $orderManagement;
+
     }
 
     /**
@@ -160,7 +164,7 @@ class OrderCancellationWorker
                 $invoices = $order->getInvoiceCollection();
                 ///if ($invoices) {
                     foreach($invoices as $invoice) {
-                        $invoice->delete();
+                        $invoice->cancel();
                         $this->spotiiHelper->logSpotiiActions("invoice");
                     }
                 //}
@@ -181,8 +185,9 @@ class OrderCancellationWorker
                 }
                 // fix end
 
-                $this->orderRepository->delete($order);
-                $this->spotiiHelper->logSpotiiActions("order deleted");
+                $this->orderManagement->cancel($order->getId());
+                //$order->cancel();
+                $this->spotiiHelper->logSpotiiActions("order cancelled");
 
             }else if($paymentMethod == self::PAYMENT_CODE){
                 $this->spotiiHelper->logSpotiiActions("Order not cleaned up ".$orderIncrementId.' '.$created);
