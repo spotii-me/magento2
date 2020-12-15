@@ -11,6 +11,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Sales\Model\Order;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
 use Magento\Framework\Event\ManagerInterface as EventManager;
+use Magento\Sales\Model\Order\InvoiceRepository;
 
 /**
  * Class Spotiipay
@@ -102,6 +103,7 @@ abstract class SpotiiPay extends Action
      * @var EventManager
      */
     protected $eventManager;
+    protected $invoiceRepository;
     /**
      * Spotiipay constructor.
      * @param \Magento\Framework\App\Action\Context $context
@@ -144,7 +146,8 @@ abstract class SpotiiPay extends Action
         SpotiiApiConfigInterface $spotiiApiIdentity,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        EventManager $eventManager
+        EventManager $eventManager,
+        InvoiceRepository $invoiceRepository
     )
     {
         $this->_customerSession = $customerSession;
@@ -168,6 +171,7 @@ abstract class SpotiiPay extends Action
         $this->stockRegistry = $stockRegistry;
         $this->productRepository = $productRepository;
         $this->eventManager = $eventManager;
+        $this->invoiceRepository = $invoiceRepository;
         parent::__construct($context);
     }
 

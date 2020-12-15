@@ -75,8 +75,10 @@ class Redirect extends SpotiiPay
             //var_dump($invoice);
             $invoiceId =  $invoice->getId();
             $this->spotiiHelper->logSpotiiActions($invoiceId);
-            $invoiceIncrementId =  $invoice->getIncrementId();
-            $this->spotiiHelper->logSpotiiActions($invoiceIncrementId);
+            $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
+            $this->invoiceRepository->save($invoice);
+            //$invoiceIncrementId =  $invoice->getIncrementId();
+            //$this->spotiiHelper->logSpotiiActions($invoiceIncrementId);
         endforeach;
         $this->spotiiHelper->logSpotiiActions('invoice returned');
         $reference = $payment->getAdditionalInformation('spotii_order_id');
