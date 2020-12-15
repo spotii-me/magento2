@@ -384,7 +384,7 @@ define([
 
         var openIframeSpotiiCheckout = function (checkoutUrl) {
 
-          $('.fancy-box').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
+          $('.lightbox').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
           loadIFrame();
         };
 

@@ -15,6 +15,9 @@ use Spotii\Spotiipay\Helper\Data;
 use Spotii\Spotiipay\Model\SpotiiPay;
 use \Magento\Quote\Model\QuoteFactory;
 use Magento\Sales\Model\Order;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Api\FilterBuilder;
+
 /**
  * Class MethodAvailabilityObserver
  * @package Spotii\Spotiipay\Observer
@@ -33,7 +36,19 @@ class SalesOrderInvoice implements ObserverInterface
      * @var spotiiHelper
      */
     protected $spotiiHelper;
+    /**
+     * @var invoiceRepositoryFactory
+     */
+    protected $invoiceRepositoryFactory;
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    private $searchCriteriaBuilder;
 
+    /**
+     * @var FilterBuilder
+     */
+    private $filterBuilder;
      /**
      * Construct
      *
@@ -44,11 +59,18 @@ class SalesOrderInvoice implements ObserverInterface
     public function __construct(
         SpotiiPay $spotiiPayModel,
         Data $spotiiHelper,
-        \Magento\Sales\Model\OrderFactory $orderFactory
+        \Magento\Sales\Model\OrderFactory $orderFactory,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        \Magento\Sales\Model\Order\InvoiceRepositoryFactory $invoiceRepositoryFactory,
+        FilterBuilder $filterBuilder
+
     ) {
+        $this->invoiceRepositoryFactory = $invoiceRepositoryFactory;
         $this->spotiiPayModel = $spotiiPayModel;
         $this->spotiiHelper = $spotiiHelper;
         $this->orderFactory = $orderFactory;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->filterBuilder = $filterBuilder;
     }
 
     public function execute($observer)
@@ -59,7 +81,6 @@ class SalesOrderInvoice implements ObserverInterface
         $this->spotiiHelper->logSpotiiActions($orderId);
         $this->spotiiHelper->logSpotiiActions($order->getEntityId());
         $this->spotiiHelper->logSpotiiActions($order->getStatus());
-        //$this->spotiiHelper->logSpotiiActions($order->getPayment()->getMethodInstance()->getCode());
         
         if (!$order) {
             return $this;
@@ -70,44 +91,27 @@ class SalesOrderInvoice implements ObserverInterface
         {
  
             try {
-                $this->spotiiHelper->logSpotiiActions('Create invoice');
+                $this->spotiiHelper->logSpotiiActions('Start change state of invoice');
+               
+                /*$filter = $this->filterBuilder->setField('order_id')
+                ->setValue('%'.$orderId.'%')
+                ->setConditionType("eq")
+                ->create();
                 
-                if(!$order->canInvoice()) {
-                    $this->spotiiHelper->logSpotiiActions('Invoice: Order cannot be invoiced.'); 
-                }
-                //$order->setActionFlag(Mage_Sales_Model_Order::ACTION_FLAG_INVOICE, true);
-                if($order->canInvoice()) {
-                $this->spotiiHelper->logSpotiiActions('Invoicing..'); 
-                //START Handle Invoice
-                $invoice = Mage::getModel('sales/service_order', $order)->prepareInvoice();
- 
-                $invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_OFFLINE);
-                $invoice->register();
- 
-                $invoice->getOrder()->setCustomerNoteNotify(true);          
-                $invoice->getOrder()->setIsInProcess(true);
-                $this->spotiiHelper->logSpotiiActions('Invoiced');
- 
-                $transactionSave = Mage::getModel('core/resource_transaction')
-                    ->addObject($invoice)
-                    ->addObject($invoice->getOrder());
- 
-                $transactionSave->save();
-                //END Handle Invoice
- 
-                //START Handle Shipment
-                $shipment = $order->prepareShipment();
-                $shipment->register();
- 
-                $order->setIsInProcess(true);
-                $this->spotiiHelper->logSpotiiActions('Shipped.', false);
- 
-                $transactionSave = Mage::getModel('core/resource_transaction')
-                    ->addObject($shipment)
-                    ->addObject($shipment->getOrder())
-                    ->save();
-                //END Handle Shipment
-            }
+                $searchCriteria->setFilterGroups([$filterOR]);  
+
+                $invoice=$this->invoiceRepositoryFactory->get($orderId);*/
+                $invoiceCollection = $order->getInvoiceCollection();
+                foreach($invoiceCollection as $invoice):
+                    //var_dump($invoice);
+                    $invoiceId =  $invoice->getId();
+                    $this->spotiiHelper->logSpotiiActions($invoiceId);
+                    $invoiceIncrementId =  $invoice->getIncrementId();
+                    $this->spotiiHelper->logSpotiiActions($invoiceIncrementId);
+                endforeach;
+                $this->spotiiHelper->logSpotiiActions('invoice returned');
+              
+            
             } catch (Exception $e) {
                 $this->spotiiHelper->logSpotiiActions('Invoicer: Exception occurred during automaticallyInvoiceShipCompleteOrder action. Exception message: '.$e->getMessage(), false);
                 $order->save();

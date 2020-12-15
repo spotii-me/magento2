@@ -109,7 +109,7 @@
                  $this->orderStateResolver->getStateForOrder($order, [OrderStateResolverInterface::IN_PROGRESS])
              );
              $order->setStatus($this->config->getStateDefaultStatus($order->getState()));
-             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_PAID);
+             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
              $this->invoiceRepository->save($invoice);
              $this->orderRepository->save($order);
              $connection->commit();
