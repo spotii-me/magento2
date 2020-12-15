@@ -55,7 +55,7 @@ class OrderCancellationWorker
     protected $date;
     protected $registry;
     protected $invoiceRepository;
-
+    protected $orderRepository;
     const PAYMENT_CODE = 'spotiipay';
     /**
      * Transaction constructor.
@@ -78,8 +78,8 @@ class OrderCancellationWorker
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
         \Magento\Framework\Registry $registry,
-        InvoiceRepository $invoiceRepository
-
+        InvoiceRepository $invoiceRepository,
+        \Magento\Sales\Model\OrderRepository $orderRepository
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -92,7 +92,7 @@ class OrderCancellationWorker
         $this->date = $date;
         $this->registry = $registry;
         $this->invoiceRepository = $invoiceRepository;
-
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -154,14 +154,36 @@ class OrderCancellationWorker
                 $paymentMethod =$payment->getMethod();
                 $created = $order->getCreatedAt();
 
-                    if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $created){
-                    $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
-                    $invoices = $order->getInvoiceCollection();
-                    foreach ($invoices as $invoice){
-                        $this->invoiceRepository->delete($invoice);
+                if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $created){
+                $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
+                // fix start
+                $invoices = $order->getInvoiceCollection();
+                if ($invoices) {
+                    foreach($invoices as $invoice) {
+                        $invoice->delete();
+                        $this->spotiiHelper->logSpotiiActions("invoice");
                     }
-                    $order->cancel()->save(); 
-                    
+                }
+                $shipments = $order->getShipmentsCollection();
+                if ($shipments)
+                {
+                    foreach($shipments as $shipment) {
+                        $shipment->delete();
+                        $this->spotiiHelper->logSpotiiActions("shippment");
+                    }
+                }
+                $creditmemos = $order->getCreditmemosCollection();
+                if ($creditmemos) {
+                    foreach($creditmemos as $creditmemo) {
+                        $creditmemo->delete();
+                        $this->spotiiHelper->logSpotiiActions("creditmemo");
+                    }
+                }
+                // fix end
+
+                $this->orderRepository->delete($order);
+                $this->spotiiHelper->logSpotiiActions("order deleted");
+                
             }else if($paymentMethod == self::PAYMENT_CODE){
                 $this->spotiiHelper->logSpotiiActions("Order not cleaned up ".$orderIncrementId.' '.$created);
             }
