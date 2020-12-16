@@ -15,10 +15,10 @@ var jsonData;
 var rejectUrl;
 var confirmUrl;
 var popup = true;
-var buttonCalledOnce = true;
-const root=document.getElementsByTagName('body')[0];
-
-//Build lightbox component
+const root = document.getElementsByTagName('body')[0];
+var hidePopup = false;
+var buttonOnce = true;
+//Build fancybox component
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
@@ -146,100 +146,92 @@ function removeOverlay() {
 
 //Google tag manager 
 function onCheckout() {
-if (typeof dataLayer !== 'undefined') {
+  if (typeof dataLayer !== 'undefined') {
     // the variable is defined
-  dataLayer.push({
-    'event': 'checkout',
-    'ecommerce': {
-      'checkout': {
-        'actionField': {'step': 3, 'option': 'Spotiipay'}
-     }
-    }
-  }
-  );
-  dataLayer.push({
-    'event': 'checkoutOption',
-    'ecommerce': {
-      'checkout_option': {
-        'actionField': {'step': 3, 'option': 'Spotiipay'}
+    dataLayer.push({
+      'event': 'checkout',
+      'ecommerce': {
+        'checkout': {
+          'actionField': { 'step': 3, 'option': 'Spotiipay' }
+        }
       }
     }
-  });
-}
+    );
+    dataLayer.push({
+      'event': 'checkoutOption',
+      'ecommerce': {
+        'checkout_option': {
+          'actionField': { 'step': 3, 'option': 'Spotiipay' }
+        }
+      }
+    });
+  }
 }
 
 //Handle the response Decline/Accept
-window.closeIFrameOnCompleteOrder = function(message) {
-  //console.log('Message - ', message);
+window.closeIFrameOnCompleteOrder = function (message) {
+
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
-  var hidePopup = message.hidePopup;
-  //console.log('Order state - ', status);
-  //console.log('Order confirmUrl - ', confirmUrl);
-  //console.log('Order rejectUrl - ', rejectUrl);
+  hidePopup = message.hidePopup;
 
   switch (status) {
     case successCheckOutStatus: {
-      if(!isSuccess){
+      if (!isSuccess) {
         isSuccess = true;
-      //console.log('successCheckOutStatus');
-      if (typeof dataLayer !== 'undefined') {
-      var params = confirmUrl.split('/');
-      var reference = params[params.length-2];
-      var ids = reference.split('-');
-      var id = ids[1];
-      dataLayer.push({
-        'event': 'purchase',
-        'ecommerce': {
-          'purchase': {
-            'actionField': {
-              'id': id,                         // Transaction ID. Required for purchases and refunds.
-              'affiliation': 'Spotii',
+        //console.log('successCheckOutStatus');
+        if (typeof dataLayer !== 'undefined') {
+          var params = confirmUrl.split('/');
+          var reference = params[params.length - 2];
+          var ids = reference.split('-');
+          var id = ids[1];
+          dataLayer.push({
+            'event': 'purchase',
+            'ecommerce': {
+              'purchase': {
+                'actionField': {
+                  'id': id,                // Transaction ID. Required for purchases and refunds.
+                  'affiliation': 'Spotii',
+                }
+              }
             }
-          }
+          });
         }
-      });
-    }
-      location.href = confirmUrl; 
-      document.getElementById('closeiframebtn').onclick = function() {
-        location.href = confirmUrl; 
-      };
-      removeOverlay();
-    }
+        location.href = confirmUrl;
+        document.getElementById('closeiframebtn').onclick = function () {
+          location.href = confirmUrl;
+        };
+        removeOverlay();
+      }
       break;
     }
     case failedCheckOutStatus: {
-      if(hidePopup && popup){
-        popup=false;
-        document.getElementById("closeiframebtn").click();
-        //console.log('here');
+      if (hidePopup && popup) {
+        popup = false;
+        document.getElementById('closeiframebtn').click();
       }
-      if(!isFail){
-      isFail = true;
-      isDeclined = true;
-      //console.log('failedCheckOutStatus');  
+      if (!isFail) {
+        isFail = true;
+        isDeclined = true;
 
-      document.getElementById('closeiframebtn').onclick = function() {
-        if(buttonCalledOnce){
-          buttonCalledOnce = false;
-          var rejectUrlSubmitted= rejectUrl.substring(0,rejectUrl.length-2)+"1/";
-          //console.log('rejectUrlSubmitted 1'+rejectUrlSubmitted);
-          location.href = rejectUrlSubmitted; 
+        document.getElementById('closeiframebtn').onclick = function () {
+          if (buttonOnce) {
+            buttonOnce = false;
+            var rejectUrlSubmitted = rejectUrl.substring(0, rejectUrl.length - 2) + "1/";
+            location.href = rejectUrlSubmitted;
+          }
+        };
+        removeOverlay();
       }
-      };
-      removeOverlay();
-    }
-    
+
       break;
     }
     case submittedCheckOutStatus: {
-     //console.log('submittedCheckOutStatus');
       removeOverlay();
       break;
     }
     default: {
-     // console.log('None status ');
       removeOverlay();
       break;
     }
@@ -308,10 +300,10 @@ define([
 
           $(".spotii-grand-total").text(
             "Total : " +
-              format.replace(
-                /%s/g,
-                amount.toFixed(window.checkoutConfig.priceFormat.precision)
-              )
+            format.replace(
+              /%s/g,
+              amount.toFixed(window.checkoutConfig.priceFormat.precision)
+            )
           );
           $(".spotii-installment-amount").text(
             format.replace(
@@ -346,60 +338,67 @@ define([
       return "Payment Schedule";
     },
     getTotalInvalidText: function () {
-        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
+      return (this.isTotalValid() ? '' : "You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
     },
-    
+    getQtyInvaildText: function () {
+      document.getElementById('total-benchmark-info').textContent = "One or more of the items in your cart are out of stock.";
+    },
     redirectToSpotiipayController: function (data) {
-      if(!isDeclined){
-      // Make a post request to redirect
-      var renderPopup= function (url) {
-        openIframeSpotiiCheckout(url);
-      };
+      if (!isDeclined) {
+        // Make a post request to redirect
+        var renderPopup = function (url) {
+          openIframeSpotiiCheckout(url);
+        };
 
-      var openIframeSpotiiCheckout= function(checkoutUrl) {
+        var openIframeSpotiiCheckout = function (checkoutUrl) {
 
-    $('.fancy-box').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
-        loadIFrame();
-    };
+          $('.fancy-box').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
+          loadIFrame();
+        };
 
-   if(toggleFlag){
-    onCheckout();
-  
-     var url = mageUrl.build("spotiipay/standard/redirect");
+        if (toggleFlag) {
 
-      $.ajax({
-        url: url,
-        method: "post",
-        showLoader: true,
-        data: data,
-        success: function (response) {
-          toggleFlag = false;
-          // Send this response to spotii api
-          // This would redirect to spotii
-          jsonData = $.parseJSON(response);
-          if (jsonData.redirectURL) { 
-            if (isMobileSafari()) {
-              redirectToSpotiiCheckout(jsonData.redirectURL,2500);
-            } else  {
-            thirdPartySupported(root).then( () => {
-            renderPopup(jsonData.redirectURL);
-          })
-            .catch(() => {
-              redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
-            });
-          }       
-          } else if (typeof jsonData["message"] !== "undefined") {
-            globalMessageList.addErrorMessage({
-              message: jsonData["message"],
-            });
-          }
-        },
-      });
-    }else{
-      loadIFrame();
-    }
-  }
-},
+          onCheckout();
+
+          var url = mageUrl.build("spotiipay/standard/redirect");
+          var x = this;
+          $.ajax({
+            url: url,
+            method: "post",
+            showLoader: true,
+            data: data,
+            success: function (response) {
+              toggleFlag = false;
+              // Send this response to spotii api
+              // This would redirect to spotii
+              try{
+              jsonData = $.parseJSON(response);
+              if (jsonData.redirectURL) {
+                if (isMobileSafari()) {
+                  redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
+                } else {
+                  thirdPartySupported(root).then(() => {
+                    renderPopup(jsonData.redirectURL);
+                  })
+                    .catch(() => {
+                      redirectToSpotiiCheckout(jsonData.redirectURL, 2500);
+                    });
+                }
+              } else if (typeof jsonData["message"] !== "undefined") {
+                globalMessageList.addErrorMessage({
+                  message: jsonData["message"],
+                });
+              }
+            }catch(e){
+              removeOverlay();
+              x.getQtyInvaildText();
+            }},
+          });
+        } else {
+          loadIFrame();
+        }
+      }
+    },
     handleRedirectAction: function () {
       var data = $("#co-shipping-form").serialize();
       if (!customer.isLoggedIn()) {
@@ -411,15 +410,42 @@ define([
     },
 
     continueToSpotiipay: function () {
-
-      showOverlay();
-      if (
-        this.validate() &&
-        additionalValidators.validate() &&
-        this.isTotalValid()
-      ) {
-        this.handleRedirectAction();
-      } 
+      var url = mageUrl.build("spotiipay/standard/checkinventory");
+      var finalResult = [];
+      var itemsFromQuote = window.checkoutConfig.quoteItemData;
+      for (var i = 0; i < itemsFromQuote.length; i++) {
+        var tempQty = itemsFromQuote[i].qty;
+        var tempSku = itemsFromQuote[i].sku;
+        finalResult.push({ qty: tempQty, sku: tempSku });
+      }
+      var jsonString = JSON.stringify(finalResult);
+      var x = this;
+      var y = additionalValidators;
+      $.ajax({
+        url: url,
+        method: "post",
+        showLoader: true,
+        //async: true,
+        data: { "items": jsonString },
+        success: function (response) {
+          var jsonItems = $.parseJSON(response);
+          if (
+            x.validate() &&
+            y.validate() &&
+            x.isTotalValid() && jsonItems.isInStock
+          ) {
+            showOverlay();
+            x.handleRedirectAction();
+          }
+          else if(!x.isTotalValid()){
+            x.getTotalInvalidText();
+          }
+          else {
+            console.log("redirect failed");
+            x.getQtyInvaildText();
+          }
+        }
+      });
     },
 
     isTotalValid: function () {
@@ -443,4 +469,3 @@ define([
     },
   });
 });
-
