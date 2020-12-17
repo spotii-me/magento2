@@ -54,6 +54,8 @@ class ProductView extends Template
     ) {
         $this->productWidgetConfig = $productWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
+        $this->storeManager = $storeManager;
+        $this->registry = $registry;
         parent::__construct($context, $data);
     }
 
