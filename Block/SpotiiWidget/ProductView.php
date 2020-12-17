@@ -48,13 +48,9 @@ class ProductView extends Template
         Template\Context $context,
         ProductWidgetConfigInterface $productWidgetConfig,
         SpotiiApiConfigInterface $spotiiApiConfig,
-<<<<<<< Updated upstream
-        array $data
-=======
         \Magento\Framework\Registry $registry,
         array $data,
         StoreManagerInterface $storeManager
->>>>>>> Stashed changes
     ) {
         $this->productWidgetConfig = $productWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;

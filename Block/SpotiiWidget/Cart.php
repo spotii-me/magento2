@@ -48,14 +48,10 @@ class Cart extends Template
         Template\Context $context,
         CartWidgetConfigInterface $cartWidgetConfig,
         SpotiiApiConfigInterface $spotiiApiConfig,
-<<<<<<< Updated upstream
-        array $data
-=======
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         array $data,
         StoreManagerInterface $storeManager
->>>>>>> Stashed changes
     ) {
         $this->cartWidgetConfig = $cartWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
