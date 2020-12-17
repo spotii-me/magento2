@@ -56,7 +56,6 @@ class Cart extends Template
         $this->cartWidgetConfig = $cartWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
         $this->storeManager = $storeManager;
-        $this->registry = $registry;
         parent::__construct($context, $data);
     }
 
