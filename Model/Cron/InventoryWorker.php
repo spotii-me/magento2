@@ -157,6 +157,11 @@ class InventoryWorker
                         $stockItem->setIsInStock((bool)$finalQty);
                         $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
                     }
+                    $invoiceCollection = $order->getInvoiceCollection();
+                    foreach($invoiceCollection as $invoice):
+                        $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_CANCELED);
+                        $this->invoiceRepository->save($invoice);
+                    endforeach;
                     $order->setState('closed')->setStatus('closed');
                     $order->save();
                     
