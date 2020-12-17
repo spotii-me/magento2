@@ -346,7 +346,20 @@ define([
       return "Payment Schedule";
     },
     getTotalInvalidText: function () {
-        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
+      var curr = window.checkoutConfig.quoteData.quote_currency_code;
+      var min="";
+      switch(curr){
+        case "AED":
+          min="200 AED";
+          break;
+        case "SAR":
+          min="200 SAR";
+          break;
+        case "BHD":
+          min="20 BHD";
+          break;
+      }
+        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over "+min+". With a little more shopping, you can split your payment over 4 cost-free instalments.");
     },
     
     redirectToSpotiipayController: function (data) {
