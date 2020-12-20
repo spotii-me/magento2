@@ -10,6 +10,7 @@ namespace Spotii\Spotiipay\Model\Cron;
 use Spotii\Spotiipay\Helper\Data as SpotiiHelper;
 use Spotii\Spotiipay\Model\Api\ConfigInterface;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
+use Magento\Sales\Model\Order\InvoiceRepository;
 
 /**
  * Class Transaction
@@ -52,6 +53,7 @@ class InventoryWorker
     protected $stockRegistry;
 
     protected $date;
+    protected $invoiceRepository;
 
     const PAYMENT_CODE = 'spotiipay';
     /**
@@ -73,7 +75,8 @@ class InventoryWorker
         \Magento\Sales\Api\Data\OrderInterface $orderInterface,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
-        \Magento\Framework\Stdlib\DateTime\DateTime $date
+        \Magento\Framework\Stdlib\DateTime\DateTime $date,
+        InvoiceRepository $invoiceRepository
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -84,6 +87,8 @@ class InventoryWorker
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->stockRegistry = $stockRegistry;
         $this->date = $date;
+        $this->invoiceRepository = $invoiceRepository;
+
     }
 
     /**
