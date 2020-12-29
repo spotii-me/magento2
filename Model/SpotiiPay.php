@@ -501,12 +501,11 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             ->setFailSafe(true)
             ->build($type);
 
-        if($order->getStatus() =="paymentauthorised"){
         $payment->addTransactionCommentsToOrder(
             $transaction,
             $message
        );
-    }
+    
         $payment->setParentTransactionId(null);
         $payment->save();
         // $quote->collectTotals()->save();
