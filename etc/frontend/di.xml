@@ -15,7 +15,7 @@
         </arguments>
     </type>
     <type name="Magento\Framework\View\Element\Js\Cookie">
-        <plugin name="afterGetPath" type="Spotii\Spotiipay\Plugin\View\Element\Js\ManagePath" sortOrder="10"/>
+        <plugin name="afterGetPath" type="Spotii\Spotiipay\Plugin\View\Element\Js\ManagePath"/>
     </type>
 	<preference for="Spotii\Spotiipay\Model\Api\ConfigInterface" type="Spotii\Spotiipay\Model\Api\Config"/>
 	<preference for="Spotii\Spotiipay\Model\Api\ProcessorInterface" type="Spotii\Spotiipay\Model\Api\Processor"/>
