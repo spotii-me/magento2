@@ -33,9 +33,9 @@ button2.textContent = 'set overlay closeClick to false';
 bodyTag.appendChild(button2);
 
 var a1 = document.createElement('a');
-a1.id = 'light';
+a1.id = 'fancy';
 a1.style.display='none';
-a1.classList= 'lightbox';
+a1.classList= 'fancy-box lightbox';
 a1.textContent ='open lightbox';
 a1.href='';
 bodyTag.appendChild(a1);
