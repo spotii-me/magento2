@@ -242,6 +242,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
                      case "SAR":
                          $magentoAmount=(round($magentoAmount, $precision))*0.9506 ;
                      break;
+                     case "BHD":	
+                        $magentoAmount=(round($magentoAmount, $precision))*9.74;	
+                    break;
                  }
               }  
                  if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) <6)){
@@ -501,12 +504,11 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             ->setFailSafe(true)
             ->build($type);
 
-        if($order->getStatus() =="paymentauthorised"){
         $payment->addTransactionCommentsToOrder(
             $transaction,
             $message
        );
-    }
+    
         $payment->setParentTransactionId(null);
         $payment->save();
         // $quote->collectTotals()->save();

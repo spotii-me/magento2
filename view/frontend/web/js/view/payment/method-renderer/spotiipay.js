@@ -18,7 +18,7 @@ var popup = true;
 const root = document.getElementsByTagName('body')[0];
 var hidePopup = false;
 var buttonOnce = true;
-//Build fancybox component
+//Build lightbox component
 var button1 = document.createElement('button');
 button1.style.display='none';
 button1.id = 'closeclick';
@@ -33,9 +33,9 @@ button2.textContent = 'set overlay closeClick to false';
 bodyTag.appendChild(button2);
 
 var a1 = document.createElement('a');
-a1.id = 'fancy';
+a1.id = 'light';
 a1.style.display='none';
-a1.classList= 'fancy-box lightbox';
+a1.classList= 'lightbox';
 a1.textContent ='open lightbox';
 a1.href='';
 bodyTag.appendChild(a1);
@@ -337,8 +337,21 @@ define([
     getPaymentText: function () {
       return "Payment Schedule";
     },
-    getTotalInvalidText: function () {
-      return (this.isTotalValid() ? '' : "You don't quite have enough in your basket: Spotii is available for purchases over AED 200. With a little more shopping, you can split your payment over 4 cost-free instalments.");
+    getTotalInvalidText: function () {	   
+      var curr = window.checkoutConfig.quoteData.quote_currency_code;	      
+      var min="200 AED";	    
+      switch(curr){	   
+        case "AED":	     
+          min="200 AED";	
+          break;	
+        case "SAR":	
+          min="200 SAR";	
+          break;	
+        case "BHD":	
+          min="20 BHD";	
+          break;	
+      }	
+        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over "+min+". With a little more shopping, you can split your payment over 4 cost-free instalments.");	
     },
     getQtyInvaildText: function () {
       document.getElementById('total-benchmark-info').textContent = "One or more of the items in your cart are out of stock.";
@@ -352,7 +365,7 @@ define([
 
         var openIframeSpotiiCheckout = function (checkoutUrl) {
 
-          $('.fancy-box').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
+          $('.lightbox').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
           loadIFrame();
         };
 
@@ -451,16 +464,17 @@ define([
     isTotalValid: function () {
       var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
       var curr = window.checkoutConfig.quoteData.quote_currency_code;
+      var min=200;
       switch(curr){
         case "USD":
           total= total*3.6730;
           break;
-        case "SAR":
-          total= total*0.9506;
+        case "BHD":
+          min= 20;
           break;
       }
       console.log(total+curr);
-      if (total > 200) return true;
+      if (total >= min) return true;
       else return false;
     },
 

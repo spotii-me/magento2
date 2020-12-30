@@ -10,6 +10,7 @@ namespace Spotii\Spotiipay\Block\SpotiiWidget;
 use Magento\Framework\View\Element\Template;
 use Spotii\Spotiipay\Model\Config\Container\CartWidgetConfigInterface;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
+use Magento\Store\Model\StoreManagerInterface;	
 
 /**
  * Class Cart
@@ -30,6 +31,11 @@ class Cart extends Template
      */
     private $spotiiApiConfig;
 
+    /**	
+     * @var StoreManagerInterface	
+     */	
+    private $storeManager;
+
     /**
      * ProductWidget constructor.
      *
@@ -42,10 +48,13 @@ class Cart extends Template
         Template\Context $context,
         CartWidgetConfigInterface $cartWidgetConfig,
         SpotiiApiConfigInterface $spotiiApiConfig,
-        array $data
+        array $data,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,	
+        StoreManagerInterface $storeManager
     ) {
         $this->cartWidgetConfig = $cartWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
+        $this->storeManager = $storeManager;
         parent::__construct($context, $data);
     }
 
@@ -68,7 +77,8 @@ class Cart extends Template
             'minPrice' => self::MIN_PRICE,
             'maxPrice' => self::MAX_PRICE,
             'imageUrl' => $this->cartWidgetConfig->getImageUrl(),
-            'hideClasses' => $this->cartWidgetConfig->getHideClass()
+            'hideClasses' => $this->cartWidgetConfig->getHideClass(),
+            'currency' => $this->storeManager->getStore()->getCurrentCurrencyCode()
         ];
 
         foreach ($result as $key => $value) {

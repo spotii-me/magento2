@@ -10,7 +10,7 @@ namespace Spotii\Spotiipay\Block\SpotiiWidget;
 use Magento\Framework\View\Element\Template;
 use Spotii\Spotiipay\Model\Config\Container\ProductWidgetConfigInterface;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
-
+use Magento\Store\Model\StoreManagerInterface;	
 /**
  * Class ProductView
  * @package Spotii\Spotiipay\Block\SpotiiWidget
@@ -30,6 +30,14 @@ class ProductView extends Template
      */
     private $spotiiApiConfig;
 
+    /**	
+     * @var StoreManagerInterface	
+     */	
+    private $storeManager;	
+    /**	
+     * @var registry	
+     */	
+    private $registry;
     /**
      * ProductWidget constructor.
      *
@@ -42,10 +50,14 @@ class ProductView extends Template
         Template\Context $context,
         ProductWidgetConfigInterface $productWidgetConfig,
         SpotiiApiConfigInterface $spotiiApiConfig,
-        array $data
-    ) {
+        \Magento\Framework\Registry $registry,	 
+        array $data,	
+        StoreManagerInterface $storeManager  
+        ) {
         $this->productWidgetConfig = $productWidgetConfig;
         $this->spotiiApiConfig = $spotiiApiConfig;
+        $this->storeManager = $storeManager;	
+        $this->registry = $registry;
         parent::__construct($context, $data);
     }
 
@@ -68,7 +80,8 @@ class ProductView extends Template
             'minPrice' => self::MIN_PRICE,
             'maxPrice' => self::MAX_PRICE,
             'imageUrl' => $this->productWidgetConfig->getImageUrl(),
-            'hideClasses' => $this->productWidgetConfig->getHideClass()
+            'hideClasses' => $this->productWidgetConfig->getHideClass(),
+            'currency' => $this->storeManager->getStore()->getCurrentCurrencyCode()	
         ];
 
         foreach ($result as $key => $value) {
