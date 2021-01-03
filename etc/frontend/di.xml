@@ -18,5 +18,5 @@
 	<preference for="Spotii\Spotiipay\Model\Api\ProcessorInterface" type="Spotii\Spotiipay\Model\Api\Processor"/>
 	<preference for="Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface" type="Spotii\Spotiipay\Model\Config\Container\SpotiiApiIdentity"/>
 	<preference for="Spotii\Spotiipay\Model\Config\Container\ProductWidgetConfigInterface" type="Spotii\Spotiipay\Model\Config\Container\ProductWidgetIdentity"/>
-    <preference for="Magento\Checkout\Block\Onepage\Success" type="Spotii\Spotiipay\Block\Onepage\CustomSuccess"/>
+    <preference for="Magento\Checkout\Block\Onepage\Success" type="Spotii\Spotiipay\Block\Onepage\Success"/>
 </config>

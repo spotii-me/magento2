@@ -1,7 +1,7 @@
 <?php
 namespace Spotii\Spotiipay\Block\Onepage;
 
-class CustomSuccess extends \Magento\Checkout\Block\Onepage\Success
+class Success extends \Magento\Checkout\Block\Onepage\Success
 {
 
      /**
