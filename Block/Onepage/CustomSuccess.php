@@ -10,8 +10,7 @@ class CustomSuccess extends \Magento\Checkout\Block\Onepage\Success
     protected $spotiiHelper;
 
     protected $orderItemsDetails;
-    protected $_checkoutSession;
-    
+
     public function __construct(
         \Spotii\Spotiipay\Helper\Data $spotiiHelper,
         \Magento\Framework\View\Element\Template\Context $context,
