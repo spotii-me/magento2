@@ -53,15 +53,21 @@ class Complete extends SpotiiPay
                 $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
                 $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
-                $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
                 $invoiceCollection = $order->getInvoiceCollection();
                 foreach($invoiceCollection as $invoice):
                     $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_PAID);
                     $this->invoiceRepository->save($invoice);
                 endforeach;
+               // $this->spotiiHelper->logSpotiiActions("Before message");
+               // $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
+                //$this->messageManager->addSuccessMessage("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
+                $this->messageManager->addSuccessMessage( __('<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.') );
+                //$this->spotiiHelper->logSpotiiActions("after message");
+
                 $this->getResponse()->setRedirect(
                     $this->_url->getUrl('checkout/onepage/success')
                );
+               //$this->spotiiHelper->logSpotiiActions("after redirect");
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
