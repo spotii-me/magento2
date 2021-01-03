@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<!-- <?xml version="1.0"?>
 <head>
     <title>Pizza Page</title>
 </head>
@@ -15,6 +15,26 @@
                template="Spotii_Spotiipay::mySuccess.phtml"
                cacheable="false">   
         </block>
-          <!-- <block class="Magento\Checkout\Block\Onepage\Success" name="checkout.success" template="success.phtml" /> -->
+           <block class="Magento\Checkout\Block\Onepage\Success" name="checkout.success" template="success.phtml" />
     </referenceContainer>
-</body>
+</body> -->
+<!-- <?xml version="1.0"?>
+<body>
+    <referenceContainer name="order.success.additional.info">
+        <block class="Spotii\Spotiipay\Block\OnePage\CustomSuccess"
+               name="custom.order.success"
+               template="Spotii_Spotiipay::order/success.phtml"
+               after="-">
+        </block>
+    </referenceContainer>
+</body>   -->
+
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Spotii\Spotiipay\Block\Onepage\CustomSuccess" name="checkout.successcustom" template="Spotii_Spotiipay::mySuccess.phtml">
+            </block>
+        </referenceContainer>
+    </body>
+</page>

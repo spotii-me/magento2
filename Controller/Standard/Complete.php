@@ -60,8 +60,8 @@ class Complete extends SpotiiPay
                 endforeach;
                // $this->spotiiHelper->logSpotiiActions("Before message");
                // $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
-                //$this->messageManager->addSuccessMessage("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
-                $this->messageManager->addSuccessMessage( __('<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.') );
+                $this->messageManager->addSuccessMessage("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
+                //$this->messageManager->addSuccessMessage( __('<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.') );
                 //$this->spotiiHelper->logSpotiiActions("after message");
 
                 $this->getResponse()->setRedirect(
