@@ -177,6 +177,7 @@ window.closeIFrameOnCompleteOrder = function (message) {
 
   switch (status) {
     case successCheckOutStatus: {
+      console.log("successCheckOutStatus called")
       document.cookie="spotiisuccess=true";
       if (!isSuccess) {
         isSuccess = true;
@@ -208,6 +209,8 @@ window.closeIFrameOnCompleteOrder = function (message) {
     }
     case failedCheckOutStatus: {
       document.cookie="spotiisuccess=false";
+      console.log("successCheckOutStatus called")
+
       if (hidePopup && popup) {
         popup = false;
         document.getElementById('closeiframebtn').click();
