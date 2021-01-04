@@ -170,7 +170,6 @@ function onCheckout() {
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function (message) {
-
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
@@ -178,6 +177,7 @@ window.closeIFrameOnCompleteOrder = function (message) {
 
   switch (status) {
     case successCheckOutStatus: {
+      document.cookie="spotiisuccess=true";
       if (!isSuccess) {
         isSuccess = true;
         //console.log('successCheckOutStatus');
@@ -207,6 +207,7 @@ window.closeIFrameOnCompleteOrder = function (message) {
       break;
     }
     case failedCheckOutStatus: {
+      document.cookie="spotiisuccess=false";
       if (hidePopup && popup) {
         popup = false;
         document.getElementById('closeiframebtn').click();
