@@ -177,7 +177,6 @@ window.closeIFrameOnCompleteOrder = function (message) {
 
   switch (status) {
     case successCheckOutStatus: {
-      document.cookie="spotiisuccess=true";
       if (!isSuccess) {
         isSuccess = true;
         if (typeof dataLayer !== 'undefined') {
@@ -185,6 +184,8 @@ window.closeIFrameOnCompleteOrder = function (message) {
           var reference = params[params.length - 2];
           var ids = reference.split('-');
           var id = ids[1];
+          document.cookie=`spt_mgt_mpt_crt_scs_msg=true-${id}`;
+
           dataLayer.push({
             'event': 'purchase',
             'ecommerce': {
@@ -206,7 +207,7 @@ window.closeIFrameOnCompleteOrder = function (message) {
       break;
     }
     case failedCheckOutStatus: {
-      document.cookie="spotiisuccess=false";
+      document.cookie="spt_mgt_mpt_crt_scs_msg=false-0000";
 
       if (hidePopup && popup) {
         popup = false;
