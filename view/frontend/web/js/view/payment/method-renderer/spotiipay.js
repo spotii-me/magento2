@@ -181,6 +181,7 @@ window.closeIFrameOnCompleteOrder = function (message) {
       var reference = params[params.length - 2];
       var ids = reference.split('-');
       var id = ids[1];
+      console.log("success", `spt_mgt_mpt_crt_scs_msg=true-${id}`)
       document.cookie=`spt_mgt_mpt_crt_scs_msg=true-${id}`;
       if (!isSuccess) {
         isSuccess = true;
