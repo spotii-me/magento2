@@ -177,15 +177,14 @@ window.closeIFrameOnCompleteOrder = function (message) {
 
   switch (status) {
     case successCheckOutStatus: {
+      var params = confirmUrl.split('/');
+      var reference = params[params.length - 2];
+      var ids = reference.split('-');
+      var id = ids[1];
+      document.cookie=`spt_mgt_mpt_crt_scs_msg=true-${id}`;
       if (!isSuccess) {
         isSuccess = true;
         if (typeof dataLayer !== 'undefined') {
-          var params = confirmUrl.split('/');
-          var reference = params[params.length - 2];
-          var ids = reference.split('-');
-          var id = ids[1];
-          document.cookie=`spt_mgt_mpt_crt_scs_msg=true-${id}`;
-
           dataLayer.push({
             'event': 'purchase',
             'ecommerce': {
