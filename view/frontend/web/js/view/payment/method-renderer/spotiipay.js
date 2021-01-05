@@ -177,11 +177,9 @@ window.closeIFrameOnCompleteOrder = function (message) {
 
   switch (status) {
     case successCheckOutStatus: {
-      console.log("successCheckOutStatus called")
       document.cookie="spotiisuccess=true";
       if (!isSuccess) {
         isSuccess = true;
-        //console.log('successCheckOutStatus');
         if (typeof dataLayer !== 'undefined') {
           var params = confirmUrl.split('/');
           var reference = params[params.length - 2];
@@ -209,7 +207,6 @@ window.closeIFrameOnCompleteOrder = function (message) {
     }
     case failedCheckOutStatus: {
       document.cookie="spotiisuccess=false";
-      console.log("successCheckOutStatus called")
 
       if (hidePopup && popup) {
         popup = false;
