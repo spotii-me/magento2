@@ -167,7 +167,8 @@ class InventoryWorker
                         $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_CANCELED);
                         $this->invoiceRepository->save($invoice);
                     endforeach;
-                    $order->setState('closed')->setStatus('closed');
+                    // $order->setState('closed')->setStatus('closed');
+                    $order->cancel();
                     $order->save();
                     
             }else if($paymentMethod == self::PAYMENT_CODE){
