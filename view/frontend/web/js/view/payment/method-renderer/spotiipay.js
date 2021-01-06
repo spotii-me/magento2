@@ -170,7 +170,6 @@ function onCheckout() {
 
 //Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function (message) {
-
   var status = message.status;
   rejectUrl = message.rejectUrl;
   confirmUrl = message.confirmUrl;
@@ -178,14 +177,16 @@ window.closeIFrameOnCompleteOrder = function (message) {
 
   switch (status) {
     case successCheckOutStatus: {
+      document.cookie='spt_mgt_mpt_crt_scs_msg=true';
+      console.log("cookie saved");
       if (!isSuccess) {
         isSuccess = true;
-        //console.log('successCheckOutStatus');
         if (typeof dataLayer !== 'undefined') {
           var params = confirmUrl.split('/');
           var reference = params[params.length - 2];
           var ids = reference.split('-');
           var id = ids[1];
+
           dataLayer.push({
             'event': 'purchase',
             'ecommerce': {
@@ -207,6 +208,8 @@ window.closeIFrameOnCompleteOrder = function (message) {
       break;
     }
     case failedCheckOutStatus: {
+      document.cookie="spt_mgt_mpt_crt_scs_msg=false";
+
       if (hidePopup && popup) {
         popup = false;
         document.getElementById('closeiframebtn').click();
