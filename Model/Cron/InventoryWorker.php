@@ -102,7 +102,7 @@ class InventoryWorker
         $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
 
-        $hourAgo = date("Y-m-d H:i:s", strtotime("-20 minutes"));
+        $hourAgo = date("Y-m-d H:i:s", strtotime("-2 minutes"));
         $hourAgo = date('Y-m-d H:i:s', strtotime($hourAgo));
 
         $today = date('Y-m-d H:i:s', strtotime($today));
@@ -167,7 +167,7 @@ class InventoryWorker
                         $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_CANCELED);
                         $this->invoiceRepository->save($invoice);
                     endforeach;
-                    $order->setState('closed')->setStatus('cancelled');
+                    $order->setState('closed')->setStatus('closed');
                     $order->save();
                     
             }else if($paymentMethod == self::PAYMENT_CODE){
