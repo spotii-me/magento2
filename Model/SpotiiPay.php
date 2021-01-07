@@ -471,11 +471,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @param $reference
      * @return mixed
      */
-<<<<<<< HEAD
-    public function createTransaction($order, $reference, $type)
-=======
     public function createTransaction($order, $reference, $quote)
->>>>>>> parent of 366a787... Fix Khaadi order stockout issue
     {
         $this->spotiiHelper->logSpotiiActions("****Transaction start****");
         $this->spotiiHelper->logSpotiiActions("Order Id : " . $order->getId());
