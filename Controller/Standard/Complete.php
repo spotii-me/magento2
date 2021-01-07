@@ -55,6 +55,8 @@ class Complete extends SpotiiPay
                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
                 }; 
 
+                $quoteId = $quote->getId();
+
                 $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
                 $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
