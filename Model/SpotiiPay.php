@@ -482,14 +482,17 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $formattedPrice = $order->getBaseCurrency()->formatTxt(
             $order->getGrandTotal()
         );
+
+        $message = __('Payment processed for amount %1.', $formattedPrice);
+        $transactionId = $reference . '-' . $type;
        
-        if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
-            $message = __('Order placed for amount %1.', $formattedPrice);
-            $transactionId = $reference;
-        } else {
-            $message = __('Payment processed for amount %1.', $formattedPrice);
-            $transactionId = $reference . '-' . $type;
-        }
+        // if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
+        //     $message = __('Order placed for amount %1.', $formattedPrice);
+        //     $transactionId = $reference;
+        // } else {
+        //     $message = __('Payment processed for amount %1.', $formattedPrice);
+        //     $transactionId = $reference . '-' . $type;
+        // }
         $this->spotiiHelper->logSpotiiActions($message);
         $transaction = $this->_transactionBuilder->setPayment($payment)
             ->setOrder($order)
