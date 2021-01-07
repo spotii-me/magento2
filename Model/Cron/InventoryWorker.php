@@ -102,7 +102,7 @@ class InventoryWorker
         $yesterday = date("Y-m-d H:i:s", strtotime("-1 days"));
         $yesterday = date('Y-m-d H:i:s', strtotime($yesterday));
 
-        $hourAgo = date("Y-m-d H:i:s", strtotime("-1 hours"));
+        $hourAgo = date("Y-m-d H:i:s", strtotime("-20 minutes"));
         $hourAgo = date('Y-m-d H:i:s', strtotime($hourAgo));
 
         $today = date('Y-m-d H:i:s', strtotime($today));
@@ -163,11 +163,14 @@ class InventoryWorker
                         $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
                     }
                     $invoiceCollection = $order->getInvoiceCollection();
-                    foreach($invoiceCollection as $invoice):
-                        $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_CANCELED);
-                        $this->invoiceRepository->save($invoice);
-                    endforeach;
-                    $order->setState('closed')->setStatus('closed');
+                     foreach($invoiceCollection as $invoice):
+                         $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_CANCELED);
+                         $this->invoiceRepository->save($invoice);
+                     endforeach;
+//                     $order->setState('closed')->setStatus('closed');
+                     $order->setState("canceled")->setStatus("canceled");
+
+//                    $order->cancel();
                     $order->save();
                     
             }else if($paymentMethod == self::PAYMENT_CODE){

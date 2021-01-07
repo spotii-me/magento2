@@ -30,7 +30,8 @@ class Complete extends SpotiiPay
 
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
-            $order->setState('processing')->setStatus('paymentauthorised');
+            // Cozmada Request: set status paymentauthorised -> processing
+            $order->setState('processing')->setStatus('processing');
             $order->save();
 
             if ($order) {
