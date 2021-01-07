@@ -163,12 +163,14 @@ class InventoryWorker
                         $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
                     }
                     $invoiceCollection = $order->getInvoiceCollection();
-                    // foreach($invoiceCollection as $invoice):
-                    //     $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_CANCELED);
-                    //     $this->invoiceRepository->save($invoice);
-                    // endforeach;
-                    // $order->setState('closed')->setStatus('closed');
-                    $order->cancel();
+                     foreach($invoiceCollection as $invoice):
+                         $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_CANCELED);
+                         $this->invoiceRepository->save($invoice);
+                     endforeach;
+//                     $order->setState('closed')->setStatus('closed');
+                     $order->setState("canceled")->setStatus("canceled");
+
+//                    $order->cancel();
                     $order->save();
                     
             }else if($paymentMethod == self::PAYMENT_CODE){
