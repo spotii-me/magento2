@@ -30,17 +30,14 @@ class Complete extends SpotiiPay
 
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
-            $order->setState('processing')->setStatus('paymentauthorised');
-            $order->save();
+            $order->setState("paymentauthorised")->setStatus("paymentauthorised");
+            // $order->save();
 
             if ($order) {
-                
-                $this->_spotiipayModel->createTransaction(
-                    $order,
-                    $reference,
-                    \Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE
-                );
-                // $quote->collectTotals()->save();          
+                $this->_checkoutSession->setLastOrderId($order->getId())
+                    ->setLastRealOrderId($order->getIncrementId())
+                    ->setLastOrderStatus($order->getStatus());
+                $this->_spotiipayModel->createTransaction($order, $reference);
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email
