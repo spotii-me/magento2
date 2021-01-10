@@ -177,7 +177,7 @@ class PayloadBuilder
                 "title" => $productName,
                 "sku" => $productSku,
                 "quantity" => $productQuantity,
-                "price" => strval(round($item->getBaseGrandTotal(), self::PRECISION)),
+                "price" => strval(round($item->getGrandTotal(), self::PRECISION)),
                 "currency" => $currencyCode,
             ];
             array_push($itemPayload["order"]["lines"], $itemData);
