@@ -21,7 +21,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     const PAYMENT_CODE = 'spotiipay';
     const ADDITIONAL_INFORMATION_KEY_ORDERID = 'spotii_order_id';
     const SPOTII_CAPTURE_EXPIRY = 'spotii_capture_expiry';
-    
+
     /**
      * @var string
      */
@@ -232,7 +232,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     public function isOrderAmountMatched($magentoAmount, $spotiiAmount, $magentoCurrency, $spotiiCurrency)
     {
         $precision = \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION;
-  
+
             if ($spotiiCurrency != $magentoCurrency){
                  if($spotiiCurrency == "AED"){
                  switch($magentoCurrency){
@@ -241,16 +241,16 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
                      break;
                      case "SAR":
                          $magentoAmount=(round($magentoAmount, $precision))*0.9506 ;
-                     break;
-                     case "BHD":	
-                        $magentoAmount=(round($magentoAmount, $precision))*9.74;	
+                         break;
+                     case "BHD":
+                        $magentoAmount=(round($magentoAmount, $precision))*9.74;
                     break;
                  }
-              }  
+              }
                  if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) <6)){
                      return true;
                  }
-        
+
              }else if (round($spotiiAmount, $precision) == round($magentoAmount, $precision)){
                      return true;
              }else {
@@ -320,7 +320,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
-        
+
         $result = $this->getSpotiiOrderInfo($reference);
         $spotiiOrderTotal = isset($result['total']) ?
                                 $result['total'] :
@@ -435,8 +435,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @return $this
      * @throws LocalizedException
      */
-    
-    
+
+
     public function processBeforeRefund($invoice, $payment){}
     public function refund(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
@@ -489,7 +489,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $formattedPrice = $order->getBaseCurrency()->formatTxt(
             $order->getGrandTotal()
         );
-       
+
         if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
             $message = __('Order placed for amount %1.', $formattedPrice);
             $transactionId = $reference;
@@ -508,7 +508,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             $transaction,
             $message
        );
-    
+
         $payment->setParentTransactionId(null);
         $payment->save();
         // $quote->collectTotals()->save();

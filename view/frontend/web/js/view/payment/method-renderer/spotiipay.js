@@ -144,7 +144,7 @@ function removeOverlay() {
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
 
-//Google tag manager 
+//Google tag manager
 function onCheckout() {
   if (typeof dataLayer !== 'undefined') {
     // the variable is defined
@@ -287,7 +287,7 @@ define([
      */
     getGrandTotal: function () {
       var total = quote.getCalculatedTotal();
-      var format = window.checkoutConfig.priceFormat.pattern;
+      var format = window.checkoutConfig.basePriceFormat.pattern;
 
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
@@ -297,22 +297,22 @@ define([
           var installmentFeeLast =
             amount -
             installmentFee.toFixed(
-              window.checkoutConfig.priceFormat.precision
+              window.checkoutConfig.basePriceFormat.precision
             ) *
               3;
 
           $(".spotii-grand-total").text(
-            "Total : " +
+            "Total: " +
             format.replace(
               /%s/g,
-              amount.toFixed(window.checkoutConfig.priceFormat.precision)
+              amount.toFixed(window.checkoutConfig.basePriceFormat.precision)
             )
           );
           $(".spotii-installment-amount").text(
             format.replace(
               /%s/g,
               installmentFee.toFixed(
-                window.checkoutConfig.priceFormat.precision
+                window.checkoutConfig.basePriceFormat.precision
               )
             )
           );
@@ -320,7 +320,7 @@ define([
             format.replace(
               /%s/g,
               installmentFeeLast.toFixed(
-                window.checkoutConfig.priceFormat.precision
+                window.checkoutConfig.basePriceFormat.precision
               )
             )
           );
@@ -340,21 +340,21 @@ define([
     getPaymentText: function () {
       return "Payment Schedule";
     },
-    getTotalInvalidText: function () {	   
-      var curr = window.checkoutConfig.quoteData.quote_currency_code;	      
-      var min="200 AED";	    
-      switch(curr){	   
-        case "AED":	     
-          min="200 AED";	
-          break;	
-        case "SAR":	
-          min="200 SAR";	
-          break;	
-        case "BHD":	
-          min="20 BHD";	
-          break;	
-      }	
-        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over "+min+". With a little more shopping, you can split your payment over 4 cost-free instalments.");	
+    getTotalInvalidText: function () {
+      var curr = window.checkoutConfig.quoteData.quote_currency_code;
+      var min="200 AED";
+      switch(curr){
+        case "AED":
+            min="200 AED";
+            break;
+        case "SAR":
+            min="200 SAR";
+            break;
+        case "BHD":
+            min="20 BHD";
+            break;
+      }
+        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over "+min+". With a little more shopping, you can split your payment over 4 cost-free instalments.");
     },
     getQtyInvaildText: function () {
       document.getElementById('total-benchmark-info').textContent = "One or more of the items in your cart are out of stock.";
