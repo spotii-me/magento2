@@ -78,7 +78,7 @@ class PayloadBuilder
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference, $quote->getId());
         $cancelUrl = $this->spotiiApiConfig->getCancelUrl($orderId, $reference);
         $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
-        $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
+        $checkoutPayload["currency"] = $this->storeManager->getStore()->getBaseCurrencyCode();
         $checkoutPayload["description"] = $reference;
         $checkoutPayload["reference"] = $reference;
         $checkoutPayload["display_reference"] = $orderId;
@@ -167,7 +167,7 @@ class PayloadBuilder
      */
     private function buildItemPayload($quote)
     {
-        $currencyCode = $this->storeManager->getStore()->getCurrentCurrencyCode();
+        $currencyCode = $this->storeManager->getStore()->getBaseCurrencyCode();
         $itemPayload["order"]["lines"] = [];
         foreach ($quote->getAllVisibleItems() as $item) {
             $productName = $item->getName();
@@ -177,7 +177,7 @@ class PayloadBuilder
                 "title" => $productName,
                 "sku" => $productSku,
                 "quantity" => $productQuantity,
-                "price" => strval(round($item->getPriceInclTax(), self::PRECISION)),
+                "price" => strval(round($item->getBaseGrandTotal(), self::PRECISION)),
                 "currency" => $currencyCode,
             ];
             array_push($itemPayload["order"]["lines"], $itemData);
