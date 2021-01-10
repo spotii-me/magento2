@@ -472,7 +472,7 @@ define([
 
     isTotalValid: function () {
       var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
-      var curr = window.checkoutConfig.quoteData.base_currency_code;
+      var curr = window.checkoutConfig.quoteData.quote_currency_code;
       var min=200;
       switch(curr){
         case "USD":
