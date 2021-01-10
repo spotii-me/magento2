@@ -336,7 +336,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException(__('Invalid amount for capture.'));
         }
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
-        $currency =$payment->getOrder()->getGlobalCurrencyCode();
+        $currency =$payment->getOrder()->getOrderCurrencyCode();
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
@@ -349,6 +349,12 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $result['currency'] :
         null;
         $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
+        $this->spotiiHelper->logSpotiiActions("Spotii Order Currency : $spotiiOrderCurr");
+        $this->spotiiHelper->logSpotiiActions("this one not the other one");
+        $this->spotiiHelper->logSpotiiActions($payment->getOrder()->getOrderCurrencyCode());
+        $this->spotiiHelper->logSpotiiActions($payment->getOrder()->getBaseCurrencyCode());
+        $this->spotiiHelper->logSpotiiActions($payment->getOrder()->getGlobalCurrencyCode());
+
 
         if ($spotiiOrderTotal != null
             && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal, $currency, $spotiiOrderCurr)) {
