@@ -167,7 +167,7 @@ class PayloadBuilder
      */
     private function buildItemPayload($quote)
     {
-        $currencyCode = $this->storeManager->getStore()->getBaseCurrencyCode();
+        $currencyCode = $this->storeManager->getStore()->getCurrencyCode();
         $itemPayload["order"]["lines"] = [];
         foreach ($quote->getAllVisibleItems() as $item) {
             $productName = $item->getName();
