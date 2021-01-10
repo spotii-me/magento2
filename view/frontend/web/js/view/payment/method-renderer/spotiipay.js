@@ -476,11 +476,17 @@ define([
       var min=200;
       switch(curr){
         case "USD":
-          total= total*3.6730;
-          break;
+            total= total*3.6730;
+            break;
         case "BHD":
-          min= 20;
-          break;
+            min= 20;
+            break;
+        case "KWD":
+            min= 15;
+            break;
+        case "OMR":
+            min= 10;
+            break;
       }
       console.log(total+curr);
       if (total >= min) return true;
