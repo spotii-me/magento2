@@ -248,20 +248,25 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
 
         if ($spotiiCurrency != $magentoCurrency){
                  if($spotiiCurrency == "AED"){
-                 switch($magentoCurrency){
-                     case "USD":
-                         $this->spotiiHelper->logSpotiiActions("**** AAAAAAA ****");
-                        $magentoAmount=(round($magentoAmount, $precision))*3.6730 ;
-                     break;
-                     case "SAR":
-                         $this->spotiiHelper->logSpotiiActions("**** BBBBBB ****");
-                         $magentoAmount=(round($magentoAmount, $precision))*0.9506 ;
-                     break;
-                     case "BHD":
-                         $this->spotiiHelper->logSpotiiActions("**** CCCCC ****");
-                         $magentoAmount=(round($magentoAmount, $precision))*9.74;
-                    break;
-                 }
+                    $this->spotiiHelper->logSpotiiActions("**** CONV ****");
+                    $this->spotiiHelper->logSpotiiActions($spotiiAmount/$magentoAmount);
+                     $conversion = round($spotiiAmount/$magentoAmount, $precision);
+                     $magentoAmount=(round($magentoAmount, $precision))*$conversion;
+
+                //  switch($magentoCurrency){
+                //      case "USD":
+                //         $this->spotiiHelper->logSpotiiActions("**** AAAAAAA ****");
+                //         $magentoAmount=(round($magentoAmount, $precision))*3.6730 ;
+                //      break;
+                //      case "SAR":
+                //          $this->spotiiHelper->logSpotiiActions("**** BBBBBB ****");
+                //          $magentoAmount=(round($magentoAmount, $precision))*0.9506;
+                //      break;
+                //      case "BHD":
+                //          $this->spotiiHelper->logSpotiiActions("**** CCCCC ****");
+                //          $magentoAmount=(round($magentoAmount, $precision))*9.74;
+                //     break;
+                //  }
               }  
                  if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) < 6)){
                      $this->spotiiHelper->logSpotiiActions("**** DDDDDDDD ****");
