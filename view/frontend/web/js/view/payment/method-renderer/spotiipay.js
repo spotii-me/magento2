@@ -287,7 +287,7 @@ define([
      */
     getGrandTotal: function () {
       var total = quote.getCalculatedTotal();
-      var format = window.checkoutConfig.priceFormat.pattern;
+      var format = window.checkoutConfig.basePriceFormat.pattern;
 
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
@@ -297,7 +297,7 @@ define([
           var installmentFeeLast =
             amount -
             installmentFee.toFixed(
-              window.checkoutConfig.priceFormat.precision
+              window.checkoutConfig.basePriceFormat.precision
             ) *
               3;
 
@@ -305,14 +305,14 @@ define([
             "Total : " +
             format.replace(
               /%s/g,
-              amount.toFixed(window.checkoutConfig.priceFormat.precision)
+              amount.toFixed(window.checkoutConfig.basePriceFormat.precision)
             )
           );
           $(".spotii-installment-amount").text(
             format.replace(
               /%s/g,
               installmentFee.toFixed(
-                window.checkoutConfig.priceFormat.precision
+                window.checkoutConfig.basePriceFormat.precision
               )
             )
           );
@@ -320,7 +320,7 @@ define([
             format.replace(
               /%s/g,
               installmentFeeLast.toFixed(
-                window.checkoutConfig.priceFormat.precision
+                window.checkoutConfig.basePriceFormat.precision
               )
             )
           );
@@ -341,7 +341,7 @@ define([
       return "Payment Schedule";
     },
     getTotalInvalidText: function () {	   
-      var curr = window.checkoutConfig.quoteData.quote_currency_code;	      
+      var curr = window.checkoutConfig.quoteData.base_currency_code;	      
       var min="200 AED";	    
       switch(curr){	   
         case "AED":	     
@@ -352,9 +352,15 @@ define([
           break;	
         case "BHD":	
           min="20 BHD";	
+          break;
+        case "KWD":
+          min="15 KWD";
+          break;
+        case "OMR":
+          min="10 OMR";
           break;	
       }	
-        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over "+min+". With a little more shopping, you can split your payment over 4 cost-free instalments.");	
+        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over "+min+" (excluding shipping). With a little more shopping, you can split your payment over 4 cost-free instalments.");	
     },
     getQtyInvaildText: function () {
       document.getElementById('total-benchmark-info').textContent = "One or more of the items in your cart are out of stock.";
@@ -474,6 +480,12 @@ define([
           break;
         case "BHD":
           min= 20;
+          break;
+        case "KWD":
+          min=15;
+          break;
+        case "OMR":
+          min=10;
           break;
       }
       console.log(total+curr);

@@ -232,29 +232,34 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     public function isOrderAmountMatched($magentoAmount, $spotiiAmount, $magentoCurrency, $spotiiCurrency)
     {
         $precision = \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION;
-  
-            if ($spotiiCurrency != $magentoCurrency){
+
+        if ($spotiiCurrency != $magentoCurrency){
                  if($spotiiCurrency == "AED"){
-                 switch($magentoCurrency){
-                     case "USD":
-                        $magentoAmount=(round($magentoAmount, $precision))*3.6730 ;
-                     break;
-                     case "SAR":
-                         $magentoAmount=(round($magentoAmount, $precision))*0.9506 ;
-                     break;
-                     case "BHD":	
-                        $magentoAmount=(round($magentoAmount, $precision))*9.74;	
-                    break;
-                 }
+                    $this->spotiiHelper->logSpotiiActions($spotiiAmount/$magentoAmount);
+                     $conversion = round($spotiiAmount/$magentoAmount, $precision);
+                     $magentoAmount=(round($magentoAmount, $precision))*$conversion;
+
+                //  switch($magentoCurrency){
+                //      case "USD":
+                //         $magentoAmount=(round($magentoAmount, $precision))*3.6730 ;
+                //      break;
+                //      case "SAR":
+                //          $magentoAmount=(round($magentoAmount, $precision))*0.9506;
+                //      break;
+                //      case "BHD":
+                //          $magentoAmount=(round($magentoAmount, $precision))*9.74;
+                //     break;
+                //  }
               }  
-                 if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) <6)){
+                 if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) < 6)){
                      return true;
                  }
         
              }else if (round($spotiiAmount, $precision) == round($magentoAmount, $precision)){
-                     return true;
+                return true;
              }else {
-                     return false;
+
+                return false;
              }
     }
 
@@ -316,7 +321,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException(__('Invalid amount for capture.'));
         }
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
-        $currency =$payment->getOrder()->getGlobalCurrencyCode();
+        $currency =$payment->getOrder()->getOrderCurrencyCode();
         $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
         $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
@@ -329,6 +334,12 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $result['currency'] :
         null;
         $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
+        $this->spotiiHelper->logSpotiiActions("Spotii Order Currency : $spotiiOrderCurr");
+        $this->spotiiHelper->logSpotiiActions("this one not the other one");
+        $this->spotiiHelper->logSpotiiActions($payment->getOrder()->getOrderCurrencyCode());
+        $this->spotiiHelper->logSpotiiActions($payment->getOrder()->getBaseCurrencyCode());
+        $this->spotiiHelper->logSpotiiActions($payment->getOrder()->getGlobalCurrencyCode());
+
 
         if ($spotiiOrderTotal != null
             && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal, $currency, $spotiiOrderCurr)) {
