@@ -87,11 +87,6 @@ class PayloadBuilder
         // $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
         $checkoutPayload["total"] = strval(round($quote->getBaseGrandTotal(), self::PRECISION));
         // $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
-        $this->spotiiHelper->logSpotiiActions("zzzzzzzzzzzzzzzzzzzzzzzzz");
-        $this->spotiiHelper->logSpotiiActions($checkoutPayload["total"] );
-        $this->spotiiHelper->logSpotiiActions("zzzzzzzzzzzzzzzzzzzzzzzzz");
-
-
         $checkoutPayload["currency"] = 'AED';
         $checkoutPayload["description"] = $reference;
         $checkoutPayload["reference"] = $reference;
