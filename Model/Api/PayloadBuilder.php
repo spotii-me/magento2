@@ -25,18 +25,25 @@ class PayloadBuilder
      * @var StoreManagerInterface
      */
     private $storeManager;
+    /**
+     * @var \Spotii\Spotiipay\Helper\Data
+     */
+    protected $spotiiHelper;
 
     /**
      * PayloadBuilder constructor.
      * @param ConfigInterface $spotiiApiConfig
      * @param StoreManagerInterface $storeManager
+     * @param \Spotii\Spotiipay\Helper\Data $spotiiHelper
      */
     public function __construct(
         ConfigInterface $spotiiApiConfig,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        \Spotii\Spotiipay\Helper\Data $spotiiHelper,
     ) {
         $this->spotiiApiConfig = $spotiiApiConfig;
         $this->storeManager = $storeManager;
+        $this->spotiiHelper = $spotiiHelper;
     }
 
     /**
@@ -77,8 +84,14 @@ class PayloadBuilder
         $orderId = $quote->getReservedOrderId();
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference, $quote->getId());
         $cancelUrl = $this->spotiiApiConfig->getCancelUrl($orderId, $reference);
-        $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
+        // $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
+        $checkoutPayload["total"] = strval(round($quote->getBaseGrandTotal(), self::PRECISION));
         // $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
+        $this->spotiiHelper->logSpotiiActions("zzzzzzzzzzzzzzzzzzzzzzzzz");
+        $this->spotiiHelper->logSpotiiActions($checkoutPayload["total"] );
+        $this->spotiiHelper->logSpotiiActions("zzzzzzzzzzzzzzzzzzzzzzzzz");
+
+
         $checkoutPayload["currency"] = 'AED';
         $checkoutPayload["description"] = $reference;
         $checkoutPayload["reference"] = $reference;
