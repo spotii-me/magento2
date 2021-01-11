@@ -39,7 +39,7 @@ class PayloadBuilder
     public function __construct(
         ConfigInterface $spotiiApiConfig,
         StoreManagerInterface $storeManager,
-        \Spotii\Spotiipay\Helper\Data $spotiiHelper,
+        \Spotii\Spotiipay\Helper\Data $spotiiHelper
     ) {
         $this->spotiiApiConfig = $spotiiApiConfig;
         $this->storeManager = $storeManager;
