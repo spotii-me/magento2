@@ -31,7 +31,7 @@ define([
 
             var script = document.createElement('script');
             script.type = 'text/javascript';
-            script.src = 'https://widget.spotii.me/v1/javascript/price-widget0Ahmed.js?uuid=' + document.spotiiConfig.merchantID;
+            script.src = 'https://widget.spotii.me/v1c /javascript/price-widgetbalmess1' + document.spotiiConfig.merchantID;
             $("head").append(script);
 
             console.log("dom loaded");
