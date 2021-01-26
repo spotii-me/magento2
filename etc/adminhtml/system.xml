@@ -35,6 +35,13 @@
                         <label>Title</label>
                         <config_path>payment/spotiipay/title</config_path>
                     </field>
+                    <!-- radio-button -->
+                    <field id="radioBtn" translate="label" type="radios" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Currency</label>
+                        <comment>Choose a currency to checkout with</comment>
+                        <config_path>payment/spotiipay/radioBtn</config_path>
+                        <source_model>Spotii\Spotiipay\Model\Config\Source\Payment</source_model>
+                    </field>
                     <!-- private key -->
                     <field id="private_key" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Private Key</label>
