@@ -11,9 +11,11 @@ namespace Spotii\Spotiipay\Model\Config\Source\Payment;
  * Class Mode
  * @package Spotii\Spotiipay\Model\Config\Source\Payment
  */
-
-class RadioBtn implements \Magento\Framework\Option\ArrayInterface
+class Currency implements \Magento\Framework\Option\ArrayInterface
 {
+    /**
+     * @return array
+     */
     public function toOptionArray()
     {
         return [

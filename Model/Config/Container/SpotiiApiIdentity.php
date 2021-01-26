@@ -20,7 +20,7 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     const XML_PATH_MERCHANT_ID = 'payment/spotiipay/merchant_id';
     const XML_PATH_LOG_TRACKER = 'payment/spotiipay/log_tracker';
     const XML_PATH_PAYMENT_ACTION = 'payment/spotiipay/payment_action';
-    const XML_PATH_RADIO_OPTION = 'payment/spotiipay/radioBtn';
+    const XML_PATH_CURRENCY_OPTION = 'payment/spotiipay/baseOrder';
 
 
     private $checkoutUrlLive = "https://api.spotii.me";
@@ -79,10 +79,8 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
      */
     public function getCurrencyCode()
     {
-        $this->spotiiHelper->logSpotiiActions("****In getCurrencyCode function****");
-        $this->spotiiHelper->logSpotiiActions(self::XML_PATH_RADIO_OPTION);
         return $this->getConfigValue(
-            self::XML_PATH_RADIO_OPTION,
+            self::XML_PATH_CURRENCY_OPTION,
             $this->getStore()->getStoreId()
         );
     }

@@ -36,7 +36,7 @@
                         <config_path>payment/spotiipay/title</config_path>
                     </field>
                     <!-- radio-button -->
-                    <field id="radioBtn" translate="label" type="radios" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="baseOrder" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Currency</label>
                         <comment>Choose a currency to checkout with</comment>
                         <config_path>payment/spotiipay/radioBtn</config_path>
