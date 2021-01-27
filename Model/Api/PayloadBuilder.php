@@ -194,7 +194,7 @@ class PayloadBuilder
     private function buildItemPayload($quote)
     {
         $this->spotiiHelper->logSpotiiActions("About to enter IF buildItemPayload");
-        if($this->spotiiApiConfigInterface->getCurrency()){
+        if($this->spotiiApiConfigInterface->getCurrency() == 'order'){
             $this->spotiiHelper->logSpotiiActions("in IF block of buildItemPayload");
             $currencyCode = $this->storeManager->getStore()->getOrderCurrencyCode();
             $this->spotiiHelper->logSpotiiActions($currencyCode);
