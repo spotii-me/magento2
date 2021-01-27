@@ -36,23 +36,35 @@
                         <config_path>payment/spotiipay/title</config_path>
                     </field>
                     <!-- radio-button -->
-                    <field id="currency" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <field id="currency" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Currency</label>
                         <comment>Choose a currency to checkout with</comment>
                         <config_path>payment/spotiipay/currency</config_path>
                         <source_model>Spotii\Spotiipay\Model\Config\Source\Payment\Currency</source_model>
                     </field>
-                    <!-- private key -->
-                    <field id="private_key" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Private Key</label>
+                    <!-- private key one -->
+                    <field id="private_key_one" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Private Key One</label>
                         <comment>Look for this in your Spotii Dashboard</comment>
-                        <config_path>payment/spotiipay/private_key</config_path>
+                        <config_path>payment/spotiipay/private_key_one</config_path>
                     </field>
-                    <!-- public key -->
-                    <field id="public_key" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Public Key</label>
+                    <!-- public key one -->
+                    <field id="public_key_one" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Public Key One</label>
                         <comment>Look for this in your Spotii Dashboard</comment>
-                        <config_path>payment/spotiipay/public_key</config_path>
+                        <config_path>payment/spotiipay/public_key_one</config_path>
+                    </field>
+                    <!-- private key one -->
+                    <field id="private_key_two" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Private Key Two</label>
+                        <comment>Enter if you have KSA account with Spotii</comment>
+                        <config_path>payment/spotiipay/private_key_two</config_path>
+                    </field>
+                    <!-- public key one -->
+                    <field id="public_key_two" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Public Key Two</label>
+                        <comment>Look for this in your Spotii Dashboard</comment>
+                        <config_path>Enter if you have KSA account with Spotii</config_path>
                     </field>
                     <!-- merchant id -->
                     <field id="merchant_id" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">

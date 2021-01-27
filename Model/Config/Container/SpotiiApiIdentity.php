@@ -13,10 +13,12 @@ namespace Spotii\Spotiipay\Model\Config\Container;
  */
 class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
 {
-    const XML_PATH_PUBLIC_KEY = 'payment/spotiipay/public_key';
+    const XML_PATH_PUBLIC_KEY_ONE = 'payment/spotiipay/public_key_one';
+    const XML_PATH_PUBLIC_KEY_TWO = 'payment/spotiipay/public_key_two';
     const XML_PATH_PAYMENT_ACTIVE = 'payment/spotiipay/active';
     const XML_PATH_PAYMENT_MODE = 'payment/spotiipay/payment_mode';
-    const XML_PATH_PRIVATE_KEY = 'payment/spotiipay/private_key';
+    const XML_PATH_PRIVATE_KEY_ONE = 'payment/spotiipay/private_key_one';
+    const XML_PATH_PRIVATE_KEY_TWO = 'payment/spotiipay/private_key_two';
     const XML_PATH_MERCHANT_ID = 'payment/spotiipay/merchant_id';
     const XML_PATH_LOG_TRACKER = 'payment/spotiipay/log_tracker';
     const XML_PATH_PAYMENT_ACTION = 'payment/spotiipay/payment_action';
@@ -43,10 +45,10 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     /**
      * @inheritdoc
      */
-    public function getPublicKey()
+    public function getCurrency()
     {
         return $this->getConfigValue(
-            self::XML_PATH_PUBLIC_KEY,
+            self::XML_PATH_CURRENCY,
             $this->getStore()->getStoreId()
         );
     }
@@ -54,12 +56,67 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     /**
      * @inheritdoc
      */
+    public function getPublicKey()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+        $currencyOrder = $currencysymbol->getStore()->getOrderCurrencyCode();
+        $currencyMode = $this->getCurrency();
+        switch ($currencyMode) {
+            case 'base':
+                return $this->getConfigValue(
+                    self::XML_PATH_PUBLIC_KEY_ONE,
+                    $this->getStore()->getStoreId()
+                );
+                break;
+            case 'order':
+                if ($currencyOrder == "SAR"){
+                    return $this->getConfigValue(
+                        self::XML_PATH_PUBLIC_KEY_TWO,
+                        $this->getStore()->getStoreId()
+                    );
+                }
+                else{
+                    return $this->getConfigValue(
+                        self::XML_PATH_PUBLIC_KEY_ONE,
+                        $this->getStore()->getStoreId()
+                    );
+                }
+                break;
+        }
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getPrivateKey()
     {
-        return $this->getConfigValue(
-            self::XML_PATH_PRIVATE_KEY,
-            $this->getStore()->getStoreId()
-        );
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+        $currencyOrder = $currencysymbol->getStore()->getOrderCurrencyCode();
+        $currencyMode = $this->getCurrency();
+        switch ($currencyMode) {
+            case 'base':
+                return $this->getConfigValue(
+                    self::XML_PATH_PRIVATE_KEY_ONE,
+                    $this->getStore()->getStoreId()
+                );
+                break;
+            case 'order':
+                if ($currencyOrder == "SAR"){
+                    return $this->getConfigValue(
+                        self::XML_PATH_PRIVATE_KEY_TWO,
+                        $this->getStore()->getStoreId()
+                    );
+                }
+                else{
+                    return $this->getConfigValue(
+                        self::XML_PATH_PRIVATE_KEY_ONE,
+                        $this->getStore()->getStoreId()
+                    );
+                }
+                break;
+        }
     }
 
     /**
@@ -142,14 +199,4 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getCurrency()
-    {
-        return $this->getConfigValue(
-            self::XML_PATH_CURRENCY,
-            $this->getStore()->getStoreId()
-        );
-    }
 }
