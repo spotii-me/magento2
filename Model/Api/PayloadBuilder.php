@@ -16,7 +16,6 @@ use Magento\Store\Model\StoreManagerInterface;
 class PayloadBuilder
 {
     const PRECISION = 4;
-    const XML_PATH_CURRENCY = 'payment/spotiipay/currency';
 
     /**
      * @var ConfigInterface
@@ -77,9 +76,10 @@ class PayloadBuilder
     {
         $orderId = $quote->getReservedOrderId();
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference, $quote->getId());
+        $currencyToBeUsed = $this->spotiiApiConfig->getCurrencyCode();
         $cancelUrl = $this->spotiiApiConfig->getCancelUrl($orderId, $reference);
         $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
-        if(XML_PATH_CURRENCY == "order"){
+        if($currencyToBeUsed){
             $checkoutPayload["currency"] = $this->storeManager->getStore()->getOrderCurrencyCode();
         }
         else{
@@ -173,7 +173,8 @@ class PayloadBuilder
      */
     private function buildItemPayload($quote)
     {
-        if(XML_PATH_CURRENCY == "order"){
+        $currencyToBeUsed = $this->spotiiApiConfig->getCurrencyCode();
+        if($currencyToBeUsed){
             $currencyCode = $this->storeManager->getStore()->getOrderCurrencyCode();
         }
         else{

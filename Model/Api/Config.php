@@ -121,6 +121,16 @@ class Config implements ConfigInterface
     }
 
     /**
+     * Get selected checkout currency
+     * @return currencyCode
+     */
+    public function getCheckoutCurrency()
+    {
+        $currencyValue = $this->spotiiApiIdentity->getCurrency();
+        return $currencyValue;
+    }
+
+    /**
      * Get cancel url
      * @return mixed
      */
