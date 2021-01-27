@@ -16,6 +16,7 @@ use Magento\Store\Model\StoreManagerInterface;
 class PayloadBuilder
 {
     const PRECISION = 4;
+    const XML_PATH_CURRENCY = 'payment/spotiipay/currency';
 
     /**
      * @var ConfigInterface
@@ -78,7 +79,12 @@ class PayloadBuilder
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference, $quote->getId());
         $cancelUrl = $this->spotiiApiConfig->getCancelUrl($orderId, $reference);
         $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
-        $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
+        if(XML_PATH_CURRENCY == "order"){
+            $checkoutPayload["currency"] = $this->storeManager->getStore()->getOrderCurrencyCode();
+        }
+        else{
+            $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
+        }
         $checkoutPayload["description"] = $reference;
         $checkoutPayload["reference"] = $reference;
         $checkoutPayload["display_reference"] = $orderId;
@@ -167,7 +173,12 @@ class PayloadBuilder
      */
     private function buildItemPayload($quote)
     {
-        $currencyCode = $this->storeManager->getStore()->getCurrentCurrencyCode();
+        if(XML_PATH_CURRENCY == "order"){
+            $currencyCode = $this->storeManager->getStore()->getOrderCurrencyCode();
+        }
+        else{
+            $currencyCode = $this->storeManager->getStore()->getCurrentCurrencyCode();
+        }
         $itemPayload["order"]["lines"] = [];
         foreach ($quote->getAllVisibleItems() as $item) {
             $productName = $item->getName();

@@ -44,27 +44,27 @@
                     </field>
                     <!-- private key one -->
                     <field id="private_key_one" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Private Key One</label>
+                        <label>Default Private Key</label>
                         <comment>Look for this in your Spotii Dashboard</comment>
                         <config_path>payment/spotiipay/private_key_one</config_path>
                     </field>
                     <!-- public key one -->
                     <field id="public_key_one" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                        <label>Public Key One</label>
+                        <label>Default Public Key</label>
                         <comment>Look for this in your Spotii Dashboard</comment>
                         <config_path>payment/spotiipay/public_key_one</config_path>
                     </field>
-                    <!-- private key one -->
+                    <!-- private key two -->
                     <field id="private_key_two" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Private Key Two</label>
                         <comment>Enter if you have KSA account with Spotii</comment>
                         <config_path>payment/spotiipay/private_key_two</config_path>
                     </field>
-                    <!-- public key one -->
+                    <!-- public key two -->
                     <field id="public_key_two" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Public Key Two</label>
-                        <comment>Look for this in your Spotii Dashboard</comment>
-                        <config_path>Enter if you have KSA account with Spotii</config_path>
+                        <comment>Enter if you have KSA account with Spotii</comment>
+                        <config_path>payment/spotiipay/public_key_two</config_path>
                     </field>
                     <!-- merchant id -->
                     <field id="merchant_id" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
