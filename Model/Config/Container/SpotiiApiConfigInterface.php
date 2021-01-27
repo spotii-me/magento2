@@ -35,17 +35,15 @@ interface SpotiiApiConfigInterface extends IdentityInterface
     public function getPaymentMode();
 
     /**
+     * Get checkout currency
+     * @return mixed
+     */
+    public function getCurrency();
+
+    /**
      * Get Merchant Id
      * @return mixed
      */
-
-    public function getCurrencyCode();
-
-    /**
-     * Get Currency Code (Base or Order)
-     * @return mixed
-     */
-
     public function getMerchantId();
 
     /**
