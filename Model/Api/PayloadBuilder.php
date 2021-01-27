@@ -8,6 +8,7 @@
 namespace Spotii\Spotiipay\Model\Api;
 
 use Magento\Store\Model\StoreManagerInterface;
+use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
 
 /**
  * Class PayloadBuilder
@@ -25,18 +26,25 @@ class PayloadBuilder
      * @var StoreManagerInterface
      */
     private $storeManager;
+    /**
+     * @var SpotiiApiConfigInterface
+     */
+    private $spotiiApiConfigInterface;
 
     /**
      * PayloadBuilder constructor.
      * @param ConfigInterface $spotiiApiConfig
      * @param StoreManagerInterface $storeManager
+     * @param SpotiiApiConfigInterface $spotiiApiConfigInterface
      */
     public function __construct(
         ConfigInterface $spotiiApiConfig,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        SpotiiApiConfigInterface $spotiiApiConfigInterface
     ) {
         $this->spotiiApiConfig = $spotiiApiConfig;
         $this->storeManager = $storeManager;
+        $this->spotiiApiConfigInterface = $spotiiApiConfigInterface;
     }
 
     /**
@@ -76,14 +84,18 @@ class PayloadBuilder
     {
         $orderId = $quote->getReservedOrderId();
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference, $quote->getId());
-        $currencyToBeUsed = $this->spotiiApiConfig->getCurrencyCode();
         $cancelUrl = $this->spotiiApiConfig->getCancelUrl($orderId, $reference);
         $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
-        if($currencyToBeUsed){
+        $this->spotiiHelper->logSpotiiActions("About to enter IF of buildCheckoutPayload statement");
+        if($this->spotiiApiConfigInterface->getCurrency() == 'order'){
+            $this->spotiiHelper->logSpotiiActions("In order block");
             $checkoutPayload["currency"] = $this->storeManager->getStore()->getOrderCurrencyCode();
+            $this->spotiiHelper->logSpotiiActions($checkoutPayload["currency"]);
         }
         else{
+            $this->spotiiHelper->logSpotiiActions("In else block");
             $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
+            $this->spotiiHelper->logSpotiiActions($checkoutPayload["currency"]);
         }
         $checkoutPayload["description"] = $reference;
         $checkoutPayload["reference"] = $reference;
@@ -173,12 +185,16 @@ class PayloadBuilder
      */
     private function buildItemPayload($quote)
     {
-        $currencyToBeUsed = $this->spotiiApiConfig->getCurrencyCode();
-        if($currencyToBeUsed){
+        $this->spotiiHelper->logSpotiiActions("About to enter IF buildItemPayload");
+        if($this->spotiiApiConfigInterface->getCurrency()){
+            $this->spotiiHelper->logSpotiiActions("in IF block of buildItemPayload");
             $currencyCode = $this->storeManager->getStore()->getOrderCurrencyCode();
+            $this->spotiiHelper->logSpotiiActions($currencyCode);
         }
         else{
+            $this->spotiiHelper->logSpotiiActions("in ELSE block of buildItemPayload");
             $currencyCode = $this->storeManager->getStore()->getCurrentCurrencyCode();
+            $this->spotiiHelper->logSpotiiActions($currencyCode);
         }
         $itemPayload["order"]["lines"] = [];
         foreach ($quote->getAllVisibleItems() as $item) {

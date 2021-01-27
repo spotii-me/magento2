@@ -120,15 +120,6 @@ class Config implements ConfigInterface
         return $this->urlBuilder->getUrl("spotiipay/standard/complete/id/$orderId/magento_spotii_id/$reference/quote_id/$quoteId", ['_secure' => true]);
     }
 
-    /**
-     * Get selected checkout currency
-     * @return currencyCode
-     */
-    public function getCheckoutCurrency()
-    {
-        $currencyValue = $this->spotiiApiIdentity->getCurrency();
-        return $currencyValue;
-    }
 
     /**
      * Get cancel url
