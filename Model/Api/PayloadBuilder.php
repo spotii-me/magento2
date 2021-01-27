@@ -8,6 +8,7 @@
 namespace Spotii\Spotiipay\Model\Api;
 
 use Magento\Store\Model\StoreManagerInterface;
+use Spotii\Spotiipay\Helper\Data as SpotiiHelper;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
 
 /**
@@ -30,21 +31,28 @@ class PayloadBuilder
      * @var SpotiiApiConfigInterface
      */
     private $spotiiApiConfigInterface;
+    /**
+     * @var SpotiiHelper
+     */
+    private $spotiiHelper;
 
     /**
      * PayloadBuilder constructor.
      * @param ConfigInterface $spotiiApiConfig
      * @param StoreManagerInterface $storeManager
      * @param SpotiiApiConfigInterface $spotiiApiConfigInterface
+     * @param SpotiiHelper $spotiiHelper
      */
     public function __construct(
         ConfigInterface $spotiiApiConfig,
         StoreManagerInterface $storeManager,
-        SpotiiApiConfigInterface $spotiiApiConfigInterface
+        SpotiiApiConfigInterface $spotiiApiConfigInterface,
+        SpotiiHelper $spotiiHelper
     ) {
         $this->spotiiApiConfig = $spotiiApiConfig;
         $this->storeManager = $storeManager;
         $this->spotiiApiConfigInterface = $spotiiApiConfigInterface;
+        $this->spotiiHelper = $spotiiHelper;
     }
 
     /**
