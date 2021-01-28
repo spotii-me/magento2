@@ -53,12 +53,11 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
         );
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getCurrentCurrency(){
+    public function getOrderCurrency(){
         $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        return $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()->getCurrentCurrencyCode();
+        $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
+        $currencyOrder = $currencysymbol->getStore()->getOrderCurrencyCode();
+        return $currencyOrder;
     }
 
     /**
@@ -73,8 +72,8 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
                     $this->getStore()->getStoreId()
                 );
                 break;
-            case 'current':
-                if ($this->getCurrentCurrency() == "SAR"){
+            case 'order':
+                if ($this->getOrderCurrency() == "SAR"){
                     return $this->getConfigValue(
                         self::XML_PATH_PUBLIC_KEY_TWO,
                         $this->getStore()->getStoreId()
@@ -101,8 +100,8 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
                     $this->getStore()->getStoreId()
                 );
                 break;
-            case 'current':
-                if ($this->getCurrentCurrency() == "SAR"){
+            case 'order':
+                if ($this->getOrderCurrency() == "SAR"){
                     return $this->getConfigValue(
                         self::XML_PATH_PRIVATE_KEY_TWO,
                         $this->getStore()->getStoreId()
