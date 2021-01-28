@@ -120,7 +120,6 @@ class Config implements ConfigInterface
         return $this->urlBuilder->getUrl("spotiipay/standard/complete/id/$orderId/magento_spotii_id/$reference/quote_id/$quoteId", ['_secure' => true]);
     }
 
-
     /**
      * Get cancel url
      * @return mixed
