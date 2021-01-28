@@ -24,8 +24,8 @@ class Currency implements \Magento\Framework\Option\ArrayInterface
                 'label' => 'Base Currency',
             ],
             [
-                'value' => 'order',
-                'label' => 'Order Currency',
+                'value' => 'current',
+                'label' => 'Current Currency',
             ]
         ];
     }

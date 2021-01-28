@@ -56,21 +56,25 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     /**
      * @inheritdoc
      */
+    public function getCurrentCurrency(){
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        return $objectManager->get('Magento\Store\Model\StoreManagerInterface')->getStore()->getCurrentCurrencyCode();
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function getPublicKey()
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
-        $currencyOrder = $currencysymbol->getStore()->getOrderCurrencyCode();
-        $currencyMode = $this->getCurrency();
-        switch ($currencyMode) {
+        switch ($this->getCurrency()) {
             case 'base':
                 return $this->getConfigValue(
                     self::XML_PATH_PUBLIC_KEY_ONE,
                     $this->getStore()->getStoreId()
                 );
                 break;
-            case 'order':
-                if ($currencyOrder == "SAR"){
+            case 'current':
+                if ($this->getCurrentCurrency() == "SAR"){
                     return $this->getConfigValue(
                         self::XML_PATH_PUBLIC_KEY_TWO,
                         $this->getStore()->getStoreId()
@@ -82,7 +86,6 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
                         $this->getStore()->getStoreId()
                     );
                 }
-                break;
         }
     }
 
@@ -91,19 +94,15 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
      */
     public function getPrivateKey()
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
-        $currencyOrder = $currencysymbol->getStore()->getOrderCurrencyCode();
-        $currencyMode = $this->getCurrency();
-        switch ($currencyMode) {
+        switch ($this->getCurrency()) {
             case 'base':
                 return $this->getConfigValue(
                     self::XML_PATH_PRIVATE_KEY_ONE,
                     $this->getStore()->getStoreId()
                 );
                 break;
-            case 'order':
-                if ($currencyOrder == "SAR"){
+            case 'current':
+                if ($this->getCurrentCurrency() == "SAR"){
                     return $this->getConfigValue(
                         self::XML_PATH_PRIVATE_KEY_TWO,
                         $this->getStore()->getStoreId()
@@ -115,7 +114,6 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
                         $this->getStore()->getStoreId()
                     );
                 }
-                break;
         }
     }
 

@@ -70,4 +70,10 @@ interface SpotiiApiConfigInterface extends IdentityInterface
      */
     public function getPaymentAction();
 
+    /**
+     * Get current currency code of magento store
+     * @return mixed
+     */
+    public function getCurrentCurrency();
+
 }

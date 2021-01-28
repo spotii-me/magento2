@@ -63,7 +63,7 @@
                     <!-- public key one -->
                     <field id="public_key_two" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Public Key Two</label>
-                        <comment>Look for this in your Spotii Dashboard</comment>
+                        <comment>Enter if you have KSA account with Spotii</comment>
                         <config_path>Enter if you have KSA account with Spotii</config_path>
                     </field>
                     <!-- merchant id -->
