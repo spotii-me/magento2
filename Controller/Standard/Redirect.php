@@ -65,6 +65,14 @@ class Redirect extends SpotiiPay
         $jsonResult = $this->_resultJsonFactory->create();
         $jsonResult->setData($json);
 
+        // Create "pending" order before redirect to Spotii
+        $quoteId = $quote->getId();
+        $quote->collectTotals()->save();        // **
+        $order = $this->_quoteManagement->submit($quote);        
+        $order->setState("pending")->setStatus("pending");
+        $order->save(); // **
+        $this->_checkoutSession->setLastQuoteId($quoteId);
+
     }catch (\Magento\Framework\Exception\LocalizedException $e) {
         $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
         $this->messageManager->addError(
