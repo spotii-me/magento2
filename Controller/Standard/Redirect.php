@@ -69,12 +69,12 @@ class Redirect extends SpotiiPay
         $quoteId = $quote->getId();
             // **
        $quote->collectTotals()->save();
+        $orderOne = $this->_checkoutSession->getLastRealOrder();
+        $this->spotiiHelper->logSpotiiActions("getLastRealOrder Order object");
+        $this->spotiiHelper->logSpotiiActions($orderOne);
         $order = $this->_quoteManagement->submit($quote);
             $this->spotiiHelper->logSpotiiActions("Quote Order object");
             $this->spotiiHelper->logSpotiiActions($order);
-        $orderOne = $this->_checkoutSession->getLastRealOrder();
-            $this->spotiiHelper->logSpotiiActions("getLastRealOrder Order object");
-            $this->spotiiHelper->logSpotiiActions($orderOne);
         $invoiceCollection = $order->getInvoiceCollection();
         foreach($invoiceCollection as $invoice):
             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
