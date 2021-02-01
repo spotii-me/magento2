@@ -34,7 +34,7 @@ class Complete extends SpotiiPay
                 ->setLastSuccessQuoteId($quote->getId())
                 ->clearHelperData();
             $this->spotiiHelper->logSpotiiActions("Set data on checkout session");
-            
+
             $quote->collectTotals()->save();
             $this->spotiiHelper->logSpotiiActions("**Saved Data on Quote**");
             $order = $this->_quoteManagement->submit($quote);
@@ -53,10 +53,9 @@ class Complete extends SpotiiPay
                     $this->_orderSender->send($order);
                 } catch (\Exception $e) {
                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
-                }; 
-
-                $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
-                $this->_checkoutSession->setLastQuoteId($quoteId);
+                }
+                $this->_checkoutSession->setLastSuccessQuoteId($quote->getId());
+                $this->_checkoutSession->setLastQuoteId($quote->getId());
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
                 $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
                 $invoiceCollection = $order->getInvoiceCollection();
