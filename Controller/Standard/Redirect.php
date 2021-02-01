@@ -68,17 +68,13 @@ class Redirect extends SpotiiPay
         // Create "pending" order before redirect to Spotii
         $quoteId = $quote->getId();
               // **
-        $quote->collectTotals()->save();
+        $quote->collectTotals()->save();   
         $order = $this->_quoteManagement->submit($quote);
-
+        
         $invoiceCollection = $order->getInvoiceCollection();
-        $this->spotiiHelper->logSpotiiActions("****Invoice Collection Print****");
         foreach($invoiceCollection as $invoice):
             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
             $this->invoiceRepository->save($invoice);
-            $this->invoiceRepository->save($invoice);
-            $this->spotiiHelper->logSpotiiActions("Invoice Print");
-            $this->spotiiHelper->logSpotiiActions($invoice);
         endforeach;
         $reference = $payment->getAdditionalInformation('spotii_order_id');
         $this->_spotiipayModel->createTransaction(
@@ -86,7 +82,7 @@ class Redirect extends SpotiiPay
             $reference,
             \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
         );
-
+        
         $order->setState('new')->setStatus('pending');
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
