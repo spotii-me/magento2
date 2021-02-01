@@ -34,13 +34,13 @@ class Complete extends SpotiiPay
             $order->save();
 
             if ($order) {
-                
+
                 $this->_spotiipayModel->createTransaction(
                     $order,
                     $reference,
                     \Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE
                 );
-                // $quote->collectTotals()->save();          
+                // $quote->collectTotals()->save();
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email
@@ -48,17 +48,17 @@ class Complete extends SpotiiPay
                     $this->_orderSender->send($order);
                 } catch (\Exception $e) {
                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
-                }; 
+                };
 
                 $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
                 $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
                 $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
-                $invoiceCollection = $order->getInvoiceCollection();
-                foreach($invoiceCollection as $invoice):
-                    $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_PAID);
-                    $this->invoiceRepository->save($invoice);
-                endforeach;
+//                $invoiceCollection = $order->getInvoiceCollection();
+//                foreach($invoiceCollection as $invoice):
+//                    $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_PAID);
+//                    $this->invoiceRepository->save($invoice);
+//                endforeach;
                 $this->getResponse()->setRedirect(
                     $this->_url->getUrl('checkout/onepage/success')
                );
