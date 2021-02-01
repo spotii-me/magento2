@@ -65,21 +65,20 @@ class Redirect extends SpotiiPay
         $jsonResult = $this->_resultJsonFactory->create();
         $jsonResult->setData($json);
 
-//      Create "pending" order before redirect to Spotii
+        // Create "pending" order before redirect to Spotii
         $quoteId = $quote->getId();
-            // **
-       $quote->collectTotals()->save();
+              // **
+        $quote->collectTotals()->save();
         $order = $this->_quoteManagement->submit($quote);
-            $this->spotiiHelper->logSpotiiActions("Quote Order object");
-            $this->spotiiHelper->logSpotiiActions($order);
-        $orderOne = $this->_checkoutSession->getLastRealOrder();
-            $this->spotiiHelper->logSpotiiActions("getLastRealOrder Order object");
-            $this->spotiiHelper->logSpotiiActions($orderOne);
+
         $invoiceCollection = $order->getInvoiceCollection();
+        $this->spotiiHelper->logSpotiiActions("****Invoice Collection Print****");
         foreach($invoiceCollection as $invoice):
             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
             $this->invoiceRepository->save($invoice);
             $this->invoiceRepository->save($invoice);
+            $this->spotiiHelper->logSpotiiActions("Invoice Print");
+            $this->spotiiHelper->logSpotiiActions($invoice);
         endforeach;
         $reference = $payment->getAdditionalInformation('spotii_order_id');
         $this->_spotiipayModel->createTransaction(
