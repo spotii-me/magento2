@@ -71,7 +71,7 @@ class Redirect extends SpotiiPay
        $quote->collectTotals()->save();
         $orderOne = $this->_checkoutSession->getLastRealOrder();
         $this->spotiiHelper->logSpotiiActions("getLastRealOrder Order object");
-        $this->spotiiHelper->logSpotiiActions($orderOne);
+        $this->spotiiHelper->logSpotiiActions($orderOne->getEntityId());
         $order = $this->_quoteManagement->submit($quote);
             $this->spotiiHelper->logSpotiiActions("Quote Order object");
             $this->spotiiHelper->logSpotiiActions($order);
