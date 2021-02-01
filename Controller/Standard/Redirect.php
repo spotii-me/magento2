@@ -69,12 +69,14 @@ class Redirect extends SpotiiPay
         $quoteId = $quote->getId();
             // **
        $quote->collectTotals()->save();
-        $orderOne = $this->_checkoutSession->getLastRealOrder();
-        $this->spotiiHelper->logSpotiiActions("getLastRealOrder Order object");
-        $this->spotiiHelper->logSpotiiActions($orderOne->getIncrementId());
-        $order = $this->_quoteManagement->submit($quote);
-            $this->spotiiHelper->logSpotiiActions("Quote Order object");
-            $this->spotiiHelper->logSpotiiActions($order->getIncrementId());
+        $orderOne = $this->_checkoutSession->getLastRealOrder()->getEntityId();
+        $this->spotiiHelper->logSpotiiActions("getLastRealOrder getEntityId");
+        $this->spotiiHelper->logSpotiiActions($orderOne);
+        $order = $this->_quoteManagement->submit($quote)->setState('new')->setStatus('pending');
+            $this->spotiiHelper->logSpotiiActions("Quote Order State");
+            $this->spotiiHelper->logSpotiiActions($order->getState());
+            $this->spotiiHelper->logSpotiiActions("Quote Order Status");
+            $this->spotiiHelper->logSpotiiActions($order->getStatus());
         $invoiceCollection = $order->getInvoiceCollection();
         foreach($invoiceCollection as $invoice):
             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
@@ -88,7 +90,7 @@ class Redirect extends SpotiiPay
             \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
         );
 
-        $order->setState('new')->setStatus('pending');
+//        $order->setState('new')->setStatus('pending');
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
 
