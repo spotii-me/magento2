@@ -67,22 +67,17 @@ class Redirect extends SpotiiPay
 
 //      Create "pending" order before redirect to Spotii
         $quoteId = $quote->getId();
+        $quote->setInventoryProcessed(true);
             // **
-       $quote->collectTotals()->save();
-        $orderOne = $this->_checkoutSession->getLastRealOrder()->getEntityId();
-        $this->spotiiHelper->logSpotiiActions("getLastRealOrder getEntityId");
-        $this->spotiiHelper->logSpotiiActions($orderOne);
-        $order = $this->_quoteManagement->submit($quote)->setState('new')->setStatus('pending');
-            $this->spotiiHelper->logSpotiiActions("Quote Order State");
-            $this->spotiiHelper->logSpotiiActions($order->getState());
-            $this->spotiiHelper->logSpotiiActions("Quote Order Status");
-            $this->spotiiHelper->logSpotiiActions($order->getStatus());
-//        $invoiceCollection = $order->getInvoiceCollection();
-//        foreach($invoiceCollection as $invoice):
-//            $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
-//            $this->invoiceRepository->save($invoice);
-//            $this->invoiceRepository->save($invoice);
-//        endforeach;
+        $quote->collectTotals()->save();
+        $order = $this->_quoteManagement->submit($quote);
+
+        $invoiceCollection = $order->getInvoiceCollection();
+        foreach($invoiceCollection as $invoice):
+            $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
+            $this->invoiceRepository->save($invoice);
+            $this->invoiceRepository->save($invoice);
+        endforeach;
         $reference = $payment->getAdditionalInformation('spotii_order_id');
         $this->_spotiipayModel->createTransaction(
             $order,
