@@ -20,13 +20,13 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     const XML_PATH_MERCHANT_ID = 'payment/spotiipay/merchant_id';
     const XML_PATH_LOG_TRACKER = 'payment/spotiipay/log_tracker';
     const XML_PATH_PAYMENT_ACTION = 'payment/spotiipay/payment_action';
-    
-    
+
+
     private $checkoutUrlLive = "https://api.spotii.me";
-    private $checkoutUrlSandbox = "https://api.sandbox.spotii.me";
+    private $checkoutUrlSandbox = "https://api.dev.spotii.me";
 
     private $authUrlLive = "https://auth.spotii.me";
-    private $authtUrlSandbox = "https://auth.sandbox.spotii.me";
+    private $authtUrlSandbox = "https://auth.dev.spotii.me";
 
     /**
      * @inheritdoc
