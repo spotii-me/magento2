@@ -247,7 +247,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
                     break;
                  }
               }  
-                 if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) <6)){
+                 if(abs( round($spotiiAmount, $precision) - round($magentoAmount, $precision) <10)){
                      return true;
                  }
         
