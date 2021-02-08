@@ -77,11 +77,11 @@ class Redirect extends SpotiiPay
             $this->invoiceRepository->save($invoice);
         endforeach;
         $reference = $payment->getAdditionalInformation('spotii_order_id');
-        $this->_spotiipayModel->createTransaction(
+        /*$this->_spotiipayModel->createTransaction(
             $order,
             $reference,
             \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
-        );
+        );*/
         
         $order->setState('new')->setStatus('pending');
         $order->save(); // **
