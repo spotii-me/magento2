@@ -252,7 +252,6 @@ define([
   "Magento_Checkout/js/action/select-payment-method",
   "Magento_Ui/js/model/messageList",
   "Magento_Checkout/js/model/quote",
-  'Magento_Checkout/js/action/place-order',
 ], function (
   customer,
   resourceUrlManager,
@@ -267,8 +266,7 @@ define([
   selectPaymentMethodAction,
   globalMessageList,
   quote,
-  fancy, 
-  placeOrder
+  fancy
 ) {
   "use strict";
   return Component.extend({
@@ -481,7 +479,6 @@ define([
     },
 
     placeOrder: function (data, event) {
-      parent.placeOrder();
       this.continueToSpotiipay();
     },
   });

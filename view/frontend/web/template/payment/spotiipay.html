@@ -61,7 +61,7 @@
                     <button class="action primary checkout"
                             type="submit"
                             data-bind="
-                                click: placeOrder,
+                                click: continueToSpotiipay,
                                 attr: {title: $t('Continue to Spotii')},
                                 css: {disabled: !isPlaceOrderActionAllowed() || !isTotalValid()},
                                 enable: (getCode() == isChecked())
