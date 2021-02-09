@@ -48,7 +48,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     /**
      * @var bool
      */
-    protected $_canCapture = true;
+    protected $_canCapture = false;
     /**
      * @var bool
      */
@@ -290,6 +290,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         } else {
             $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+            $_canCapture = true;
             $this->spotiiHelper->logSpotiiActions("Authorization successful");
             $this->spotiiHelper->logSpotiiActions("Authorization end");
         }
@@ -305,8 +306,10 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
+        $this->spotiiHelper->logSpotiiActions("****Capture for no reason starts****");
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
         $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+        $this->spotiiHelper->logSpotiiActions("****Capture for no reason ends****");
     }
 
     public function capturePostSpotii(\Magento\Payment\Model\InfoInterface $payment, $amount)
