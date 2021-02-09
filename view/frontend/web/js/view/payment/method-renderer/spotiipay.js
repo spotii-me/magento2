@@ -253,7 +253,6 @@ define([
   "Magento_Ui/js/model/messageList",
   "Magento_Checkout/js/model/quote",
   "ko",
-  'Magento_Paypal/js/model/iframe',
 ], function (
   customer,
   resourceUrlManager,
@@ -270,12 +269,23 @@ define([
   quote,
   fancy,
   ko,
-  iframe
 ) {
   "use strict";
+  var isInAction = ko.observable(false);
   return Component.extend({
     defaults: {
       template: "Spotii_Spotiipay/payment/spotiipay",
+      paymentReady: false
+  },
+    redirectAfterPlaceOrder: false,
+    isInAction: isInAction,
+
+    /**
+     * @param {jQuery.Event} event
+     */
+    stopEventPropagation: function (event) {
+      event.stopImmediatePropagation();
+      event.preventDefault();
     },
 
     getSpotiipayImgSrc: function () {
@@ -484,9 +494,9 @@ define([
     placePendingPaymentOrder: function () {
       if (this.placeOrder()) {
           //fullScreenLoader.startLoader();
-          iframe.isInAction(true);
+          this.isInAction(true);
           // capture all click events
-          document.addEventListener('click', iframe.stopEventPropagation, true);
+          document.addEventListener('click', this.stopEventPropagation, true);
           this.continueToSpotiipay();
         }
   },
