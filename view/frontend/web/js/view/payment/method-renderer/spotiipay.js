@@ -267,7 +267,6 @@ define([
   selectPaymentMethodAction,
   globalMessageList,
   quote,
-  fancy,
   ko,
 ) {
   "use strict";
@@ -277,7 +276,6 @@ define([
       template: "Spotii_Spotiipay/payment/spotiipay",
       paymentReady: false
   },
-    redirectAfterPlaceOrder: false,
     isInAction: isInAction,
 
     /**
