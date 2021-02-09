@@ -53,6 +53,7 @@ class Redirect extends SpotiiPay
         }
         $payment = $quote->getPayment();
         $payment->setMethod('spotiipay');
+        $payment->setIsTransactionPending(true);
         $payment->save();
         $quote->reserveOrderId();
         $quote->setPayment($payment);
@@ -83,7 +84,7 @@ class Redirect extends SpotiiPay
             \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
         );
         
-        $order->setState('new')->setStatus('pending');
+        //$order->setState('new')->setStatus('pending');
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
 

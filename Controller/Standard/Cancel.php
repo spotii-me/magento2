@@ -29,8 +29,10 @@ class Cancel extends SpotiiPay
         $paymentSubmitted = $this->getRequest()->getParam("submitted");
 
         if($paymentSubmitted == '1'){
-
-        $order->setState("canceled")->setStatus("canceled");
+        $payment= $order->getPayment();
+        $payment->setIsTransactionDenied(true);
+        $order->setPayment($payment);
+        //$order->setState("canceled")->setStatus("canceled");
         $order->save();
         
         foreach ($order->getAllVisibleItems() as $item) {
