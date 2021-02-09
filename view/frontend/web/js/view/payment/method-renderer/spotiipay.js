@@ -480,7 +480,7 @@ define([
 
     placePendingPaymentOrder: function () {
       if (this.placeOrder()) {
-        fullScreenLoader.startLoader();
+       // fullScreenLoader.startLoader();
         this.isInAction(true);
         // capture all click events
         //document.addEventListener('click', iframe.stopEventPropagation, true);
