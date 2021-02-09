@@ -488,7 +488,7 @@ define([
           //fullScreenLoader.startLoader();
           this.isInAction(true);
           // capture all click events
-          document.addEventListener('click', iframe.stopEventPropagation, true);
+        //  document.addEventListener('click', iframe.stopEventPropagation, true);
           this.continueToSpotiipay();
         }
       } catch (error) {
