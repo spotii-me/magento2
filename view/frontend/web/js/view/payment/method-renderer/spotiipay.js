@@ -252,6 +252,8 @@ define([
   "Magento_Checkout/js/action/select-payment-method",
   "Magento_Ui/js/model/messageList",
   "Magento_Checkout/js/model/quote",
+  "ko",
+  'Magento_Paypal/js/model/iframe',
 ], function (
   customer,
   resourceUrlManager,
@@ -266,7 +268,9 @@ define([
   selectPaymentMethodAction,
   globalMessageList,
   quote,
-  fancy
+  fancy,
+  ko,
+  iframe
 ) {
   "use strict";
   return Component.extend({
@@ -477,16 +481,14 @@ define([
       if (total >= min) return true;
       else return false;
     },
-
     placePendingPaymentOrder: function () {
       if (this.placeOrder()) {
-       // fullScreenLoader.startLoader();
-        this.isInAction(true);
-        // capture all click events
-        //document.addEventListener('click', iframe.stopEventPropagation, true);
-        this.continueToSpotiipay();
-      }
-      
-    },
+          //fullScreenLoader.startLoader();
+          this.isInAction(true);
+          // capture all click events
+          document.addEventListener('click', iframe.stopEventPropagation, true);
+          this.continueToSpotiipay();
+        }
+  },
   });
 });
