@@ -478,8 +478,15 @@ define([
       else return false;
     },
 
-    placeOrder: function (data, event) {
-      this.continueToSpotiipay();
+    placePendingPaymentOrder: function () {
+      if (this.placeOrder()) {
+        fullScreenLoader.startLoader();
+        this.isInAction(true);
+        // capture all click events
+        //document.addEventListener('click', iframe.stopEventPropagation, true);
+        this.continueToSpotiipay();
+      }
+      
     },
   });
 });
