@@ -122,7 +122,7 @@ define(
                     return false;
             },
 
-            placeOrder: function(data, event) {
+            isTotalValid: function(data, event) {
                 if(this.isTotalValid)
                     this.continueToSpotiipay();
                 else    

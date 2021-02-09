@@ -72,7 +72,7 @@ class Redirect extends SpotiiPay
         $quote->collectTotals()->save();   
         $order = $this->_quoteManagement->submit($quote);
         
-        $invoiceCollection = $order->getInvoiceCollection();
+        /*$invoiceCollection = $order->getInvoiceCollection();
         foreach($invoiceCollection as $invoice):
             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
             $this->invoiceRepository->save($invoice);
