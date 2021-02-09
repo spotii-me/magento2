@@ -38,7 +38,11 @@ class Complete extends SpotiiPay
             $order->save();
 
             if ($order) {
-                
+                $this->_spotiipayModel->createTransaction(
+                    $order,
+                    $reference,
+                    \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
+                );
                 $this->_spotiipayModel->createTransaction(
                     $order,
                     $reference,
