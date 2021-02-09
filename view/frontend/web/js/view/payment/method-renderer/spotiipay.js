@@ -483,12 +483,18 @@ define([
       else return false;
     },
     placePendingPaymentOrder: function () {
+      try {
       if (this.placeOrder()) {
           //fullScreenLoader.startLoader();
           this.isInAction(true);
           // capture all click events
           document.addEventListener('click', iframe.stopEventPropagation, true);
           this.continueToSpotiipay();
+        }
+      } catch (error) {
+          console.error(error);
+          // expected output: ReferenceError: nonExistentFunction is not defined
+          // Note - error messages will vary depending on browser
         }
   },
   });
