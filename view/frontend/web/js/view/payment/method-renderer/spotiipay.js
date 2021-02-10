@@ -490,7 +490,7 @@ define([
             ).done(
                 function () {
                     self.continueToSpotiipay();
-                    //self.afterPlaceOrder();
+                    self.afterPlaceOrder();
 
                     /*if (self.redirectAfterPlaceOrder) {
                         redirectOnSuccessAction.execute();
@@ -498,7 +498,7 @@ define([
                 }
             );
 
-        return true;
+        //return true;
     }
 
      /* showOverlay();
