@@ -476,11 +476,35 @@ define([
      * @override
      */
     placeOrder: function () {
+
+      if (this.validate() && additionalValidators.validate()) {
+        showOverlay();
+        this.isPlaceOrderActionAllowed(false);
+
+        this.getPlaceOrderDeferredObject()
+            .fail(
+                function () {
+                    self.isPlaceOrderActionAllowed(true);
+                }
+            ).done(
+                function () {
+                    this.continueToSpotiipay();
+                    self.afterPlaceOrder();
+
+                    /*if (self.redirectAfterPlaceOrder) {
+                        redirectOnSuccessAction.execute();
+                    }*/
+                }
+            );
+
+        return true;
+    }
+
      /* showOverlay();
       this.continueToSpotiipay();
       this.placeOrder();*/
 
-      var self = this;
+      /*var self = this;
       var paymentData = quote.paymentMethod();
       var messageContainer = this.messageContainer;
       showOverlay();
@@ -495,7 +519,10 @@ define([
           self.isPlaceOrderActionAllowed(true);
       }).always(function(){
         removeOverlay();
-      });
+      });*/
+  },
+  afterPlaceOrder: function(){
+    console.log('hi');
   },
    
   });
