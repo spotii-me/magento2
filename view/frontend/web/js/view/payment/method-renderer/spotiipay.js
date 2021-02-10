@@ -476,7 +476,7 @@ define([
      * @override
      */
     placeOrder: function () {
-
+      var self = this;
       if (this.validate() && additionalValidators.validate()) {
         showOverlay();
         this.isPlaceOrderActionAllowed(false);
