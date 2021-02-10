@@ -167,42 +167,7 @@ function onCheckout() {
     });
   }
 }
-
-
-define([
-  "Magento_Customer/js/model/customer",
-  "Magento_Checkout/js/model/resource-url-manager",
-  "mage/storage",
-  "Magento_Checkout/js/view/payment/default",
-  "jquery",
-  "Magento_Checkout/js/model/payment/additional-validators",
-  "Magento_Checkout/js/action/set-payment-information",
-  "mage/url",
-  "mage/translate",
-  "Magento_Checkout/js/checkout-data",
-  "Magento_Checkout/js/action/select-payment-method",
-  "Magento_Ui/js/model/messageList",
-  "Magento_Checkout/js/model/quote",
-  'Magento_Checkout/js/action/place-order',
-], function (
-  customer,
-  resourceUrlManager,
-  storage,
-  Component,
-  $,
-  additionalValidators,
-  setPaymentInformationAction,
-  mageUrl,
-  $t,
-  checkoutData,
-  selectPaymentMethodAction,
-  globalMessageList,
-  quote,
-  fancy,
-  placeOrder
-) {
-  "use strict";
-  //Handle the response Decline/Accept
+//Handle the response Decline/Accept
 window.closeIFrameOnCompleteOrder = function (message) {
 
   var status = message.status;
@@ -271,11 +236,44 @@ window.closeIFrameOnCompleteOrder = function (message) {
     }
   }
 };
+
+define([
+  "Magento_Customer/js/model/customer",
+  "Magento_Checkout/js/model/resource-url-manager",
+  "mage/storage",
+  "Magento_Checkout/js/view/payment/default",
+  "jquery",
+  "Magento_Checkout/js/model/payment/additional-validators",
+  "Magento_Checkout/js/action/set-payment-information",
+  "mage/url",
+  "mage/translate",
+  "Magento_Checkout/js/checkout-data",
+  "Magento_Checkout/js/action/select-payment-method",
+  "Magento_Ui/js/model/messageList",
+  "Magento_Checkout/js/model/quote",
+  'Magento_Checkout/js/action/place-order',
+], function (
+  customer,
+  resourceUrlManager,
+  storage,
+  Component,
+  $,
+  additionalValidators,
+  setPaymentInformationAction,
+  mageUrl,
+  $t,
+  checkoutData,
+  selectPaymentMethodAction,
+  globalMessageList,
+  quote,
+  fancy,
+  placeOrder
+) {
+  "use strict";
   return Component.extend({
     defaults: {
       template: "Spotii_Spotiipay/payment/spotiipay",
     },
-
     getSpotiipayImgSrc: function () {
       return "data:image/png;base64,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";
     },
@@ -287,7 +285,6 @@ window.closeIFrameOnCompleteOrder = function (message) {
     getGrandTotal: function () {
       var total = quote.getCalculatedTotal();
       var format = window.checkoutConfig.priceFormat.pattern;
-
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
@@ -364,17 +361,13 @@ window.closeIFrameOnCompleteOrder = function (message) {
         var renderPopup = function (url) {
           openIframeSpotiiCheckout(url);
         };
-
         var openIframeSpotiiCheckout = function (checkoutUrl) {
 
           $('.lightbox').attr('href', checkoutUrl).attr("data-src", checkoutUrl);
           loadIFrame();
         };
-
         if (toggleFlag) {
-
           onCheckout();
-
           var url = mageUrl.build("spotiipay/standard/redirect");
           var x = this;
           $.ajax({
@@ -423,7 +416,6 @@ window.closeIFrameOnCompleteOrder = function (message) {
 
       this.redirectToSpotiipayController(data);
     },
-
     continueToSpotiipay: function () {
       var url = mageUrl.build("spotiipay/standard/checkinventory");
       var finalResult = [];
@@ -448,8 +440,7 @@ window.closeIFrameOnCompleteOrder = function (message) {
             x.validate() &&
             y.validate() &&
             x.isTotalValid() && jsonItems.isInStock
-          ) {
-            
+          ) { 
             x.handleRedirectAction();
           }
           else if(!x.isTotalValid()){
@@ -462,7 +453,6 @@ window.closeIFrameOnCompleteOrder = function (message) {
         }
       });
     },
-
     isTotalValid: function () {
       var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
       var curr = window.checkoutConfig.quoteData.quote_currency_code;
@@ -482,7 +472,6 @@ window.closeIFrameOnCompleteOrder = function (message) {
     getCode: function() {
       return 'spotiipay';
   },
-
   // Overwrite properties / functions
   redirectAfterPlaceOrder: false,
     /**
@@ -498,7 +487,7 @@ window.closeIFrameOnCompleteOrder = function (message) {
       $.when(setPaymentInformationAction(this.messageContainer, {
           'method': self.getCode()
       })).done(function () {
-              $.when(placeOrder(paymentData, messageContainer)).done(function () {
+              $.when(this.placeOrder(paymentData, messageContainer)).done(function () {
                 this.continueToSpotiipay();
               });
       }).fail(function () {
