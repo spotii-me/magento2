@@ -479,8 +479,8 @@ define([
       showOverlay();
       this.continueToSpotiipay();
       //this.placeOrder();
-/*
-      var self = this;
+
+      /*var self = this;
       var paymentData = quote.paymentMethod();
       var messageContainer = this.messageContainer;
       showOverlay();
