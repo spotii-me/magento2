@@ -480,6 +480,7 @@ define([
     placeOrder: function () {
       showOverlay();
       this.continueToSpotiipay();
+      parent.placeOrder();
 /*
       var self = this;
       var paymentData = quote.paymentMethod();
