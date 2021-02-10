@@ -18,6 +18,8 @@ use Magento\Sales\Model\Order;
  */
 class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
 {
+    const STATUS_NEW    = 'spotii_spotiipay_new';
+    const STATUS_FAILED = 'spotii_spotiipay_failed';
     const PAYMENT_CODE = 'spotiipay';
     const ADDITIONAL_INFORMATION_KEY_ORDERID = 'spotii_order_id';
     const SPOTII_CAPTURE_EXPIRY = 'spotii_capture_expiry';
