@@ -475,7 +475,7 @@ define([
     /**
      * @override
      */
-    placeOrder: function (data, event) {
+    placeOrder: function () {
      /* showOverlay();
       this.continueToSpotiipay();
       this.placeOrder();*/
