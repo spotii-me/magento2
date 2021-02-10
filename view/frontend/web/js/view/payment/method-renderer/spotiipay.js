@@ -488,7 +488,7 @@ define([
                 }
             ).done(
                 function () {
-                    this.continueToSpotiipay();
+                    self.continueToSpotiipay();
                     self.afterPlaceOrder();
 
                     /*if (self.redirectAfterPlaceOrder) {

@@ -70,7 +70,7 @@ class Redirect extends SpotiiPay
         $quoteId = $quote->getId();
               
         $quote->collectTotals()->save();   
-        $order = $this->_quoteManagement->submit($quote);
+        
         $order = $this->_checkoutSession->getLastRealOrder();
 
         if($order->getId()){
