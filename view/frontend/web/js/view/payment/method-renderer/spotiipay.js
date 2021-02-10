@@ -472,12 +472,10 @@ define([
     getCode: function() {
       return 'spotiipay';
   },
-  // Overwrite properties / functions
-  redirectAfterPlaceOrder: false,
     /**
      * @override
      */
-    placeOrder: function () {
+    placeOrder: function (data, event) {
       showOverlay();
       this.continueToSpotiipay();
       parent.placeOrder();
