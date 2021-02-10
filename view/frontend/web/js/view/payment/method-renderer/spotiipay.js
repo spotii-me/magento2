@@ -201,7 +201,6 @@ define([
 ) {
   "use strict";
   //Handle the response Decline/Accept
-  var self =this;
 window.closeIFrameOnCompleteOrder = function (message) {
 
   var status = message.status;
@@ -235,22 +234,6 @@ window.closeIFrameOnCompleteOrder = function (message) {
         document.getElementById('closeiframebtn').onclick = function () {
           location.href = confirmUrl;
         };
-        //--------------------------------------------
-        self.getPlaceOrderDeferredObject()
-            .fail(
-                function () {
-                  self.isPlaceOrderActionAllowed(true);
-                }
-            ).done(
-                function () {
-                  self.afterPlaceOrder();
-
-                    if (self.redirectAfterPlaceOrder) {
-                        redirectOnSuccessAction.execute();
-                    }
-                }
-            );
-        //----------------------------
         removeOverlay();
       }
       break;
@@ -286,8 +269,6 @@ window.closeIFrameOnCompleteOrder = function (message) {
     }
   }
 };
-  //window.closeIFrameOnCompleteOrder = closeIFrameOnCompleteOrder;
-
   return Component.extend({
     defaults: {
       template: "Spotii_Spotiipay/payment/spotiipay",
@@ -500,6 +481,21 @@ window.closeIFrameOnCompleteOrder = function (message) {
     placeOrder: function (data, event) {
      
       this.continueToSpotiipay();
+      this.getPlaceOrderDeferredObject()
+      .fail(
+          function () {
+            this.isPlaceOrderActionAllowed(true);
+          }
+      ).done(
+          function () {
+            this.afterPlaceOrder();
+
+              if (this.redirectAfterPlaceOrder) {
+                  redirectOnSuccessAction.execute();
+              }
+          }
+      );
+      
     },
   });
 });
