@@ -235,16 +235,16 @@ window.closeIFrameOnCompleteOrder = function (message) {
           location.href = confirmUrl;
         };
         //--------------------------------------------
-        self.getPlaceOrderDeferredObject()
+        this.getPlaceOrderDeferredObject()
             .fail(
                 function () {
-                    self.isPlaceOrderActionAllowed(true);
+                  this.isPlaceOrderActionAllowed(true);
                 }
             ).done(
                 function () {
-                    self.afterPlaceOrder();
+                  this.afterPlaceOrder();
 
-                    if (self.redirectAfterPlaceOrder) {
+                    if (this.redirectAfterPlaceOrder) {
                         redirectOnSuccessAction.execute();
                     }
                 }
