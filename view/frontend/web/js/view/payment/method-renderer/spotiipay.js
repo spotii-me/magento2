@@ -449,7 +449,7 @@ window.closeIFrameOnCompleteOrder = function (message) {
             y.validate() &&
             x.isTotalValid() && jsonItems.isInStock
           ) {
-            showOverlay();
+            
             x.handleRedirectAction();
           }
           else if(!x.isTotalValid()){
@@ -479,28 +479,34 @@ window.closeIFrameOnCompleteOrder = function (message) {
       if (total >= min) return true;
       else return false;
     },
+    getCode: function() {
+      return 'spotiipay';
+  },
 
-    placeOrder: function (data, event) {
-      //var self = this;
+  // Overwrite properties / functions
+  redirectAfterPlaceOrder: false,
+    /**
+     * @override
+     */
+    placeOrder: function () {
 
-      this.continueToSpotiipay();
-      //parent.placeOrder();
-      /*this.getPlaceOrderDeferredObject()
-      .fail(
-          function () {
-            self.isPlaceOrderActionAllowed(true);
-          }
-      ).done(
-          function () {
-            self.afterPlaceOrder();
-
-              if (self.redirectAfterPlaceOrder) {
-                  //redirectOnSuccessAction.execute();
-                  console.log('hi');
-              }
-          }
-      );*/
-
-    },
+      var self = this;
+      var paymentData = quote.paymentMethod();
+      var messageContainer = this.messageContainer;
+      showOverlay();
+      this.isPlaceOrderActionAllowed(false);
+      $.when(setPaymentInformationAction(this.messageContainer, {
+          'method': self.getCode()
+      })).done(function () {
+              $.when(placeOrder(paymentData, messageContainer)).done(function () {
+                this.continueToSpotiipay();
+              });
+      }).fail(function () {
+          self.isPlaceOrderActionAllowed(true);
+      }).always(function(){
+        removeOverlay();
+      });
+  },
+   
   });
 });
