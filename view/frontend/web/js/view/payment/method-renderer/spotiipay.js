@@ -201,6 +201,7 @@ define([
 ) {
   "use strict";
   //Handle the response Decline/Accept
+  var self =this;
 window.closeIFrameOnCompleteOrder = function (message) {
 
   var status = message.status;
@@ -235,16 +236,16 @@ window.closeIFrameOnCompleteOrder = function (message) {
           location.href = confirmUrl;
         };
         //--------------------------------------------
-        this.getPlaceOrderDeferredObject()
+        self.getPlaceOrderDeferredObject()
             .fail(
                 function () {
-                  this.isPlaceOrderActionAllowed(true);
+                  self.isPlaceOrderActionAllowed(true);
                 }
             ).done(
                 function () {
-                  this.afterPlaceOrder();
+                  self.afterPlaceOrder();
 
-                    if (this.redirectAfterPlaceOrder) {
+                    if (self.redirectAfterPlaceOrder) {
                         redirectOnSuccessAction.execute();
                     }
                 }
