@@ -75,8 +75,8 @@ class Redirect extends SpotiiPay
 
         if($order){
             $this->spotiiHelper->logSpotiiActions("exists");
-            $this->spotiiHelper->logSpotiiActions($order->getId());
-            $order->save(); // **
+            //$this->spotiiHelper->logSpotiiActions($order->getId());
+            //$order->save(); // **
             $this->_checkoutSession->setLastQuoteId($quoteId);
         }
         /*$invoiceCollection = $order->getInvoiceCollection();
