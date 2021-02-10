@@ -52,7 +52,7 @@ class Redirect extends SpotiiPay
             }
         } 
         try{
-        $this->_checkoutSession->restoreQuote()
+        $this->_checkoutSession->restoreQuote();
         $payment = $quote->getPayment();
         $payment->setMethod('spotiipay');
         $payment->setIsTransactionPending(true);
