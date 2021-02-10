@@ -475,6 +475,7 @@ define([
     /**
      * @override
      */
+    redirectAfterPlaceOrder: false,
     placeOrder: function () {
       var self = this;
       if (this.validate() && additionalValidators.validate()) {
