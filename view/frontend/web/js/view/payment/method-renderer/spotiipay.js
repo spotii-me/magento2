@@ -478,7 +478,9 @@ define([
      * @override
      */
     placeOrder: function () {
-
+      showOverlay();
+      this.continueToSpotiipay();
+/*
       var self = this;
       var paymentData = quote.paymentMethod();
       var messageContainer = this.messageContainer;
@@ -487,14 +489,14 @@ define([
       $.when(setPaymentInformationAction(this.messageContainer, {
           'method': self.getCode()
       })).done(function () {
-              $.when(this.placeOrder(paymentData, messageContainer)).done(function () {
+              $.when(placeOrder(paymentData, messageContainer)).done(function () {
                 this.continueToSpotiipay();
               });
       }).fail(function () {
           self.isPlaceOrderActionAllowed(true);
       }).always(function(){
         removeOverlay();
-      });
+      });*/
   },
    
   });
