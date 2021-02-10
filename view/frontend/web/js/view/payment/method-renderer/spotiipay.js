@@ -479,23 +479,24 @@ window.closeIFrameOnCompleteOrder = function (message) {
     },
 
     placeOrder: function (data, event) {
-     
+      var self = this;
+
       this.continueToSpotiipay();
       this.getPlaceOrderDeferredObject()
       .fail(
           function () {
-            this.isPlaceOrderActionAllowed(true);
+            self.isPlaceOrderActionAllowed(true);
           }
       ).done(
           function () {
-            this.afterPlaceOrder();
+            self.afterPlaceOrder();
 
-              if (this.redirectAfterPlaceOrder) {
+              if (self.redirectAfterPlaceOrder) {
                   redirectOnSuccessAction.execute();
               }
           }
       );
-      
+
     },
   });
 });
