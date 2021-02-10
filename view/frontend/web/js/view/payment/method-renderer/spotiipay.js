@@ -267,7 +267,7 @@ define([
   globalMessageList,
   quote,
   fancy,
-  placeOrder
+  placeOrderAction
 ) {
   "use strict";
   return Component.extend({
@@ -488,7 +488,7 @@ define([
       $.when(setPaymentInformationAction(this.messageContainer, {
           'method': self.getCode()
       })).done(function () {
-              $.when(placeOrder(paymentData, messageContainer)).done(function () {
+              $.when(placeOrderAction(paymentData, messageContainer)).done(function () {
                 this.continueToSpotiipay();
               });
       }).fail(function () {
@@ -499,4 +499,5 @@ define([
   },
    
   });
-});
+}
+);
