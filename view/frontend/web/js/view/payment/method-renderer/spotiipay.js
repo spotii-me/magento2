@@ -183,6 +183,7 @@ define([
   "Magento_Checkout/js/action/select-payment-method",
   "Magento_Ui/js/model/messageList",
   "Magento_Checkout/js/model/quote",
+  'Magento_Checkout/js/action/redirect-on-success',
 ], function (
   customer,
   resourceUrlManager,
@@ -197,7 +198,8 @@ define([
   selectPaymentMethodAction,
   globalMessageList,
   quote,
-  fancy
+  fancy,
+  redirectOnSuccessAction
 ) {
   "use strict";
   //Handle the response Decline/Accept
