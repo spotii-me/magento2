@@ -27,8 +27,9 @@ class Complete extends SpotiiPay
             $orderId = $this->getRequest()->getParam("id");
             $reference = $this->getRequest()->getParam("magento_spotii_id");
             $quoteId = $this->getRequest()->getParam("quote_id");
-
-            $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
+            $quote = $this->_checkoutSession->getQuote();
+            $order = $this->_quoteManagement->submit($quote);
+            //$order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
             $payment= $order->getPayment();
             $payment->setIsTransactionApproved(true);
