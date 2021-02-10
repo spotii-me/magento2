@@ -481,10 +481,11 @@ window.closeIFrameOnCompleteOrder = function (message) {
     },
 
     placeOrder: function (data, event) {
-      var self = this;
+      //var self = this;
 
       this.continueToSpotiipay();
-      this.getPlaceOrderDeferredObject()
+      //parent.placeOrder();
+      /*this.getPlaceOrderDeferredObject()
       .fail(
           function () {
             self.isPlaceOrderActionAllowed(true);
@@ -494,10 +495,11 @@ window.closeIFrameOnCompleteOrder = function (message) {
             self.afterPlaceOrder();
 
               if (self.redirectAfterPlaceOrder) {
-                  redirectOnSuccessAction.execute();
+                  //redirectOnSuccessAction.execute();
+                  console.log('hi');
               }
           }
-      );
+      );*/
 
     },
   });

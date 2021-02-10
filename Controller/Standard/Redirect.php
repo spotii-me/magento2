@@ -70,8 +70,14 @@ class Redirect extends SpotiiPay
         $quoteId = $quote->getId();
               // **
         $quote->collectTotals()->save();   
-        $order = $this->_quoteManagement->submit($quote);
-        
+        //$order = $this->_quoteManagement->submit($quote);
+        $order = $this->checkoutSession->getLastRealOrder();
+
+        if($order){
+            $this->spotiiHelper->logSpotiiActions("exists");
+            $order->save(); // **
+            $this->_checkoutSession->setLastQuoteId($quoteId);
+        }
         /*$invoiceCollection = $order->getInvoiceCollection();
         foreach($invoiceCollection as $invoice):
             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
@@ -85,8 +91,7 @@ class Redirect extends SpotiiPay
         );*/
         
         //$order->setState('new')->setStatus('pending');
-        $order->save(); // **
-        $this->_checkoutSession->setLastQuoteId($quoteId);
+       
 
     }catch (\Magento\Framework\Exception\LocalizedException $e) {
         $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
