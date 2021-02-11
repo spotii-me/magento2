@@ -25,6 +25,7 @@ class Redirect extends SpotiiPay
     public function execute()
     {
         $this->spotiiHelper->logSpotiiActions("****Starting Spotii****");
+        $this->_checkoutSession->restoreQuote();
         $quote = $this->_checkoutSession->getQuote();
         $order = $this->_checkoutSession->getLastRealOrder();
 
