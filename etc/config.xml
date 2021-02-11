@@ -12,7 +12,7 @@
             <spotiipay>
 		<active>1</active>
                 <model>Spotii\Spotiipay\Model\SpotiiPay</model>
-                <order_status>processing</order_status>
+                <order_status>pending</order_status>
                 <merchant_country>US</merchant_country>
                 <payment_mode>sandbox</payment_mode>
                 <log_tracker>0</log_tracker>
