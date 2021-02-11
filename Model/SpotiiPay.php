@@ -352,7 +352,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $this->spotiiHelper->logSpotiiActions("Capture Expiration Timestamp : $captureExpirationTimestamp");
         $this->spotiiHelper->logSpotiiActions("Current Timestamp : $currentTimestamp");
         if ($captureExpirationTimestamp >= $currentTimestamp) {
-            $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+           // $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
             $this->spotiiCapture($reference);
             $payment->setTransactionId($reference)->setIsTransactionClosed(false);
             $this->spotiiHelper->logSpotiiActions("Authorized on Spotii");
