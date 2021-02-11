@@ -185,7 +185,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $reference = uniqid() . "-" . $quote->getReservedOrderId();
         $this->spotiiHelper->logSpotiiActions("Reference Id : $reference");
         $payment = $quote->getPayment();
-        $payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
+        //$payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
+        $this->spotiiHelper->logSpotiiActions("Order url : $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID)");
         $payment->save();
         $response = $this->getSpotiiRedirectUrl($quote, $reference);
         $result = $this->jsonHelper->jsonDecode($response, true);
