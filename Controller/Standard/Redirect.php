@@ -78,7 +78,7 @@ class Redirect extends SpotiiPay
         // Create "pending" order before redirect to Spotii
         //$quoteId = $quote->getId();
               
-        $order->collectTotals()->save();   
+        //$quote->collectTotals()->save();   
     
         $this->_checkoutSession->setLastQuoteId($quoteId);
         /*$invoiceCollection = $order->getInvoiceCollection();

@@ -25,18 +25,37 @@ class Complete extends SpotiiPay
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
 
             $orderId = $this->getRequest()->getParam("id");
+            $this->spotiiHelper->logSpotiiActions("1");
+
             $reference = $this->getRequest()->getParam("magento_spotii_id");
+            $this->spotiiHelper->logSpotiiActions("2");
+
             $quoteId = $this->getRequest()->getParam("quote_id");
+            $this->spotiiHelper->logSpotiiActions("3");
+
             $quote = $this->_checkoutSession->getQuote();
+            $this->spotiiHelper->logSpotiiActions("4");
+
             //$order = $this->_quoteManagement->submit($quote);
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
+            $this->spotiiHelper->logSpotiiActions("5");
+
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
+            $this->spotiiHelper->logSpotiiActions("6");
+
             $payment= $order->getPayment();
+            $this->spotiiHelper->logSpotiiActions("7");
+
             $payment->setIsTransactionApproved(true);
+            $this->spotiiHelper->logSpotiiActions("8");
+
             $payment->save();
             $order->setPayment($payment);
+            $this->spotiiHelper->logSpotiiActions("9");
+
             //$order->setState('processing')->setStatus('paymentauthorised');
             $order->save();
+            $this->spotiiHelper->logSpotiiActions("10");
 
             if ($order) {
                 $this->_spotiipayModel->createTransaction(
