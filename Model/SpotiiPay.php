@@ -342,11 +342,11 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         }
 
-        $captureExpiration = (isset($result['capture_expiration']) && $result['capture_expiration']) ? $result['capture_expiration'] : null;
-        if ($captureExpiration === null) {
-            $this->spotiiHelper->logSpotiiActions("Not authorized on Spotii");
-            throw new LocalizedException(__('Not authorized on Spotii. Please try again.'));
-        }
+        // $captureExpiration = (isset($result['capture_expiration']) && $result['capture_expiration']) ? $result['capture_expiration'] : null;
+        // if ($captureExpiration === null) {
+        //     $this->spotiiHelper->logSpotiiActions("Not authorized on Spotii");
+        //     throw new LocalizedException(__('Not authorized on Spotii. Please try again.'));
+        // }
         $captureExpirationTimestamp = $this->dateTime->timestamp($captureExpiration);
         $currentTimestamp = $this->dateTime->timestamp("now");
         $this->spotiiHelper->logSpotiiActions("Capture Expiration Timestamp : $captureExpirationTimestamp");
@@ -374,10 +374,10 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     public function setSpotiiCaptureExpiry($reference, $payment)
     {
         $spotiiOrder = $this->getSpotiiOrderInfo($reference);
-        if (isset($spotiiOrder['capture_expiration']) && $spotiiOrder['capture_expiration']) {
-            $payment->setAdditionalInformation(self::SPOTII_CAPTURE_EXPIRY, $spotiiOrder['capture_expiration']);
-            $payment->save();
-        }
+        // if (isset($spotiiOrder['capture_expiration']) && $spotiiOrder['capture_expiration']) {
+        //     // $payment->setAdditionalInformation(self::SPOTII_CAPTURE_EXPIRY, $spotiiOrder['capture_expiration']);
+        //     // $payment->save();
+        // }
     }
 
     /**

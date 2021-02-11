@@ -476,7 +476,10 @@ define([
      * @override
      */
     redirectAfterPlaceOrder: false,
-    placeOrder: function () {
+    afterPlaceOrder: function(){
+      this.continueToSpotiipay();
+    },
+    /*placeOrder: function () {
       var self = this;
       if (this.validate() && additionalValidators.validate()) {
         showOverlay();
@@ -494,7 +497,7 @@ define([
 
                     /*if (self.redirectAfterPlaceOrder) {
                         redirectOnSuccessAction.execute();
-                    }*/
+                    }
                 }
             );
 
@@ -520,11 +523,9 @@ define([
           self.isPlaceOrderActionAllowed(true);
       }).always(function(){
         removeOverlay();
-      });*/
-  },
-  afterPlaceOrder: function(){
-    console.log('hi');
-  },
+      });
+  },*/
+
    
   });
 }
