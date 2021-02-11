@@ -182,11 +182,11 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function getSpotiiCheckoutUrl($order,$quoteId)
     {
-        $reference = uniqid() . "-" . $order->getId();
+        $reference = uniqid() . "-" . $order->getIncrementId();
         $this->spotiiHelper->logSpotiiActions("Reference Id : $reference");
         $payment = $order->getPayment();
         //$payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
-        $this->spotiiHelper->logSpotiiActions("Order url : $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID)");
+        $this->spotiiHelper->logSpotiiActions("Order url : ".$payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID));
         $payment->save();
         $response = $this->getSpotiiRedirectUrl($order, $reference,$quoteId);
         $result = $this->jsonHelper->jsonDecode($response, true);
