@@ -47,7 +47,7 @@ class PayloadBuilder
      */
     public function buildSpotiiCheckoutPayload($quote, $reference,$quoteId)
     {
-        $checkoutPayload = $this->buildCheckoutPayload($quote, $referenc,$quoteId);
+        $checkoutPayload = $this->buildCheckoutPayload($quote, $reference,$quoteId);
         $orderPayload = $this->buildOrderPayload($quote);
         $customerPayload = $this->buildCustomerPayload($quote);
         $billingPayload = $this->buildBillingPayload($quote);
