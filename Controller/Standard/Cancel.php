@@ -30,7 +30,7 @@ class Cancel extends SpotiiPay
 
         if($paymentSubmitted == '1'){
         $payment= $order->getPayment();
-        $payment->setIsTransactionDenied(true);
+        //$payment->setIsTransactionDenied(true);
         $order->setPayment($payment);
         //$order->setState("canceled")->setStatus("canceled");
         $order->save();

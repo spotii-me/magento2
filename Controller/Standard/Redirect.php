@@ -25,13 +25,14 @@ class Redirect extends SpotiiPay
     public function execute()
     {
         $this->spotiiHelper->logSpotiiActions("****Starting Spotii****");
-        $this->_checkoutSession->restoreQuote();
+        //$this->_checkoutSession->restoreQuote();
         $quote = $this->_checkoutSession->getQuote();
         $order = $this->_checkoutSession->getLastRealOrder();
 
         if($order->getId()){
             $this->spotiiHelper->logSpotiiActions("exists");
             $this->spotiiHelper->logSpotiiActions($order->getId());
+            $this->spotiiHelper->logSpotiiActions($order->getState());
         //$this->spotiiHelper->logSpotiiActions("Quote Id : " . $order->getId());
         if ($this->_customerSession->isLoggedIn()) {
             $customerId = $this->_customerSession->getCustomer()->getId();
@@ -59,13 +60,13 @@ class Redirect extends SpotiiPay
         } 
         try{
         $this->_checkoutSession->restoreQuote();
-        $payment = $order->getPayment();
+        //$payment = $order->getPayment();
         //$payment->setMethod('spotiipay');
-        $this->spotiiHelper->logSpotiiActions("payment method :". $payment->getMethod());
-        $payment->setIsTransactionPending(true);
-        $payment->save();
+        //$this->spotiiHelper->logSpotiiActions("payment method :". $payment->getMethod());
+        //$payment->setIsTransactionPending(true);
+        //$payment->save();
         //$order->reserveOrderId();
-        $order->setPayment($payment);
+        //$order->setPayment($payment);
         $order->save();
         //$this->_checkoutSession->replaceQuote($order);
         $quoteId = $quote->getId();

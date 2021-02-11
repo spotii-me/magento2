@@ -185,9 +185,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $reference = uniqid() . "-" . $order->getIncrementId();
         $this->spotiiHelper->logSpotiiActions("Reference Id : $reference");
         $payment = $order->getPayment();
-        //$payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
+        $payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
         $this->spotiiHelper->logSpotiiActions("Order url : ".$payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID));
-        $payment->save();
+        //$payment->save();
         $response = $this->getSpotiiRedirectUrl($order, $reference,$quoteId);
         $result = $this->jsonHelper->jsonDecode($response, true);
         $orderUrl = array_key_exists('checkout_url', $result) ? $result['checkout_url'] : false;
@@ -292,7 +292,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         } else {
-            $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+            //$payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
             $_canCapture = true;
             $this->spotiiHelper->logSpotiiActions("Authorization successful");
             $this->spotiiHelper->logSpotiiActions("Authorization end");
@@ -310,8 +310,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     public function capture(\Magento\Payment\Model\InfoInterface $payment, $amount)
     {
         $this->spotiiHelper->logSpotiiActions("****Capture for no reason starts****");
-        $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
-        $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+        //$reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
+        //$payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
         $this->spotiiHelper->logSpotiiActions("****Capture for no reason ends****");
     }
 
@@ -354,7 +354,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         if ($captureExpirationTimestamp >= $currentTimestamp) {
            // $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
             $this->spotiiCapture($reference);
-            $payment->setTransactionId($reference)->setIsTransactionClosed(false);
+            //$payment->setTransactionId($reference)->setIsTransactionClosed(false);
             $this->spotiiHelper->logSpotiiActions("Authorized on Spotii");
             $this->spotiiHelper->logSpotiiActions("****Capture at Magento end****");
         } else {
@@ -515,7 +515,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             $message
        );
     
-        $payment->setParentTransactionId(null);
+        //$payment->setParentTransactionId(null);
         $payment->save();
         // $quote->collectTotals()->save();
         $order->save();

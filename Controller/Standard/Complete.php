@@ -52,10 +52,10 @@ class Complete extends SpotiiPay
             $payment= $order->getPayment();
             $this->spotiiHelper->logSpotiiActions("7");
 
-            $payment->setIsTransactionApproved(true);
+            //$payment->setIsTransactionApproved(true);
             $this->spotiiHelper->logSpotiiActions("8");
 
-            $payment->save();
+            //$payment->save();
             $order->setPayment($payment);
             $this->spotiiHelper->logSpotiiActions("9");
 
