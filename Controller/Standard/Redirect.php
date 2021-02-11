@@ -55,10 +55,11 @@ class Redirect extends SpotiiPay
         $this->_checkoutSession->restoreQuote();
         $payment = $quote->getPayment();
         //$payment->setMethod('spotiipay');
+        $this->spotiiHelper->logSpotiiActions("Checkout Url :". $payment->getMethod());
         $payment->setIsTransactionPending(true);
         $payment->save();
         $quote->reserveOrderId();
-        $quote->setPayment($payment);
+        //$quote->setPayment($payment);
         $quote->save();
         $this->_checkoutSession->replaceQuote($quote);
         $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
