@@ -22,27 +22,30 @@ class Complete extends SpotiiPay
     {
         $redirect = 'checkout/onepage/success';
         try {
+            
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
 
             $orderId = $this->getRequest()->getParam("id");
-            $this->spotiiHelper->logSpotiiActions("1");
+            $this->spotiiHelper->logSpotiiActions($orderId);
 
             $reference = $this->getRequest()->getParam("magento_spotii_id");
-            $this->spotiiHelper->logSpotiiActions("2");
+            $this->spotiiHelper->logSpotiiActions($reference);
 
             $quoteId = $this->getRequest()->getParam("quote_id");
-            $this->spotiiHelper->logSpotiiActions("3");
+            $this->spotiiHelper->logSpotiiActions($quoteId);
 
             $quote = $this->_checkoutSession->getQuote();
             $this->spotiiHelper->logSpotiiActions("4");
 
             //$order = $this->_quoteManagement->submit($quote);
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
+            $this->spotiiHelper->logSpotiiActions($order->getQuoteId());
+
             $this->spotiiHelper->logSpotiiActions("5");
             $order->getPayment();
             $this->spotiiHelper->logSpotiiActions("5.1");
             $order->getGrandTotal();
-            $this->spotiiHelper->logSpotiiActions("5.2");
+            $this->spotiiHelper->logSpotiiActions($order->getGrandTotal());
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
             $this->spotiiHelper->logSpotiiActions("6");
 

@@ -81,7 +81,7 @@ class PayloadBuilder
         $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
         $checkoutPayload["description"] = $reference;
         $checkoutPayload["reference"] = $reference;
-        $checkoutPayload["display_reference"] = $orderId;
+        $checkoutPayload["display_reference"] = $order->getIncrementId();
         $checkoutPayload["reject_callback_url"] = $cancelUrl;
         $checkoutPayload["confirm_callback_url"] = $completeUrl;
         return $checkoutPayload;
