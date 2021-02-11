@@ -45,9 +45,9 @@ class PayloadBuilder
      * @param $reference
      * @return array
      */
-    public function buildSpotiiCheckoutPayload($quote, $reference)
+    public function buildSpotiiCheckoutPayload($quote, $reference,$quoteId)
     {
-        $checkoutPayload = $this->buildCheckoutPayload($quote, $reference);
+        $checkoutPayload = $this->buildCheckoutPayload($quote, $referenc,$quoteId);
         $orderPayload = $this->buildOrderPayload($quote);
         $customerPayload = $this->buildCustomerPayload($quote);
         $billingPayload = $this->buildBillingPayload($quote);
@@ -72,10 +72,10 @@ class PayloadBuilder
      * @return mixed
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function buildCheckoutPayload($quote, $reference)
+    private function buildCheckoutPayload($order, $reference,$quoteId)
     {
-        $orderId = $quote->getReservedOrderId();
-        $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference, $quote->getId());
+        $orderId = $order->getId();
+        $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference, $quoteId);
         $cancelUrl = $this->spotiiApiConfig->getCancelUrl($orderId, $reference);
         $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
         $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();

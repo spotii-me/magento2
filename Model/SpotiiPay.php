@@ -180,15 +180,15 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @return bool
      * @throws LocalizedException
      */
-    public function getSpotiiCheckoutUrl($quote)
+    public function getSpotiiCheckoutUrl($order,$quoteId)
     {
-        $reference = uniqid() . "-" . $quote->getReservedOrderId();
+        $reference = uniqid() . "-" . $order->getId();
         $this->spotiiHelper->logSpotiiActions("Reference Id : $reference");
-        $payment = $quote->getPayment();
+        $payment = $order->getPayment();
         //$payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
         $this->spotiiHelper->logSpotiiActions("Order url : $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID)");
         $payment->save();
-        $response = $this->getSpotiiRedirectUrl($quote, $reference);
+        $response = $this->getSpotiiRedirectUrl($order, $reference,$quoteId);
         $result = $this->jsonHelper->jsonDecode($response, true);
         $orderUrl = array_key_exists('checkout_url', $result) ? $result['checkout_url'] : false;
         $this->spotiiHelper->logSpotiiActions("Order url : $orderUrl");
@@ -206,10 +206,10 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      * @return mixed
      * @throws LocalizedException
      */
-    public function getSpotiiRedirectUrl($quote, $reference)
+    public function getSpotiiRedirectUrl($quote, $reference,$quoteId)
     {
         $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/checkouts/';
-        $requestBody = $this->apiPayloadBuilder->buildSpotiiCheckoutPayload($quote, $reference);
+        $requestBody = $this->apiPayloadBuilder->buildSpotiiCheckoutPayload($quote, $reference,$quoteId);
         try {
             $authToken = $this->spotiiApiConfig->getAuthToken();
             $response = $this->spotiiApiProcessor->call(

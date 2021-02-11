@@ -26,43 +26,49 @@ class Redirect extends SpotiiPay
     {
         $this->spotiiHelper->logSpotiiActions("****Starting Spotii****");
         $quote = $this->_checkoutSession->getQuote();
-        $this->spotiiHelper->logSpotiiActions("Quote Id : " . $quote->getId());
+        $order = $this->_checkoutSession->getLastRealOrder();
+
+        if($order->getId()){
+            $this->spotiiHelper->logSpotiiActions("exists");
+            $this->spotiiHelper->logSpotiiActions($order->getId());
+        //$this->spotiiHelper->logSpotiiActions("Quote Id : " . $order->getId());
         if ($this->_customerSession->isLoggedIn()) {
             $customerId = $this->_customerSession->getCustomer()->getId();
             $this->spotiiHelper->logSpotiiActions("Customer Id : $customerId");
             $customer = $this->_customerRepository->getById($customerId);
-            $quote->setCustomer($customer);
-            $billingAddress = $quote->getBillingAddress();
-            $shippingAddress = $quote->getShippingAddress();
+            $order->setCustomer($customer);
+            $billingAddress = $order->getBillingAddress();
+            $shippingAddress = $order->getShippingAddress();
             if ((empty($shippingAddress) || empty($shippingAddress->getStreetLine(1))) && (empty($billingAddress) || empty($billingAddress->getStreetLine(1)))) {
                 $json = $this->_jsonHelper->jsonEncode(["message" => "Please select an address"]);
                 $jsonResult = $this->_resultJsonFactory->create();
                 $jsonResult->setData($json);
                 return $jsonResult;
             } elseif (empty($billingAddress) || empty($billingAddress->getStreetLine(1)) || empty($billingAddress->getFirstname())) {
-                $quote->setBillingAddress($shippingAddress);
+                $order->setBillingAddress($shippingAddress);
             }
         } else {
             $post = $this->getRequest()->getPostValue();
             $this->spotiiHelper->logSpotiiActions("Guest customer");
             if (!empty($post['email'])) {
-                $quote->setCustomerEmail($post['email'])
+                $order->setCustomerEmail($post['email'])
                     ->setCustomerIsGuest(true)
                     ->setCustomerGroupId(\Magento\Customer\Api\Data\GroupInterface::NOT_LOGGED_IN_ID);
             }
         } 
         try{
         $this->_checkoutSession->restoreQuote();
-        $payment = $quote->getPayment();
+        $payment = $order->getPayment();
         //$payment->setMethod('spotiipay');
-        $this->spotiiHelper->logSpotiiActions("Checkout Url :". $payment->getMethod());
+        $this->spotiiHelper->logSpotiiActions("payment method :". $payment->getMethod());
         $payment->setIsTransactionPending(true);
         $payment->save();
-        $quote->reserveOrderId();
-        //$quote->setPayment($payment);
-        $quote->save();
-        $this->_checkoutSession->replaceQuote($quote);
-        $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
+        //$order->reserveOrderId();
+        $order->setPayment($payment);
+        $order->save();
+        //$this->_checkoutSession->replaceQuote($order);
+        $quoteId = $quote->getId();
+        $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($order,$quoteId);
         $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
        
         $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
@@ -70,17 +76,10 @@ class Redirect extends SpotiiPay
         $jsonResult->setData($json);
 
         // Create "pending" order before redirect to Spotii
-        $quoteId = $quote->getId();
+        //$quoteId = $quote->getId();
               
-        $quote->collectTotals()->save();   
-        
-        $order = $this->_checkoutSession->getLastRealOrder();
-
-        if($order->getId()){
-            $this->spotiiHelper->logSpotiiActions("exists");
-            $this->spotiiHelper->logSpotiiActions($order->getId());
-            $order->save(); 
-        }
+        $order->collectTotals()->save();   
+    
         $this->_checkoutSession->setLastQuoteId($quoteId);
         /*$invoiceCollection = $order->getInvoiceCollection();
         foreach($invoiceCollection as $invoice):
@@ -108,6 +107,7 @@ class Redirect extends SpotiiPay
             $e->getMessage()
         );
     }
+}
         return $jsonResult;
     }
 }
