@@ -77,7 +77,7 @@ class PayloadBuilder
         $orderId = $order->getId();
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference, $quoteId);
         $cancelUrl = $this->spotiiApiConfig->getCancelUrl($orderId, $reference);
-        $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
+        $checkoutPayload["total"] = strval(round($order->getGrandTotal(), self::PRECISION));
         $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
         $checkoutPayload["description"] = $reference;
         $checkoutPayload["reference"] = $reference;
