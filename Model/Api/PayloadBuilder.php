@@ -77,7 +77,7 @@ class PayloadBuilder
         $orderId = $quote->getReservedOrderId();
         $completeUrl = $this->spotiiApiConfig->getCompleteUrl($orderId, $reference, $quote->getId());
         $cancelUrl = $this->spotiiApiConfig->getCancelUrl($orderId, $reference);
-        $checkoutPayload["total"] = strval(round($quote->getGrandTotal(), self::PRECISION));
+        $checkoutPayload["total"] = strval(round(($quote->getSubtotal() - $quote->getSubtotalWithDiscount()), self::PRECISION));
         $checkoutPayload["currency"] = $this->storeManager->getStore()->getCurrentCurrencyCode();
         $checkoutPayload["description"] = $reference;
         $checkoutPayload["reference"] = $reference;
@@ -97,7 +97,7 @@ class PayloadBuilder
         $orderPayload["order"] = [
             "tax_amount" => $quote->getShippingAddress()->getBaseTaxAmount(),
             "shipping_amount" => $quote->getShippingAddress()->getShippingAmount(),
-            "discount" => ($quote->getSubtotal() - $quote->getSubtotalWithDiscount())
+            "discount" => 0
         ];
         return $orderPayload;
     }
