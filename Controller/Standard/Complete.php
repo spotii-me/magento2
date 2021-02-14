@@ -39,7 +39,7 @@ class Complete extends SpotiiPay
 
             //$order = $this->_quoteManagement->submit($quote);
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-            $this->spotiiHelper->logSpotiiActions($order->getQuoteId());
+            //$this->spotiiHelper->logSpotiiActions($order->getQuoteId());
 
             $this->spotiiHelper->logSpotiiActions("5");
             $amount = $order->getGrandTotal();
