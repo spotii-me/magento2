@@ -29,6 +29,10 @@ class PaymentAction implements ArrayInterface
             [
                 'value' => \Spotii\Spotiipay\Model\SpotiiPay::ACTION_AUTHORIZE_CAPTURE,
                 'label' => __('Authorize and Capture')
+            ],
+            [
+                'value' => \Spotii\Spotiipay\Model\SpotiiPay::ACTION_SALE,
+                'label' => __('Sale')
             ]
         ];
     }

@@ -23,7 +23,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     const PAYMENT_CODE = 'spotiipay';
     const ADDITIONAL_INFORMATION_KEY_ORDERID = 'spotii_order_id';
     const SPOTII_CAPTURE_EXPIRY = 'spotii_capture_expiry';
-    
+    const ACTION_SALE = 'sale';
+
     /**
      * @var string
      */
@@ -347,20 +348,20 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         //     $this->spotiiHelper->logSpotiiActions("Not authorized on Spotii");
         //     throw new LocalizedException(__('Not authorized on Spotii. Please try again.'));
         // }
-        $captureExpirationTimestamp = $this->dateTime->timestamp($captureExpiration);
+        //$captureExpirationTimestamp = $this->dateTime->timestamp($captureExpiration);
         $currentTimestamp = $this->dateTime->timestamp("now");
-        $this->spotiiHelper->logSpotiiActions("Capture Expiration Timestamp : $captureExpirationTimestamp");
+        //$this->spotiiHelper->logSpotiiActions("Capture Expiration Timestamp : $captureExpirationTimestamp");
         $this->spotiiHelper->logSpotiiActions("Current Timestamp : $currentTimestamp");
-        if ($captureExpirationTimestamp >= $currentTimestamp) {
+        //if ($captureExpirationTimestamp >= $currentTimestamp) {
            // $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
             $this->spotiiCapture($reference);
             //$payment->setTransactionId($reference)->setIsTransactionClosed(false);
             $this->spotiiHelper->logSpotiiActions("Authorized on Spotii");
             $this->spotiiHelper->logSpotiiActions("****Capture at Magento end****");
-        } else {
+        /*} else {
             $this->spotiiHelper->logSpotiiActions("Unable to capture amount. Time expired.");
             throw new LocalizedException(__('Unable to capture amount.'));
-        }
+        }*/
     }
 
     /**

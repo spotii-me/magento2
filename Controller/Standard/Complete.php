@@ -34,7 +34,7 @@ class Complete extends SpotiiPay
             $quoteId = $this->getRequest()->getParam("quote_id");
             $this->spotiiHelper->logSpotiiActions($quoteId);
 
-            $quote = $this->_checkoutSession->getQuote();
+            //$quote = $this->_checkoutSession->getQuote();
             $this->spotiiHelper->logSpotiiActions("4");
 
             //$order = $this->_quoteManagement->submit($quote);
@@ -42,11 +42,13 @@ class Complete extends SpotiiPay
             $this->spotiiHelper->logSpotiiActions($order->getQuoteId());
 
             $this->spotiiHelper->logSpotiiActions("5");
-            $order->getPayment();
-            $this->spotiiHelper->logSpotiiActions("5.1");
-            $order->getGrandTotal();
-            $this->spotiiHelper->logSpotiiActions($order->getGrandTotal());
-            $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
+            $amount = $order->getGrandTotal();
+            $payment = $order->getPayment();
+            $this->_spotiipayModel->capturePostSpotii($payment, $amount);
+
+            $payment->registerAuthorizationNotification($amount);
+            $payment->registerCaptureNotification($amount);
+
             $this->spotiiHelper->logSpotiiActions("6");
 
             $payment= $order->getPayment();

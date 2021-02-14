@@ -16,7 +16,7 @@
                 <merchant_country>US</merchant_country>
               <payment_mode>sandbox</payment_mode>
                 <log_tracker>0</log_tracker>
-<!--                <payment_action>authorize_capture</payment_action>-->
+               <payment_action>sale</payment_action>
                 <title>Spotii</title>
 	    </spotiipay>
         </payment>
