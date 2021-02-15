@@ -329,7 +329,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $result['currency'] :
         null;
         $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
-
+        $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
         if ($spotiiOrderTotal != null
             && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal, $currency, $spotiiOrderCurr)) {
             $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
@@ -489,7 +489,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $discount = $order->getSubtotal() - $order->getSubtotalWithDiscount();
 
         $formattedPrice = $order->getBaseCurrency()->formatTxt(
-            $order->getGrandTotal() + $discount
+            $order->getGrandTotal()
         );
        
         if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
