@@ -29,7 +29,7 @@ class Complete extends SpotiiPay
             $quoteId = $this->getRequest()->getParam("quote_id");
 
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-            $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
+            $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal() + ($order->getSubtotal() - $order->getSubtotalWithDiscount()));
             $order->setState('processing')->setStatus('paymentauthorised');
             $order->save();
 
