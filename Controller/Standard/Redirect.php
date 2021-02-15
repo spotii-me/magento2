@@ -30,9 +30,8 @@ class Redirect extends SpotiiPay
         $order = $this->_checkoutSession->getLastRealOrder();
 
         if($order->getId()){
-            $this->spotiiHelper->logSpotiiActions("exists");
             $this->spotiiHelper->logSpotiiActions($order->getId());
-            $this->spotiiHelper->logSpotiiActions($order->getState());
+            //$this->spotiiHelper->logSpotiiActions($order->getState());
         //$this->spotiiHelper->logSpotiiActions("Quote Id : " . $order->getId());
         if ($this->_customerSession->isLoggedIn()) {
             $customerId = $this->_customerSession->getCustomer()->getId();
