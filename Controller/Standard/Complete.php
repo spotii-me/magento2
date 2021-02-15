@@ -26,22 +26,11 @@ class Complete extends SpotiiPay
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
 
             $orderId = $this->getRequest()->getParam("id");
-            $this->spotiiHelper->logSpotiiActions($orderId);
-
             $reference = $this->getRequest()->getParam("magento_spotii_id");
-            $this->spotiiHelper->logSpotiiActions($reference);
-
             $quoteId = $this->getRequest()->getParam("quote_id");
-            $this->spotiiHelper->logSpotiiActions($quoteId);
 
-            //$quote = $this->_checkoutSession->getQuote();
-            $this->spotiiHelper->logSpotiiActions("4");
-
-            //$order = $this->_quoteManagement->submit($quote);
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-            //$this->spotiiHelper->logSpotiiActions($order->getQuoteId());
 
-            $this->spotiiHelper->logSpotiiActions("5");
             $amount = $order->getGrandTotal();
             $payment = $order->getPayment();
             $this->_spotiipayModel->capturePostSpotii($payment, $amount);
@@ -49,21 +38,13 @@ class Complete extends SpotiiPay
             $payment->registerAuthorizationNotification($amount);
             $payment->registerCaptureNotification($amount);
 
-            $this->spotiiHelper->logSpotiiActions("6");
 
             $payment= $order->getPayment();
-            $this->spotiiHelper->logSpotiiActions("7");
 
-            //$payment->setIsTransactionApproved(true);
-            $this->spotiiHelper->logSpotiiActions("8");
-
-            //$payment->save();
+            $payment->setIsTransactionApproved(true);
             $order->setPayment($payment);
-            $this->spotiiHelper->logSpotiiActions("9");
 
-            //$order->setState('processing')->setStatus('paymentauthorised');
             $order->save();
-            $this->spotiiHelper->logSpotiiActions("10");
 
             if ($order) {
                 $this->_spotiipayModel->createTransaction(
@@ -76,7 +57,6 @@ class Complete extends SpotiiPay
                     $reference,
                     \Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE
                 );
-                // $quote->collectTotals()->save();          
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email
@@ -90,11 +70,11 @@ class Complete extends SpotiiPay
                 $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
                 $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
-                $invoiceCollection = $order->getInvoiceCollection();
+                /*$invoiceCollection = $order->getInvoiceCollection();
                 foreach($invoiceCollection as $invoice):
                     $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_PAID);
                     $this->invoiceRepository->save($invoice);
-                endforeach;
+                endforeach;*/
                 $this->getResponse()->setRedirect(
                     $this->_url->getUrl('checkout/onepage/success')
                );
