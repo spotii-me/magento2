@@ -486,10 +486,10 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $payment = $order->getPayment();
         $payment->setLastTransId($reference);
         $payment->setTransactionId($reference);
-        $discount = $order->getSubtotal() - $order->getSubtotalWithDiscount();
-
+        $discount = strval(round($order->getGrandTotal() - $order->getDiscountAmount(), \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION));
+        $this->spotiiHelper->logSpotiiActions("Discount: $discount");
         $formattedPrice = $order->getBaseCurrency()->formatTxt(
-            $order->getGrandTotal() - $order->getDiscountAmount()
+            $discount
         );
        
         if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
