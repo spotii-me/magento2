@@ -289,9 +289,10 @@ define([
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
-          console.log(response);
-          var amount = response.base_subtotal;
-          var installmentFee = response.base_subtotal/ 4;
+          //console.log(response);
+          var totalAmount = response.grand_total - response.discount_amount;
+          var amount = totalAmount;
+          var installmentFee = totalAmount/ 4;
           var installmentFeeLast =
             amount -
             installmentFee.toFixed(
@@ -474,7 +475,7 @@ define([
           min= 20;
           break;
       }
-      console.log(total+curr);
+      //console.log(total+curr);
       if (total >= min) return true;
       else return false;
     },
