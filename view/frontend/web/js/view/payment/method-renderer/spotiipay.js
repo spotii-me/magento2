@@ -289,6 +289,7 @@ define([
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
+          console.log(response);
           var amount = response.base_subtotal;
           var installmentFee = response.base_subtotal/ 4;
           var installmentFeeLast =
@@ -462,7 +463,7 @@ define([
     },
 
     isTotalValid: function () {
-      var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.base_subtotal;
+      var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.totalsData.grand_total - window.checkoutConfig.totalsData.base_discount_amount;
       var curr = window.checkoutConfig.quoteData.quote_currency_code;
       var min=200;
       switch(curr){
