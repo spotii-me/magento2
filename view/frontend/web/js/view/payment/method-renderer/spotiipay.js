@@ -289,7 +289,7 @@ define([
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
-          console.log(response);
+         // console.log(response);
           var totalAmount = response.base_grand_total - response.base_discount_amount;
           var amount = totalAmount;
           var installmentFee = totalAmount/ 4;
@@ -475,7 +475,7 @@ define([
           min= 20;
           break;
       }
-      console.log(total+curr);
+      //console.log(total+curr);
       if (total >= min) return true;
       else return false;
     },
