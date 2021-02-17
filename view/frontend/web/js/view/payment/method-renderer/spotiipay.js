@@ -289,8 +289,8 @@ define([
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
-          //console.log(response);
-          var totalAmount = response.grand_total - response.discount_amount;
+          console.log(response);
+          var totalAmount = response.base_grand_total - response.base_discount_amount;
           var amount = totalAmount;
           var installmentFee = totalAmount/ 4;
           var installmentFeeLast =
@@ -464,7 +464,7 @@ define([
     },
 
     isTotalValid: function () {
-      var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.totalsData.grand_total - window.checkoutConfig.totalsData.base_discount_amount;
+      var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.totalsData.base_grand_total - window.checkoutConfig.totalsData.base_discount_amount;
       var curr = window.checkoutConfig.quoteData.quote_currency_code;
       var min=200;
       switch(curr){
@@ -475,12 +475,13 @@ define([
           min= 20;
           break;
       }
-      //console.log(total+curr);
+      console.log(total+curr);
       if (total >= min) return true;
       else return false;
     },
 
     placeOrder: function (data, event) {
+      location.load();
       this.continueToSpotiipay();
     },
   });
