@@ -489,7 +489,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $discount = $order->getSubtotal() - $order->getSubtotalWithDiscount();
 
         $formattedPrice = $order->getBaseCurrency()->formatTxt(
-            $order->getSubtotal() + $order->getDiscountAmount()
+            $order->getGrandTotal() + $order->getDiscountAmount()
         );
        
         if ($type == \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER) {
