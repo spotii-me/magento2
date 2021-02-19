@@ -343,25 +343,25 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
         }
 
-        // $captureExpiration = (isset($result['capture_expiration']) && $result['capture_expiration']) ? $result['capture_expiration'] : null;
-        // if ($captureExpiration === null) {
-        //     $this->spotiiHelper->logSpotiiActions("Not authorized on Spotii");
-        //     throw new LocalizedException(__('Not authorized on Spotii. Please try again.'));
-        // }
-        //$captureExpirationTimestamp = $this->dateTime->timestamp($captureExpiration);
+        $captureExpiration = (isset($result['capture_expiration']) && $result['capture_expiration']) ? $result['capture_expiration'] : null;
+        if ($captureExpiration === null) {
+            $this->spotiiHelper->logSpotiiActions("Not authorized on Spotii");
+            throw new LocalizedException(__('Not authorized on Spotii. Please try again.'));
+        }
+        $captureExpirationTimestamp = $this->dateTime->timestamp($captureExpiration);
         $currentTimestamp = $this->dateTime->timestamp("now");
-        //$this->spotiiHelper->logSpotiiActions("Capture Expiration Timestamp : $captureExpirationTimestamp");
+        $this->spotiiHelper->logSpotiiActions("Capture Expiration Timestamp : $captureExpirationTimestamp");
         $this->spotiiHelper->logSpotiiActions("Current Timestamp : $currentTimestamp");
-        //if ($captureExpirationTimestamp >= $currentTimestamp) {
-           // $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+        if ($captureExpirationTimestamp >= $currentTimestamp) {
+            $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
             $this->spotiiCapture($reference);
-            //$payment->setTransactionId($reference)->setIsTransactionClosed(false);
+            $payment->setTransactionId($reference)->setIsTransactionClosed(false);
             $this->spotiiHelper->logSpotiiActions("Authorized on Spotii");
             $this->spotiiHelper->logSpotiiActions("****Capture at Magento end****");
-        /*} else {
+        } else {
             $this->spotiiHelper->logSpotiiActions("Unable to capture amount. Time expired.");
             throw new LocalizedException(__('Unable to capture amount.'));
-        }*/
+        }
     }
 
     /**
@@ -375,10 +375,10 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     public function setSpotiiCaptureExpiry($reference, $payment)
     {
         $spotiiOrder = $this->getSpotiiOrderInfo($reference);
-        // if (isset($spotiiOrder['capture_expiration']) && $spotiiOrder['capture_expiration']) {
-        //     // $payment->setAdditionalInformation(self::SPOTII_CAPTURE_EXPIRY, $spotiiOrder['capture_expiration']);
-        //     // $payment->save();
-        // }
+        if (isset($spotiiOrder['capture_expiration']) && $spotiiOrder['capture_expiration']) {
+            $payment->setAdditionalInformation(self::SPOTII_CAPTURE_EXPIRY, $spotiiOrder['capture_expiration']);
+            $payment->save();
+        }
     }
 
     /**

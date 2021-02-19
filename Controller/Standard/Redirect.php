@@ -28,11 +28,11 @@ class Redirect extends SpotiiPay
         //$this->_checkoutSession->restoreQuote();
         $quote = $this->_checkoutSession->getQuote();
         $order = $this->_checkoutSession->getLastRealOrder();
-
+        $order->setState('new')->setStatus('pending');
         if($order->getId()){
             $this->spotiiHelper->logSpotiiActions($order->getId());
             //$this->spotiiHelper->logSpotiiActions($order->getState());
-        //$this->spotiiHelper->logSpotiiActions("Quote Id : " . $order->getId());
+            //$this->spotiiHelper->logSpotiiActions("Quote Id : " . $order->getId());
         if ($this->_customerSession->isLoggedIn()) {
             $customerId = $this->_customerSession->getCustomer()->getId();
             $this->spotiiHelper->logSpotiiActions("Customer Id : $customerId");
