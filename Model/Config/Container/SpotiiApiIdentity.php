@@ -23,10 +23,10 @@ class SpotiiApiIdentity extends Container implements SpotiiApiConfigInterface
     
     
     private $checkoutUrlLive = "https://api.spotii.me";
-    private $checkoutUrlSandbox = "https://api.spotii.com";
+    private $checkoutUrlSandbox = "https://api.dev.spotii.me";
 
     private $authUrlLive = "https://auth.spotii.me";
-    private $authtUrlSandbox = "https://auth.spotii.com";
+    private $authtUrlSandbox = "https://auth.dev.spotii.me";
 
     /**
      * @inheritdoc
