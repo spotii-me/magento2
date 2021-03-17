@@ -35,7 +35,7 @@ bodyTag.appendChild(button2);
 var a1 = document.createElement('a');
 a1.id = 'fancy';
 a1.style.display='none';
-a1.classList= 'fancy-box lightbox';
+a1.classList= 'lightbox';
 a1.textContent ='open lightbox';
 a1.href='';
 bodyTag.appendChild(a1);
@@ -50,7 +50,7 @@ var LoadCSS = function (filename) {
 LoadCSS("https://widget.spotii.me/v1/javascript/iframe-lightbox.min.css");
 var script = document.createElement('script');
 script.type = 'text/javascript';
-script.src = 'https://widget.spotii.me/v1/javascript/iframe-lightbox.min.js';
+script.src = 'https://widget.spotii.me/v1/javascript/iframe-lightbox-fancy.min.js';
 document.getElementsByTagName('body')[0].appendChild(script);
 //-----------------
 
