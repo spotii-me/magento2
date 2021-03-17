@@ -464,13 +464,13 @@ define([
     isTotalValid: function () {
       var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
       var curr = window.checkoutConfig.quoteData.quote_currency_code;
-      var min=200;
+      var min=1;
       switch(curr){
         case "USD":
           total= total*3.6730;
           break;
         case "BHD":
-          min= 20;
+          min= 1;
           break;
       }
       console.log(total+curr);
