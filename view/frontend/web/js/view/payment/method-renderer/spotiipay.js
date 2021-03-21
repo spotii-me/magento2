@@ -350,6 +350,12 @@ define([
         case "BHD":	
           min="20 BHD";	
           break;	
+        case "OMR":	
+          min="20 OMR";	
+          break;
+        case "KWD":	
+          min="20 KWD";	
+          break;	
       }	
         return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over "+min+". With a little more shopping, you can split your payment over 4 cost-free instalments.");	
     },
@@ -470,6 +476,8 @@ define([
           total= total*3.6730;
           break;
         case "BHD":
+        case "OMR":	
+        case "KWD":
           min= 20;
           break;
       }
