@@ -11,6 +11,7 @@ use Spotii\Spotiipay\Helper\Data as SpotiiHelper;
 use Spotii\Spotiipay\Model\Api\ConfigInterface;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
 use Magento\Sales\Model\Order\InvoiceRepository;
+use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 
 /**
  * Class Transaction
@@ -53,7 +54,10 @@ class InventoryWorker
     protected $stockRegistry;
 
     protected $date;
+
     protected $invoiceRepository;
+
+    protected $objectManager;
 
     const PAYMENT_CODE = 'spotiipay';
     /**
@@ -76,7 +80,8 @@ class InventoryWorker
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
         \Magento\Framework\Stdlib\DateTime\DateTime $date,
-        InvoiceRepository $invoiceRepository
+        InvoiceRepository $invoiceRepository,
+        ObjectManager $objectManager
     ) {
         $this->orderFactory = $orderFactory;
         $this->spotiiHelper = $spotiiHelper;
@@ -88,7 +93,7 @@ class InventoryWorker
         $this->stockRegistry = $stockRegistry;
         $this->date = $date;
         $this->invoiceRepository = $invoiceRepository;
-
+        $this->objectManager = $objectManager;
     }
 
     /**
@@ -119,11 +124,11 @@ class InventoryWorker
                 'created_at',
                 ['lteq' => $today]
                 )->addAttributeToSelect('increment_id');
-                
+
                 $this->spotiiHelper->logSpotiiActions("ordersCollection ".sizeof($ordersCollection));
- 
+
                 $this->cleanOrders($ordersCollection, $hourAgo);
-            
+
             $this->spotiiHelper->logSpotiiActions("****Inventory clean up process end****");
         } catch (\Exception $e) {
             $this->spotiiHelper->logSpotiiActions("Error while cleaning up orders by Spotii" . $e->getMessage());
@@ -139,6 +144,8 @@ class InventoryWorker
     private function cleanOrders($ordersCollection = null, $hourAgo)
     {
         try{
+            $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+            $registery = $objectManager->get('Magento\Framework\Registry');
         if ($ordersCollection) {
             foreach ($ordersCollection as $orderObj) {
                 $orderIncrementId = $orderObj->getIncrementId();
@@ -146,30 +153,18 @@ class InventoryWorker
                 $payment = $order->getPayment();
                 $paymentMethod =$payment->getMethod();
                 $created = $order->getCreatedAt();
-
                     if($paymentMethod == self::PAYMENT_CODE && $hourAgo > $created){
                     $this->spotiiHelper->logSpotiiActions("Order cleaned up ".$orderIncrementId.' '.$created);
                     foreach ($order->getAllVisibleItems() as $item) {
-                        $sku = $item->getSku();
-                        $qtyOrdered = $item->getQtyOrdered();
-                
-                        $stockItem = $this->stockRegistry->getStockItemBySku($sku);
-                
-                        $qtyInStock= $stockItem->getQty();
-                        $finalQty = $qtyInStock +$qtyOrdered;
-                
-                        $stockItem->setQty($finalQty);
-                        $stockItem->setIsInStock((bool)$finalQty);
-                        $this->stockRegistry->updateStockItemBySku($sku, $stockItem);
+                        $registery->register( 'isSecureArea', 'true' );
+                        $order->delete();
+                        $registery->unregister( 'isSecureArea' );
                     }
                     $invoiceCollection = $order->getInvoiceCollection();
                     foreach($invoiceCollection as $invoice):
-                        $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_CANCELED);
-                        $this->invoiceRepository->save($invoice);
+                        $invoice->delete();
                     endforeach;
-                    $order->setState('closed')->setStatus('closed');
-                    $order->save();
-                    
+
             }else if($paymentMethod == self::PAYMENT_CODE){
                 $this->spotiiHelper->logSpotiiActions("Order not cleaned up ".$orderIncrementId.' '.$created);
             }
