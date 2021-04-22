@@ -11,7 +11,6 @@ use Spotii\Spotiipay\Helper\Data as SpotiiHelper;
 use Spotii\Spotiipay\Model\Api\ConfigInterface;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
 use Magento\Sales\Model\Order\InvoiceRepository;
-use Magento\InventorySalesApi\Api\GetProductSalableQtyInterface;
 
 /**
  * Class Transaction
