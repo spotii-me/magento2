@@ -16,7 +16,7 @@ use Spotii\Spotiipay\Controller\AbstractController\SpotiiPay;
 class Complete extends SpotiiPay
 {
     /**
-     * Complete the order
+     * Complete the transaction
      */
     public function execute()
     {
@@ -46,7 +46,7 @@ class Complete extends SpotiiPay
             \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
         );
 
-        $order->setState('new')->setStatus('pending');
+        $order->setState('new')->setStatus('processing');
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
 
@@ -59,7 +59,7 @@ class Complete extends SpotiiPay
 
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
-            $order->setState('processing')->setStatus('paymentauthorised');
+            $order->setState('processing')->setStatus('Payment Authorised by Spotii');
             $order->save();
 
             if ($order) {
@@ -93,11 +93,6 @@ class Complete extends SpotiiPay
                );
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
-            $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
-            $this->messageManager->addError(
-                $e->getMessage()
-            );
-        } catch (\Exception $e) {
             $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
             $this->messageManager->addError(
                 $e->getMessage()
