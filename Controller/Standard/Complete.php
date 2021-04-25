@@ -21,7 +21,7 @@ class Complete extends SpotiiPay
     public function execute()
     {
         $redirect = 'checkout/onepage/success';
-        // Create order before redirect to Spotii
+        // Create order before redirect to success
         $quote = $this->_checkoutSession->getQuote();
         $quoteId = $quote->getId();
         $quote->collectTotals()->save();
