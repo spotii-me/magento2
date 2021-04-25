@@ -21,6 +21,35 @@ class Complete extends SpotiiPay
     public function execute()
     {
         $redirect = 'checkout/onepage/success';
+        // Create order before redirect to Spotii
+        $quote = $this->_checkoutSession->getQuote();
+        $quoteId = $quote->getId();
+        $quote->collectTotals()->save();
+        $order = $this->_quoteManagement->submit($quote);
+
+        $invoiceCollection = $order->getInvoiceCollection();
+        foreach($invoiceCollection as $invoice):
+            $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
+            $this->invoiceRepository->save($invoice);
+        endforeach;
+        $payment = $quote->getPayment();
+        $payment->setMethod('spotiipay');
+        $payment->save();
+        $quote->reserveOrderId();
+        $quote->setPayment($payment);
+        $quote->save();
+        $this->_checkoutSession->replaceQuote($quote);
+        $reference = $payment->getAdditionalInformation('spotii_order_id');
+        $this->_spotiipayModel->createTransaction(
+            $order,
+            $reference,
+            \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
+        );
+
+        $order->setState('new')->setStatus('pending');
+        $order->save(); // **
+        $this->_checkoutSession->setLastQuoteId($quoteId);
+
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
 
@@ -34,13 +63,13 @@ class Complete extends SpotiiPay
             $order->save();
 
             if ($order) {
-                
+
                 $this->_spotiipayModel->createTransaction(
                     $order,
                     $reference,
                     \Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE
                 );
-                // $quote->collectTotals()->save();          
+                // $quote->collectTotals()->save();
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email
@@ -48,7 +77,7 @@ class Complete extends SpotiiPay
                     $this->_orderSender->send($order);
                 } catch (\Exception $e) {
                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
-                }; 
+                };
 
                 $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
                 $this->_checkoutSession->setLastQuoteId($quoteId);
