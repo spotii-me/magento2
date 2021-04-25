@@ -60,7 +60,7 @@ class Redirect extends SpotiiPay
             $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
             $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
         }
-    try{
+        try{
         $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
         $jsonResult = $this->_resultJsonFactory->create();
         $jsonResult->setData($json);
@@ -71,5 +71,6 @@ class Redirect extends SpotiiPay
             $e->getMessage()
         );
     }
+        return $jsonResult;
     }
 }
