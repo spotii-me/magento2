@@ -45,8 +45,6 @@ class Complete extends SpotiiPay
             $reference,
             \Magento\Sales\Model\Order\Payment\Transaction::TYPE_ORDER
         );
-
-        $order->setState('new')->setStatus('processing');
         $order->save(); // **
         $this->_checkoutSession->setLastQuoteId($quoteId);
 

@@ -21,17 +21,16 @@ class Cancel extends SpotiiPay
     public function execute()
     {
         try {
-
             $this->messageManager->addError("<b>Transaction Cancelled!</b><br> You have cancelled your payment with Spotii :(");
             $this->spotiiHelper->logSpotiiActions("Returned from Spotii without completeing payment, order not placed");
-            $this->getResponse()->setRedirect(
-                $this->_url->getUrl('checkout/onepage/failure')
-            );
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
             $this->messageManager->addError(
                 $e->getMessage()
             );
         }
+        $this->getResponse()->setRedirect(
+        $this->_url->getUrl('checkout/onepage/failure')
+        );
     }
 }
