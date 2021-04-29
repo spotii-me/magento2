@@ -144,7 +144,7 @@ function removeOverlay() {
   document.getElementsByTagName("body")[0].removeChild(overlay);
 }
 
-//Google tag manager 
+//Google tag manager
 function onCheckout() {
   if (typeof dataLayer !== 'undefined') {
     // the variable is defined
@@ -223,12 +223,10 @@ window.closeIFrameOnCompleteOrder = function (message) {
           }
         };
         removeOverlay();
+        var rejectUrlSubmitted = rejectUrl.substring(0, rejectUrl.length - 2) + "1/";
+        location.href = rejectUrlSubmitted;
       }
 
-      break;
-    }
-    case submittedCheckOutStatus: {
-      removeOverlay();
       break;
     }
     default: {
@@ -337,27 +335,27 @@ define([
     getPaymentText: function () {
       return "Payment Schedule";
     },
-    getTotalInvalidText: function () {	   
-      var curr = window.checkoutConfig.quoteData.quote_currency_code;	      
-      var min="200 AED";	    
-      switch(curr){	   
-        case "AED":	     
-          min="200 AED";	
-          break;	
-        case "SAR":	
-          min="200 SAR";	
-          break;	
-        case "BHD":	
-          min="20 BHD";	
-          break;	
-        case "OMR":	
-          min="20 OMR";	
+    getTotalInvalidText: function () {
+      var curr = window.checkoutConfig.quoteData.quote_currency_code;
+      var min="200 AED";
+      switch(curr){
+        case "AED":
+          min="200 AED";
           break;
-        case "KWD":	
-          min="20 KWD";	
-          break;	
-      }	
-        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over "+min+". With a little more shopping, you can split your payment over 4 cost-free instalments.");	
+        case "SAR":
+          min="200 SAR";
+          break;
+        case "BHD":
+          min="20 BHD";
+          break;
+        case "OMR":
+          min="20 OMR";
+          break;
+        case "KWD":
+          min="20 KWD";
+          break;
+      }
+        return (this.isTotalValid() ? '':"You don't quite have enough in your basket: Spotii is available for purchases over "+min+". With a little more shopping, you can split your payment over 4 cost-free instalments.");
     },
     getQtyInvaildText: function () {
       document.getElementById('total-benchmark-info').textContent = "One or more of the items in your cart are out of stock.";
@@ -476,7 +474,7 @@ define([
           total= total*3.6730;
           break;
         case "BHD":
-        case "OMR":	
+        case "OMR":
         case "KWD":
           min= 20;
           break;
