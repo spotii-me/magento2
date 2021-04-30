@@ -180,7 +180,7 @@ window.closeIFrameOnCompleteOrder = function (message) {
     case successCheckOutStatus: {
       if (!isSuccess) {
         isSuccess = true;
-        //console.log('successCheckOutStatus');
+        console.log('successCheckOutStatus');
         if (typeof dataLayer !== 'undefined') {
           var params = confirmUrl.split('/');
           var reference = params[params.length - 2];
@@ -207,26 +207,30 @@ window.closeIFrameOnCompleteOrder = function (message) {
       break;
     }
     case failedCheckOutStatus: {
+        console.log('failedCheckoutStatus');
       if (hidePopup && popup) {
         popup = false;
+          console.log('hiding popup');
         document.getElementById('closeiframebtn').click();
       }
       if (!isFail) {
         isFail = true;
         isDeclined = true;
-
+        console.log('isFail:',isFail)
         document.getElementById('closeiframebtn').onclick = function () {
           if (buttonOnce) {
+              console.log('in buttonOnce if');
             buttonOnce = false;
             var rejectUrlSubmitted = rejectUrl.substring(0, rejectUrl.length - 2) + "1/";
             location.href = rejectUrlSubmitted;
           }
         };
+        console.log('setting reject by Ze');
+          var rejectUrlSubmitted = rejectUrl.substring(0, rejectUrl.length - 2) + "1/";
+          location.href = rejectUrlSubmitted;
         removeOverlay();
-        var rejectUrlSubmitted = rejectUrl.substring(0, rejectUrl.length - 2) + "1/";
-        location.href = rejectUrlSubmitted;
       }
-
+      console.log('break of failedStatus');
       break;
     }
     default: {
