@@ -32,7 +32,7 @@ class Cancel extends SpotiiPay
         $this->spotiiHelper->logSpotiiActions("Abandoned Cart");
         $this->_checkoutSession->restoreQuote();
         $this->getResponse()->setRedirect(
-        $this->_url->getUrl('checkout/onepage/failure')
+        $this->_url->getUrl('checkout/cart')
         );
     }
 }
