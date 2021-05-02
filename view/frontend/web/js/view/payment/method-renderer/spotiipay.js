@@ -291,9 +291,10 @@ define([
       storage
         .get(resourceUrlManager.getUrlForCartTotals(quote), false)
         .done(function (response) {
-          var amount = response.base_grand_total;
-          var installmentFee = response.base_grand_total / 4;
-          var installmentFeeLast =
+            var totalAmount = response.base_grand_total - response.base_discount_amount;
+            var amount = totalAmount;
+            var installmentFee = totalAmount/ 4;
+            var installmentFeeLast =
             amount -
             installmentFee.toFixed(
               window.checkoutConfig.priceFormat.precision
@@ -470,7 +471,7 @@ define([
     },
 
     isTotalValid: function () {
-      var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.quoteData.grand_total;
+        var total = this.getGrandTotal() ? this.getGrandTotal() : window.checkoutConfig.totalsData.base_grand_total - window.checkoutConfig.totalsData.base_discount_amount;
       var curr = window.checkoutConfig.quoteData.quote_currency_code;
       var min=200;
       switch(curr){
@@ -489,6 +490,7 @@ define([
     },
 
     placeOrder: function (data, event) {
+        location.load();
       this.continueToSpotiipay();
     },
   });
