@@ -2,10 +2,13 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="head.additional">
-             <action method="setTemplate">
+             <!-- <action method="setTemplate">
                 <argument name="template" xsi:type="string">Vendor_Module::product/list.phtml</argument>
-            </action>
+            </action> -->
             <block class="Spotii\Spotiipay\Block\SpotiiWidget\Catalogue" name="spotii.widget.catalog.view" template="catalog.phtml"/>
+            <block class="Spotii\Spotiipay\Block\SpotiiWidget\Catalogue" name="spotii.widget.catalog.view" template="catalog.phtml"/>
+            <block class="Spotii\Spotiipay\Block\SpotiiWidget\Catalogue" name="spotii.widget.catalog.view" template="catalog.phtml"/>
+
         </referenceContainer>
     </body>
 </page>
