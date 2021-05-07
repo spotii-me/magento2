@@ -6,9 +6,6 @@
                 <argument name="template" xsi:type="string">Vendor_Module::product/list.phtml</argument>
             </action> -->
             <block class="Spotii\Spotiipay\Block\SpotiiWidget\Catalogue" name="spotii.widget.catalog.view" template="catalog.phtml"/>
-            <block class="Spotii\Spotiipay\Block\SpotiiWidget\Catalogue" name="spotii.widget.catalog.view" template="catalog.phtml"/>
-            <block class="Spotii\Spotiipay\Block\SpotiiWidget\Catalogue" name="spotii.widget.catalog.view" template="catalog.phtml"/>
-
         </referenceContainer>
     </body>
 </page>
