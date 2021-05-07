@@ -24,7 +24,6 @@ class Redirect extends SpotiiPay
      */
     public function execute()
     {
-        try{
             $this->spotiiHelper->logSpotiiActions("****Starting Spotii****");
             $quote = $this->_checkoutSession->getQuote();
             $this->spotiiHelper->logSpotiiActions("Quote Id : " . $quote->getId());
@@ -33,13 +32,15 @@ class Redirect extends SpotiiPay
                 $this->spotiiHelper->logSpotiiActions("Customer Id : $customerId");
                 $customer = $this->_customerRepository->getById($customerId);
                 $quote->setCustomer($customer);
+                $this->spotiiHelper->logSpotiiActions("Quote: " . $quote);
                 $billingAddress = $quote->getBillingAddress();
                 $shippingAddress = $quote->getShippingAddress();
+                $this->spotiiHelper->logSpotiiActions("BA : " . $billingAddress);
+                $this->spotiiHelper->logSpotiiActions("SA:" . $shippingAddress);
                 if ((empty($shippingAddress) || empty($shippingAddress->getStreetLine(1))) && (empty($billingAddress) || empty($billingAddress->getStreetLine(1)))) {
                     $json = $this->_jsonHelper->jsonEncode(["message" => "Please select an address"]);
                     $jsonResult = $this->_resultJsonFactory->create();
                     $jsonResult->setData($json);
-                    return $jsonResult;
                 } elseif (empty($billingAddress) || empty($billingAddress->getStreetLine(1)) || empty($billingAddress->getFirstname())) {
                     $quote->setBillingAddress($shippingAddress);
                 }
@@ -61,9 +62,6 @@ class Redirect extends SpotiiPay
                 $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
                 $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
             }
-        }catch(\Magento\Framework\Exception\LocalizedException $e){
-            $this->spotiiHelper->logSpotiiActions("Exception: " . $e->getMessage());
-        }
         try{
         $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
         $jsonResult = $this->_resultJsonFactory->create();
