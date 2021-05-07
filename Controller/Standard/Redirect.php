@@ -53,7 +53,7 @@ class Redirect extends SpotiiPay
                         ->setCustomerGroupId(\Magento\Customer\Api\Data\GroupInterface::NOT_LOGGED_IN_ID);
                 }
             }
-        try{
+
         $payment = $quote->getPayment();
         $payment->setMethod('spotiipay');
         $payment->save();
@@ -61,18 +61,17 @@ class Redirect extends SpotiiPay
         $quote->setPayment($payment);
         $quote->save();
         $this->_checkoutSession->replaceQuote($quote);
-        $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
-        $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
-        $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
-        $jsonResult = $this->_resultJsonFactory->create();
-        $jsonResult->setData($json);
-
+        try {
+            $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
+            $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
+            $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
+            $jsonResult = $this->_resultJsonFactory->create();
+            $jsonResult->setData($json);
+            return $jsonResult;
     }catch (\Magento\Framework\Exception\LocalizedException $e) {
         $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
         $this->messageManager->addError(
             $e->getMessage()
         );
     }
-        return $jsonResult;
-    }
-}
+}}
