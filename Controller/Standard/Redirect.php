@@ -24,36 +24,33 @@ class Redirect extends SpotiiPay
      */
     public function execute()
     {
-            $this->spotiiHelper->logSpotiiActions("****Starting Spotii****");
-            $quote = $this->_checkoutSession->getQuote();
-            $this->spotiiHelper->logSpotiiActions("Quote Id : " . $quote->getId());
-            if ($this->_customerSession->isLoggedIn()) {
-                $customerId = $this->_customerSession->getCustomer()->getId();
-                $this->spotiiHelper->logSpotiiActions("Customer Id : $customerId");
-                $customer = $this->_customerRepository->getById($customerId);
-                $quote->setCustomer($customer);
-                $this->spotiiHelper->logSpotiiActions("Quote: " . $quote);
-                $billingAddress = $quote->getBillingAddress();
-                $shippingAddress = $quote->getShippingAddress();
-                $this->spotiiHelper->logSpotiiActions("BA : " . $billingAddress);
-                $this->spotiiHelper->logSpotiiActions("SA:" . $shippingAddress);
-                if ((empty($shippingAddress) || empty($shippingAddress->getStreetLine(1))) && (empty($billingAddress) || empty($billingAddress->getStreetLine(1)))) {
-                    $json = $this->_jsonHelper->jsonEncode(["message" => "Please select an address"]);
-                    $jsonResult = $this->_resultJsonFactory->create();
-                    $jsonResult->setData($json);
-                } elseif (empty($billingAddress) || empty($billingAddress->getStreetLine(1)) || empty($billingAddress->getFirstname())) {
-                    $quote->setBillingAddress($shippingAddress);
-                }
-            } else {
-                $post = $this->getRequest()->getPostValue();
-                $this->spotiiHelper->logSpotiiActions("Guest customer");
-                if (!empty($post['email'])) {
-                    $quote->setCustomerEmail($post['email'])
-                        ->setCustomerIsGuest(true)
-                        ->setCustomerGroupId(\Magento\Customer\Api\Data\GroupInterface::NOT_LOGGED_IN_ID);
-                }
+        $this->spotiiHelper->logSpotiiActions("****Starting Spotii****");
+        $quote = $this->_checkoutSession->getQuote();
+        $this->spotiiHelper->logSpotiiActions("Quote Id : " . $quote->getId());
+        if ($this->_customerSession->isLoggedIn()) {
+            $customerId = $this->_customerSession->getCustomer()->getId();
+            $this->spotiiHelper->logSpotiiActions("Customer Id : $customerId");
+            $customer = $this->_customerRepository->getById($customerId);
+            $quote->setCustomer($customer);
+            $billingAddress = $quote->getBillingAddress();
+            $shippingAddress = $quote->getShippingAddress();
+            if ((empty($shippingAddress) || empty($shippingAddress->getStreetLine(1))) && (empty($billingAddress) || empty($billingAddress->getStreetLine(1)))) {
+                $json = $this->_jsonHelper->jsonEncode(["message" => "Please select an address"]);
+                $jsonResult = $this->_resultJsonFactory->create();
+                $jsonResult->setData($json);
+                return $jsonResult;
+            } elseif (empty($billingAddress) || empty($billingAddress->getStreetLine(1)) || empty($billingAddress->getFirstname())) {
+                $quote->setBillingAddress($shippingAddress);
             }
-
+        } else {
+            $post = $this->getRequest()->getPostValue();
+            $this->spotiiHelper->logSpotiiActions("Guest customer");
+            if (!empty($post['email'])) {
+                $quote->setCustomerEmail($post['email'])
+                    ->setCustomerIsGuest(true)
+                    ->setCustomerGroupId(\Magento\Customer\Api\Data\GroupInterface::NOT_LOGGED_IN_ID);
+            }
+        }
         $payment = $quote->getPayment();
         $payment->setMethod('spotiipay');
         $payment->save();
@@ -61,17 +58,24 @@ class Redirect extends SpotiiPay
         $quote->setPayment($payment);
         $quote->save();
         $this->_checkoutSession->replaceQuote($quote);
-        try {
-            $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
-            $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
+        $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
+        $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
+        try{
             $json = $this->_jsonHelper->jsonEncode(["redirectURL" => $checkoutUrl]);
             $jsonResult = $this->_resultJsonFactory->create();
             $jsonResult->setData($json);
-            return $jsonResult;
-    }catch (\Magento\Framework\Exception\LocalizedException $e) {
-        $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
-        $this->messageManager->addError(
-            $e->getMessage()
-        );
+
+        }catch (\Magento\Framework\Exception\LocalizedException $e) {
+            $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+            $this->messageManager->addError(
+                $e->getMessage()
+            );
+        } catch (\Exception $e) {
+            $this->spotiiHelper->logSpotiiActions("Redirect Exception: " . $e->getMessage());
+            $this->messageManager->addError(
+                $e->getMessage()
+            );
+        }
+        return $jsonResult;
     }
-}}
+}
