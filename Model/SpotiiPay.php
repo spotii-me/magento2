@@ -186,7 +186,9 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
         $payment->save();
         $response = $this->getSpotiiRedirectUrl($quote, $reference);
-        $result = $this->jsonHelper->jsonDecode($response, true);
+        $this->spotiiHelper->logSpotiiActions("response : $response");
+        $result = json_decode($response, true);
+        // $result = $this->jsonHelper->jsonDecode($response, true);
         $orderUrl = array_key_exists('checkout_url', $result) ? $result['checkout_url'] : false;
         $this->spotiiHelper->logSpotiiActions("Order url : $orderUrl");
         if (!$orderUrl) {
