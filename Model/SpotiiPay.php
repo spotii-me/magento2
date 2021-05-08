@@ -141,7 +141,6 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         Api\ProcessorInterface $spotiiApiProcessor,
         Order\Payment\Transaction\BuilderInterface $transactionBuilder,
         \Magento\Framework\Json\Helper\Data $jsonHelper,
-        \Magento\Framework\Serialize\Serializer\Json $myJsonHelper,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
         \Magento\Framework\Api\AttributeValueFactory $customAttributeFactory,
@@ -187,10 +186,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
         $payment->save();
         $response = $this->getSpotiiRedirectUrl($quote, $reference);
-//        $result = $this->jsonHelper->jsonDecode($response, true);
-        $jsonDecode = $this->myJsonHelper->unserialize($response);
-        $json = $this->myJsonHelper->serialize($jsonDecode);
-        $orderUrl = array_key_exists('checkout_url', $json) ? $json['checkout_url'] : false;
+        $result = $this->jsonHelper->jsonDecode($response, true);
+        $orderUrl = array_key_exists('checkout_url', $result) ? $result['checkout_url'] : false;
         $this->spotiiHelper->logSpotiiActions("Order url : $orderUrl");
         if (!$orderUrl) {
             $this->spotiiHelper->logSpotiiActions("No Token response from API");
