@@ -16,7 +16,6 @@ define([
             //initialize parent Component
             this._super();
             this.processSpotiiDocument();
-
         },
 
         processSpotiiDocument: function() {
