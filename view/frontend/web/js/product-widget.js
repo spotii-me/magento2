@@ -15,7 +15,8 @@ define([
         initialize: function () {
             //initialize parent Component
             this._super();
-            this.processSpotiiDocument();
+            setTimeout(function(){ this.processSpotiiDocument()}, 10000);
+            // this.processSpotiiDocument();
         },
 
         processSpotiiDocument: function() {
