@@ -6,7 +6,6 @@
                     <block class="Magento\Catalog\Block\Product\ProductList\Item\Container" name="category.product.addto" as="addto">
                         <block as="product_list_blockname"  
                             class="Spotii\Spotiipay\Block\SpotiiWidget\Catalogue"
-                            after="-"
                             name="product.list.blockname" 
                             template="catalog.phtml"/>
                     </block>

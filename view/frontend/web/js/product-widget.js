@@ -14,8 +14,7 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 		initialize: function () {
 			//initialize parent Component
 			this._super();
-			setTimeout(() => this.processSpotiiDocument(), 10000);
-			// this.processSpotiiDocument();
+			this.processSpotiiDocument();
 		},
 
 		processSpotiiDocument: function () {
