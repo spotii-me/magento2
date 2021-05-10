@@ -81,8 +81,7 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 			var script = document.createElement('script');
 			script.type = 'text/javascript';
 			script.src =
-				'https://widget.spotii.me/v1/javascript/price-widget?uuid=' +
-				document.spotiiConfig.merchantID;
+				'https://widget.spotii.me/v1/javascript/price-widget'
 			$('head').append(script);
 			console.log('dom loaded');
 		},
