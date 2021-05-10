@@ -14,16 +14,17 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 		initialize: async function () {
 			//initialize parent Component
 			this._super();
-			await this.loopThroughProduct();
-			this.processSpotiiDocument();
+		 	this.loopThroughProduct();
 		},
 
 		loopThroughProduct: function () {
+			const allProducts = document.getElementsByClassName('price-wrapper');
 			for (let product of allProducts) {
 				console.log(this.jsConfig, 'js config in loop through product')
 				this.jsConfig.renderToPath = ['#' + product.id];
 				console.log(this.jsConfig.renderToPath, 'render Path in js config');
 				console.log(product.id, 'product ID tag');
+				this.processSpotiiDocument();
 			}
 		},
 
