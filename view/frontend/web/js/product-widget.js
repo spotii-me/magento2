@@ -21,7 +21,7 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 			console.log('rendering started');
 			var self = this;
 			console.log(self.jsConfig);
-			const allProducts = document.getElementsByClassName('price-wrapper');
+			const allProducts = document.getElementsByClassName('product-item-info');
 			console.log(allProducts, 'allProducts')
 			for (let product of allProducts) {
 				const text = document.createElement('span');
