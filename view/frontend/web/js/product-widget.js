@@ -17,17 +17,18 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 			this.processSpotiiDocument();
 		},
 
-		processSpotiiDocument: function () {
+		processSpotiiDocument: async function () {
 			console.log('rendering started');
 			var self = this;
 			console.log(self.jsConfig);
 			const allProducts = document.getElementsByClassName('price-wrapper');
 			console.log(allProducts, 'allProducts')
 			for (let product of allProducts) {
+				self.jsConfig.renderToPath = ["#"+product.id];
+				console.log(self.jsConfig.renderToPath , 'render Path in js config')
 				document.spotiiConfig = self.jsConfig;
-				document.spotiiConfig.renderToPath = ["#"+product.id];
 				console.log(product.id, 'product ID tag');
-				console.log(document.spotiiConfig.renderToPath, 'render Path')
+				console.log(document.spotiiConfig.renderToPath, 'render Path in spotii config')
 				console.log(document.spotiiConfig, 'spotiiConfig')
 
 				if (!document.spotiiConfig) {
