@@ -20,18 +20,24 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 		loopThroughProduct: function () {
 			const allProducts = document.getElementsByClassName('price-wrapper');
 			for (let product of allProducts) {
-				console.log(this.jsConfig, 'js config in loop through product')
-				this.jsConfig.renderToPath = ['#' + product.id];
-				console.log(this.jsConfig.renderToPath, 'render Path in js config');
+				// console.log(this.jsConfig, 'js config in loop through product')
+				// this.jsConfig.renderToPath = ['#' + product.id];
+				// console.log(this.jsConfig.renderToPath, 'render Path in js config');
 				console.log(product.id, 'product ID tag');
-				this.processSpotiiDocument();
+				var config = {
+					targetXPath: [".price-wrapper"],
+					renderToPath: ["#" + product.id],
+					currency: 'SAR'
+				}
+				this.processSpotiiDocument(config);
 			}
 		},
 
-		processSpotiiDocument: function () {
+		processSpotiiDocument: function (config) {
+			console.log(config, 'config')
 			console.log('rendering started');
-			var self = this;
-			console.log(self.jsConfig);
+			// var self = this;
+			// console.log(self.jsConfig);
 			// const allProducts = document.getElementsByClassName('price-wrapper');
 			// console.log(allProducts, 'allProducts');
 			// for (let product of allProducts) {
@@ -61,7 +67,7 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 
 			// 	console.log('dom loaded');
 			// }
-			document.spotiiConfig = self.jsConfig;
+			document.spotiiConfig = config;
 			console.log(document.spotiiConfig.renderToPath,'render Path in spotii config');
 			console.log(document.spotiiConfig, 'spotiiConfig');
 
