@@ -26,6 +26,8 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 			for (let product of allProducts) {
 				document.spotiiConfig = self.jsConfig;
 				document.spotiiConfig.renderToPath = ["#"+product.id];
+				console.log(product.id, 'product ID tag');
+				console.log(document.spotiiConfig.renderToPath, 'render Path')
 				console.log(document.spotiiConfig, 'spotiiConfig')
 
 				if (!document.spotiiConfig) {
