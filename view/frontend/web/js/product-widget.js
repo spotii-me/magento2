@@ -18,6 +18,25 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 		},
 
 		processSpotiiDocument: function () {
+			var isNumeric = function(source) {
+				return !isNaN(parseFloat(source)) && isFinite(source)
+		};
+		var isAlphabet = function(e) {
+				return /^[a-zA-Z()]+$/.test(e)
+		};
+		var parsePrice = function(source) {
+				var priceStr = "",
+						i = 0;
+				for (; i < source.length; i += 1) {
+						if (isNumeric(source[i]) || source[i] === ".") {
+								if (i > 0 && source[i] === "." && isAlphabet(source[i - 1])) {
+										continue
+								}
+								priceStr += source[i]
+						}
+				}
+				return parseFloat(priceStr)
+		};
 			const logo = `<svg viewBox="0 0 575 156" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 			style="max-height: 100%; vertical-align: text-bottom; height: 0.90em"><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="nonzero">
 					<path d="M93.4,42.68 L116.74,19.34 C102.292199,4.90544225 81.9818341,-2.03751498 61.7212349,0.532217389 C41.4606357,3.10194976 23.5267068,14.8955829 13.14,32.48 C39.0890855,17.1797853 72.1029078,21.3754119 93.4,42.68 Z"
@@ -37,8 +56,9 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 			const allProducts = document.getElementsByClassName('price-box price-final_price');
 			console.log(allProducts, 'allProducts')
 			for (let product of allProducts) {
+				const price = parsePrice(product.innerText);
 				const text = document.createElement('span');
-				text.appendChild(document.createTextNode('4 free interest free payments with '))
+				text.appendChild(document.createTextNode('4 free interest free payments of '+ (price/4).toFixed(2) + ' with '))
 				const spotiiLogo = document.createElement('span')
 				spotiiLogo.innerHTML = logo;
 				product.appendChild(document.createElement("br"));
