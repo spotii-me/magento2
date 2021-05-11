@@ -41,6 +41,7 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 				text.appendChild(document.createTextNode('4 free interest free payments with '))
 				const spotiiLogo = document.createElement('span')
 				spotiiLogo.innerHTML = logo;
+				product.appendChild(document.createElement("br"));
 				product.appendChild(text);
 				product.appendChild(spotiiLogo);
 
