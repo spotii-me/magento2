@@ -38,8 +38,11 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 			console.log(allProducts, 'allProducts')
 			for (let product of allProducts) {
 				const text = document.createElement('span');
-				text.appendChild(document.createTextNode('4 free interest free payments with '+logo))
+				text.appendChild(document.createTextNode('4 free interest free payments with '))
+				const spotiiLogo = document.createElement('span')
+				spotiiLogo.innerHTML = logo;
 				product.appendChild(text);
+				product.appendChild(spotiiLogo);
 
 				// self.jsConfig.renderToPath = ["#"+product.id];
 				// console.log(self.jsConfig.renderToPath , 'render Path in js config')
