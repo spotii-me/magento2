@@ -59,7 +59,7 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 				const price = parsePrice(product.innerText);
 				const priceText = this.jsConfig.currency;
 				const text = document.createElement('span');
-				text.appendChild(document.createTextNode('4 free interest free payments of ' + priceText + " " + (price/4).toFixed(2) + ' with '))
+				text.appendChild(document.createTextNode('or 4 free interest free payments of ' + priceText + " " + (price/4).toFixed(2) + ' with '))
 				const spotiiLogo = document.createElement('span')
 				spotiiLogo.innerHTML = logo;
 				product.appendChild(document.createElement("br"));
