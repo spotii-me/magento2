@@ -11,10 +11,10 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 	'use strict';
 
 	return Component.extend({
-		initialize: async function () {
+		initialize: function () {
 			//initialize parent Component
 			this._super();
-			await this.loadSpotiiScript();
+			this.loadSpotiiScript();
 			this.spotiiCatalogWidget();
 			// this.processSpotiiDocument();
 		},
