@@ -11,10 +11,34 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 	'use strict';
 
 	return Component.extend({
-		initialize: function () {
+		initialize: async function () {
 			//initialize parent Component
 			this._super();
-			this.processSpotiiDocument();
+			await this.loadSpotiiScript();
+			this.spotiiCatalogWidget();
+			// this.processSpotiiDocument();
+		},
+
+		spotiiCatalogWidget: function(){
+			var self = this;
+			console.log(self, 'self')
+			let classToRender = self.jsConfig.renderToPath
+			console.log(classToRender, 'class To render')
+			const allProducts = document.getElementsByClassName(classToRender);
+			console.log(allProducts, 'all products')
+			for(let product of allProducts){
+				console.log(product, 'product')
+				window.loadSpotiiWidget(window, document, self.jsConfig.targetXPath, product.id, self.jsConfig.currency)
+			}
+
+		},
+
+		loadSpotiiScript: function(){
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = 'https://widget.spotii.me/v1/javascript/vperfumes-price-widget.js';
+			$("head").append(script);
+			console.log("dom loaded");
 		},
 
 		processSpotiiDocument: function () {
