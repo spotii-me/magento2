@@ -15,7 +15,7 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 			//initialize parent Component
 			this._super();
 			this.loadSpotiiScript();
-			this.spotiiCatalogWidget();
+			setTimeout( () => this.spotiiCatalogWidget() , 5000);
 			// this.processSpotiiDocument();
 		},
 
