@@ -209,6 +209,16 @@
                             <config_path>cart/spotiipay/hide_classes</config_path>
                         </field>
                     </group>
+                    <group id="spotiipay_widget_catalog_page" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label><![CDATA[Catalogue Page]]></label>
+                        <field id="renderXPath" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                            <label>Catalogue page: render to element path</label>
+                            <comment>
+                                Path of the element to which to render widget. Enter class name only. Ex : price-wrapper
+                            </comment>
+                            <config_path>catalog/spotiipay/render_x_path</config_path>
+                        </field>
+                    </group>
                 </group>
             </group>
         </section>

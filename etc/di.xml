@@ -12,4 +12,5 @@
 	<preference for="Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface" type="Spotii\Spotiipay\Model\Config\Container\SpotiiApiIdentity"/>
 	<preference for="Spotii\Spotiipay\Model\Config\Container\ProductWidgetConfigInterface" type="Spotii\Spotiipay\Model\Config\Container\ProductWidgetIdentity"/>
 	<preference for="Spotii\Spotiipay\Model\Config\Container\CartWidgetConfigInterface" type="Spotii\Spotiipay\Model\Config\Container\CartWidgetIdentity"/>
+	<preference for="Spotii\Spotiipay\Model\Config\Container\CatalogWidgetConfigInterface" type="Spotii\Spotiipay\Model\Config\Container\CatalogWidgetIdentity"/>
 </config>
