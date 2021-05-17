@@ -453,7 +453,7 @@ define([
           if (
             x.validate() &&
             y.validate() &&
-            x.isTotalValid() && jsonItems.isInStock
+            x.isTotalValid()
           ) {
             showOverlay();
             x.handleRedirectAction();
