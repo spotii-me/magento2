@@ -76,17 +76,20 @@ class Complete extends SpotiiPay
                 } catch (\Exception $e) {
                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
                 };
+                $session = $this->_checkoutSession;
+                $incrementId = $this->_checkoutSession->getCollection()->getLastItem()->getIncrementId();
                 $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
                 $this->_checkoutSession->setLastQuoteId($quoteId);
-                $this->_checkoutSession->setLastOrderId($order->getEntityId());
-                $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
+                $this->_checkoutSession->setLastOrderId($orderId); // ***Required, otherwise getOrderId() is empty on success.phtml***
+                $this->_checkoutSession->setLastRealOrderId($incrementId);
+                $this->_checkoutSession->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
                 $invoiceCollection = $order->getInvoiceCollection();
                 foreach($invoiceCollection as $invoice):
                     $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_PAID);
                     $this->invoiceRepository->save($invoice);
                 endforeach;
                 $this->getResponse()->setRedirect(
-                    $this->_url->getUrl('checkout/onepage/success')
+                    $this->_url->getUrl($redirect)
                );
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
@@ -95,8 +98,5 @@ class Complete extends SpotiiPay
                 $e->getMessage()
             );
         }
-        $this->getResponse()->setRedirect(
-            $this->_url->getUrl($redirect)
-       );
     }
 }
