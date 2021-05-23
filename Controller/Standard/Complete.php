@@ -33,11 +33,6 @@ class Complete extends SpotiiPay
             $this->invoiceRepository->save($invoice);
         endforeach;
         $payment = $quote->getPayment();
-        $payment->setMethod('spotiipay');
-        $payment->save();
-        $quote->reserveOrderId();
-        $quote->setPayment($payment);
-        $quote->save();
         $this->_checkoutSession->replaceQuote($quote);
         $reference = $payment->getAdditionalInformation('spotii_order_id');
         $this->_spotiipayModel->createTransaction(
