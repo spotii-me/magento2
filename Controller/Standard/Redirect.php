@@ -51,13 +51,6 @@ class Redirect extends SpotiiPay
                     ->setCustomerGroupId(\Magento\Customer\Api\Data\GroupInterface::NOT_LOGGED_IN_ID);
             }
         }
-        $payment = $quote->getPayment();
-        $payment->setMethod('spotiipay');
-        $payment->save();
-        $quote->reserveOrderId();
-        $quote->setPayment($payment);
-        $quote->save();
-        $this->_checkoutSession->replaceQuote($quote);
         $checkoutUrl = $this->_spotiipayModel->getSpotiiCheckoutUrl($quote);
         $this->spotiiHelper->logSpotiiActions("Checkout Url : $checkoutUrl");
         try{

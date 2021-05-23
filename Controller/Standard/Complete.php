@@ -32,7 +32,14 @@ class Complete extends SpotiiPay
             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
             $this->invoiceRepository->save($invoice);
         endforeach;
-        $reference = $this->getRequest()->getParam("magento_spotii_id");
+        $payment = $quote->getPayment();
+        $payment->setMethod('spotiipay');
+        $payment->save();
+        $quote->reserveOrderId();
+        $quote->setPayment($payment);
+        $quote->save();
+        $this->_checkoutSession->replaceQuote($quote);
+        $reference = $payment->getAdditionalInformation('spotii_order_id');
         $this->_spotiipayModel->createTransaction(
             $order,
             $reference,
@@ -45,7 +52,7 @@ class Complete extends SpotiiPay
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
 
             $orderId = $this->getRequest()->getParam("id");
-
+            $reference = $this->getRequest()->getParam("magento_spotii_id");
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
             $order->setState('processing');
@@ -58,7 +65,7 @@ class Complete extends SpotiiPay
                     $reference,
                     \Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE
                 );
-                // $quote->collectTotals()->save();
+                $quote->collectTotals()->save();
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email
