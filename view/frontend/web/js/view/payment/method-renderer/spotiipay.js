@@ -225,10 +225,6 @@ window.closeIFrameOnCompleteOrder = function (message) {
             location.href = rejectUrlSubmitted;
           }
         };
-        console.log('setting reject by Ze');
-          var rejectUrlSubmitted = rejectUrl.substring(0, rejectUrl.length - 2) + "1/";
-          location.href = rejectUrlSubmitted;
-        removeOverlay();
       }
       console.log('break of failedStatus');
       break;
