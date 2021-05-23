@@ -32,14 +32,7 @@ class Complete extends SpotiiPay
             $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_OPEN);
             $this->invoiceRepository->save($invoice);
         endforeach;
-        $payment = $quote->getPayment();
-        $payment->setMethod('spotiipay');
-        $payment->save();
-        $quote->reserveOrderId();
-        $quote->setPayment($payment);
-        $quote->save();
-        $this->_checkoutSession->replaceQuote($quote);
-        $reference = $payment->getAdditionalInformation('spotii_order_id');
+        $reference = $this->getRequest()->getParam("magento_spotii_id");
         $this->_spotiipayModel->createTransaction(
             $order,
             $reference,
@@ -52,8 +45,6 @@ class Complete extends SpotiiPay
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
 
             $orderId = $this->getRequest()->getParam("id");
-            $reference = $this->getRequest()->getParam("magento_spotii_id");
-            $quoteId = $this->getRequest()->getParam("quote_id");
 
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
@@ -76,12 +67,6 @@ class Complete extends SpotiiPay
                 } catch (\Exception $e) {
                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
                 };
-                $session = $this->_checkoutSession;
-                $incrementId = $this->_checkoutSession->getCollection()->getLastItem()->getIncrementId();
-                $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
-                $this->_checkoutSession->setLastQuoteId($quoteId);
-                $this->_checkoutSession->setLastOrderId($orderId); // ***Required, otherwise getOrderId() is empty on success.phtml***
-                $this->_checkoutSession->setLastRealOrderId($incrementId);
                 $this->_checkoutSession->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
                 $invoiceCollection = $order->getInvoiceCollection();
                 foreach($invoiceCollection as $invoice):
