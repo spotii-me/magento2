@@ -1,6 +1,6 @@
 <?php
 
-namespace Vendor\Module\Block;
+namespace Spotii\Spotiipay\Block;
 
 class Success extends \Magento\Checkout\Block\Onepage\Success {
 
