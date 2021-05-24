@@ -1,9 +1,11 @@
 <?php
-namespace Spotii\Spotiipay\Block\OnePage;
-class Success extends \Magento\Framework\View\Element\Template
-{
-    public function getCustomSuccess()
-    {
-        return 'Your custom contents.';
+
+namespace Spotii\Spotiipay\Block;
+
+class Success extends \Magento\Checkout\Block\Onepage\Success {
+
+    public function getOrder() {
+        return $this->_checkoutSession->getLastRealOrder();
     }
+
 }
