@@ -13,4 +13,5 @@
 	<preference for="Spotii\Spotiipay\Model\Config\Container\ProductWidgetConfigInterface" type="Spotii\Spotiipay\Model\Config\Container\ProductWidgetIdentity"/>
 	<preference for="Spotii\Spotiipay\Model\Config\Container\CartWidgetConfigInterface" type="Spotii\Spotiipay\Model\Config\Container\CartWidgetIdentity"/>
 	<preference for="Spotii\Spotiipay\Model\Config\Container\CatalogWidgetConfigInterface" type="Spotii\Spotiipay\Model\Config\Container\CatalogWidgetIdentity"/>
+    <preference for="Magento\Checkout\Block\Onepage\Success" type="Vendor\Module\Block\Success"/>
 </config>
