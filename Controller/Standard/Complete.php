@@ -24,6 +24,7 @@ class Complete extends SpotiiPay
         // Create order before redirect to success
         $quote = $this->_checkoutSession->getQuote();
         $quoteId = $quote->getId();
+        $this->spotiiHelper->logSpotiiActions("Quote ID $quoteId");
         $quote->collectTotals()->save();
         $order = $this->_quoteManagement->submit($quote);
 
@@ -40,6 +41,7 @@ class Complete extends SpotiiPay
         $quote->save();
         $this->_checkoutSession->replaceQuote($quote);
         $reference = $payment->getAdditionalInformation('spotii_order_id');
+        $this->spotiiHelper->logSpotiiActions("Reference after quote replace $reference");
         $this->_spotiipayModel->createTransaction(
             $order,
             $reference,
@@ -50,18 +52,18 @@ class Complete extends SpotiiPay
 
         try {
             $this->spotiiHelper->logSpotiiActions("Returned from Spotiipay.");
-
             $orderId = $this->getRequest()->getParam("id");
             $reference = $this->getRequest()->getParam("magento_spotii_id");
             $quoteId = $this->getRequest()->getParam("quote_id");
-
+            $this->spotiiHelper->logSpotiiActions("orderId $orderId");
+            $this->spotiiHelper->logSpotiiActions("reference $reference");
+            $this->spotiiHelper->logSpotiiActions("quoteId $quoteId");
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
             $order->setState('processing');
             $order->save();
 
             if ($order) {
-
                 $this->_spotiipayModel->createTransaction(
                     $order,
                     $reference,
@@ -78,7 +80,9 @@ class Complete extends SpotiiPay
                 };
                 $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
                 $this->_checkoutSession->setLastQuoteId($quoteId);
-                $this->_checkoutSession->setLastOrderId($order->getEntityId());
+                $entityId = $order->getEntityId();
+                $this->_checkoutSession->setLastOrderId($entityId);
+                $this->spotiiHelper->logSpotiiActions("Entity ID $entityId");
                 $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
                 $invoiceCollection = $order->getInvoiceCollection();
                 foreach($invoiceCollection as $invoice):
