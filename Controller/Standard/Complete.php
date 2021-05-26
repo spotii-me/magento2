@@ -80,7 +80,6 @@ class Complete extends SpotiiPay
                 $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
                 $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
-                Mage::dispatchEvent('checkout_onepage_controller_success_action', array('order_ids' => array($order->getEntityId())));
                 $invoiceCollection = $order->getInvoiceCollection();
                 foreach($invoiceCollection as $invoice):
                     $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_PAID);
