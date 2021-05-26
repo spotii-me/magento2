@@ -18,7 +18,6 @@ class Complete extends SpotiiPay
     /**
      * Complete the transaction
      */
-
     public function execute()
     {
         $redirect = 'checkout/onepage/success';
@@ -77,19 +76,18 @@ class Complete extends SpotiiPay
                 } catch (\Exception $e) {
                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
                 };
+                $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
+                $this->_checkoutSession->setLastQuoteId($quoteId);
+                $this->_checkoutSession->setLastOrderId($order->getEntityId());
                 $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
-                $invoiceCollection = $order->getlastorderidgetInvoiceCollection();
+                $invoiceCollection = $order->getInvoiceCollection();
                 foreach($invoiceCollection as $invoice):
                     $invoice->setState(\Magento\Sales\Model\Order\Invoice::STATE_PAID);
                     $this->invoiceRepository->save($invoice);
                 endforeach;
-                $this->_checkoutSession->setLastRealOrderId($order->getIncrementId());
-                $resultPage = $this->_resultPageFactory->create();
-                $this->_eventManager->dispatch(
-                    'checkout_onepage_controller_success_action',
-                    ['order_ids' => [$order->getId()]]
-                );
-                return $resultPage;
+                $this->getResponse()->setRedirect(
+                    $this->_url->getUrl('checkout/onepage/success')
+               );
             }
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             $this->spotiiHelper->logSpotiiActions("Transaction Exception: " . $e->getMessage());
@@ -97,6 +95,8 @@ class Complete extends SpotiiPay
                 $e->getMessage()
             );
         }
-        return $resultPage;
+        $this->getResponse()->setRedirect(
+            $this->_url->getUrl($redirect)
+       );
     }
 }

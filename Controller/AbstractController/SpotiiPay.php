@@ -11,12 +11,6 @@ use Magento\Framework\App\Action\Action;
 use Magento\Sales\Model\Order;
 use Spotii\Spotiipay\Model\Config\Container\SpotiiApiConfigInterface;
 use Magento\Sales\Model\Order\InvoiceRepository;
-use Magento\Framework\View\Result\PageFactory;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Checkout\Model\Session;
-use Magento\Sales\Model\OrderFactory;
-
 /**
  * Class Spotiipay
  * @package Spotii\Spotiipay\Controller\AbstractController
@@ -98,16 +92,6 @@ abstract class SpotiiPay extends Action
 
     protected $stockRegistry;
     protected $invoiceRepository;
-
-    /** @var ManagerInterface */
-    protected $_eventManager;
-
-    /** @var PageFactory */
-    protected $_resultPageFactory;
-
-    /** @var ScopeConfigInterface */
-    protected $_scopeConfig;
-
     /**
      * Spotiipay constructor.
      * @param \Magento\Framework\App\Action\Context $context
@@ -128,11 +112,6 @@ abstract class SpotiiPay extends Action
      * @param Order\Payment\Transaction\BuilderInterface $transactionBuilder
      * @param Order\Email\Sender\OrderSender $orderSender
      * @param SpotiiApiConfigInterface $spotiiApiIdentity
-     * @param ManagerInterface $eventManager,
-     * @param PageFactory $resultPageFactory,
-     * @param ScopeConfigInterface $scopeConfig,
-     * @param OrderFactory $orderFactory,
-     * @param Session $session
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -154,11 +133,7 @@ abstract class SpotiiPay extends Action
         \Magento\Sales\Model\Order\Email\Sender\OrderSender $orderSender,
         SpotiiApiConfigInterface $spotiiApiIdentity,
         \Magento\CatalogInventory\Api\StockRegistryInterface $stockRegistry,
-        InvoiceRepository $invoiceRepository,
-        ManagerInterface $eventManager,
-        PageFactory $resultPageFactory,
-        ScopeConfigInterface $scopeConfig,
-        Session $session
+        InvoiceRepository $invoiceRepository
     )
     {
         $this->_customerSession = $customerSession;
@@ -181,9 +156,6 @@ abstract class SpotiiPay extends Action
         $this->spotiiApiIdentity = $spotiiApiIdentity;
         $this->stockRegistry = $stockRegistry;
         $this->invoiceRepository = $invoiceRepository;
-        $this->_eventManager = $eventManager;
-        $this->_resultPageFactory = $resultPageFactory;
-        $this->_scopeConfig = $scopeConfig;
         parent::__construct($context);
     }
 
@@ -201,4 +173,4 @@ abstract class SpotiiPay extends Action
         return true;
     }
 }
-
+  
