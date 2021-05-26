@@ -16,7 +16,6 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Sales\Model\OrderFactory;
-use Magento\Framework\Event\ManagerInterface;
 
 /**
  * Class Spotiipay
