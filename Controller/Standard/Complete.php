@@ -56,7 +56,9 @@ class Complete extends SpotiiPay
             $quoteId = $this->getRequest()->getParam("quote_id");
 
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
-            $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
+            $discount = strval(round($order->getGrandTotal() - $order->getDiscountAmount(), \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION));
+            $this->spotiiHelper->logSpotiiActions("Discount: $discount");
+            $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $discount );
             $order->setState('processing');
             $order->save();
 
