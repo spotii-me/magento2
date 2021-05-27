@@ -289,13 +289,13 @@ define([
         .done(function (response) {
             var totalAmount = response.base_grand_total - response.base_discount_amount;
             var amount = totalAmount;
-            var installmentFee = totalAmount/ 4;
+            var installmentFee = totalAmount/ 3;
           var installmentFeeLast =
             amount -
             installmentFee.toFixed(
               window.checkoutConfig.priceFormat.precision
             ) *
-              3;
+              2;
 
           $(".spotii-grand-total").text(
             "Total : " +
