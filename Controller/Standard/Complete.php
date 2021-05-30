@@ -30,19 +30,19 @@ class Complete extends SpotiiPay
 
             $order = $this->_orderFactory->create()->loadByIncrementId($orderId);
             $this->_spotiipayModel->capturePostSpotii($order->getPayment(), $order->getGrandTotal());
-            
+
             $paidOrderStatus = $this->spotiiApiIdentity->getPaidOrderStatus();
             $order->setState('processing')->setStatus($paidOrderStatus);
             $order->save();
 
             if ($order) {
-                
+
                 $this->_spotiipayModel->createTransaction(
                     $order,
                     $reference,
                     \Magento\Sales\Model\Order\Payment\Transaction::TYPE_CAPTURE
                 );
-                // $quote->collectTotals()->save();          
+                // $quote->collectTotals()->save();
                 $this->spotiiHelper->logSpotiiActions("Created transaction with reference $reference");
 
                 // send email
@@ -50,11 +50,12 @@ class Complete extends SpotiiPay
                     $this->_orderSender->send($order);
                 } catch (\Exception $e) {
                    $this->_helper->debug("Transaction Email Sending Error: " . json_encode($e));
-                }; 
+                };
 
                 $this->_checkoutSession->setLastSuccessQuoteId($quoteId);
                 $this->_checkoutSession->setLastQuoteId($quoteId);
                 $this->_checkoutSession->setLastOrderId($order->getEntityId());
+                $this->_checkoutSession->setLastRealOrderId($orderId);
                 $this->messageManager->addSuccess("<b>Success! Payment completed!</b><br>Thank you for your payment, your order with Spotii has been placed.");
                 $this->getResponse()->setRedirect(
                     $this->_url->getUrl('checkout/onepage/success')
