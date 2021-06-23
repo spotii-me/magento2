@@ -47,21 +47,84 @@ class PayloadBuilder
      */
     public function buildSpotiiCheckoutPayload($quote, $reference)
     {
-        $checkoutPayload = $this->buildCheckoutPayload($quote, $reference);
-        $orderPayload = $this->buildOrderPayload($quote);
-        $customerPayload = $this->buildCustomerPayload($quote);
+
+
+        /**
+         *{
+            *  "type": "standard",
+            *  "shopper": {
+            *    "first_name": "testsdfsdf",
+            *    "last_name": "tessdfsdfsdft",
+            *    "phone": "0400000000",
+            *    "email": "danzip@zip.co",
+            *    "billing_address": {
+            *      "line1": "8 dd",
+            *      "city": "yssdd",
+            *      "postal_code": "2199",
+            *      "state": "NSW",
+            *      "country": "ZA"
+            *    }
+            *  },
+            *  "order": {
+            *    "reference": "98801299778",
+            *    "amount": 250,
+            *    "currency": "BHD",
+            *    "shipping": {
+            *      "pickup": false,
+            *      "address": {
+            *        "line1": "8 dd",
+            *        "city": "yssdd",
+            *        "postal_code": "2199",
+            *        "state": "NSW",
+            *        "country": "ZA"
+            *      }
+            *    },
+            *    "items": [
+            *      {
+            *        "name": "Argus All-Weather Tank",
+            *        "amount": 23.54,
+            *        "reference": "99",
+            *        "quantity": 3,
+            *        "type": "sku",
+            *        "image_uri": "http://127.0.0.1/magento22/pub/static/version1594351058/frontend/Magento/luma/en_AU/Magento_Catalog/images/product/placeholder/.jpg",
+            *        "item_uri": "http://127.0.0.1/magento22/argus-all-weather-tank",
+            *        "product_code": "MT07-S-Gray"
+            *      },
+            *      {
+            *        "name": "Shipping",
+            *        "amount": 16.05,
+            *        "reference": "Shipping",
+            *        "quantity": 1,
+            *        "type": "shipping"
+            *      }
+            *    ],
+            *    "cart_reference": "90"
+            *  },
+            *  "metadata": {},
+            *  "config": {
+            *    "redirect_uri": "https://global-api.labs.au.edge.zip.co/merchant/callback?redirect=http%3A%2F%2F127.0.0.1%2Fmagento22%2Fzippayment%2Fcomplete%2F&region=ae"
+            *  }
+            *} 
+        **/
         $billingPayload = $this->buildBillingPayload($quote);
-        $shippingPayload = $this->buildShippingPayload($quote);
+        $customerPayload = $this->buildCustomerPayload($quote,$billingPayload);
+        
         $itemPayload = $this->buildItemPayload($quote);
+        $shippingAddressPayload = $this->buildShippingPayload($quote);
+        $orderPayload = $this->buildOrderPayload($quote, $reference,$shippingAddressPayload,$itemPayload);
         $payload = array_merge_recursive(
-            $checkoutPayload,
             $orderPayload,
             $customerPayload,
-            $billingPayload,
-            $shippingPayload,
-            $itemPayload
+
         );
-        $payload["completes"] = true;
+        $config = [
+            "redirect_uri"=>"https://global-api.labs.au.edge.zip.co/merchant/callback?redirect=http%3A%2F%2F127.0.0.1%2Fmagento22%2Fzippayment%2Fcomplete%2F&region=ae"
+        ];   
+        $payload["type"]= "standard";
+        $payload["config"]= $config;
+        $payload["metadata"]= [];
+
+        //$payload["completes"] = true;
         return $payload;
     }
 
@@ -92,12 +155,52 @@ class PayloadBuilder
      * @param $quote
      * @return mixed
      */
-    private function buildOrderPayload($quote)
+    private function buildOrderPayload($quote, $reference,$shippingAddressPayload,$itemPayload)
     {
+        /**
+            *   {
+            *    "reference": "98801299778",
+            *    "amount": 250,
+            *    "currency": "BHD",
+            *    "shipping": {
+            *      "pickup": false,
+            *      "address": {
+            *        "line1": "8 dd",
+            *        "city": "yssdd",
+            *        "postal_code": "2199",
+            *        "state": "NSW",
+            *        "country": "ZA"
+            *      }
+            *    },
+            *    "items": [
+            *      {
+            *        "name": "Argus All-Weather Tank",
+            *        "amount": 23.54,
+            *        "reference": "99",
+            *        "quantity": 3,
+            *        "type": "sku",
+            *        "image_uri": "http://127.0.0.1/magento22/pub/static/version1594351058/frontend/Magento/luma/en_AU/Magento_Catalog/images/product/placeholder/.jpg",
+            *        "item_uri": "http://127.0.0.1/magento22/argus-all-weather-tank",
+            *        "product_code": "MT07-S-Gray"
+            *      },
+            *      {
+            *        "name": "Shipping",
+            *        "amount": 16.05,
+            *        "reference": "Shipping",
+            *        "quantity": 1,
+            *        "type": "shipping"
+            *      }
+            *    ],
+            *    "cart_reference": "90"
+            *  },
+        */
         $orderPayload["order"] = [
-            "tax_amount" => $quote->getShippingAddress()->getBaseTaxAmount(),
-            "shipping_amount" => $quote->getShippingAddress()->getShippingAmount(),
-            "discount" => ($quote->getSubtotal() - $quote->getSubtotalWithDiscount())
+            "amount" => strval(round($quote->getGrandTotal(), self::PRECISION)),
+            "currency" => $this->storeManager->getStore()->getCurrentCurrencyCode(),
+            "reference" => $reference,
+            "shipping" => $shippingAddressPayload,
+            "items" => $itemPayload,
+            "cart_reference"=> "90"
         ];
         return $orderPayload;
     }
@@ -107,14 +210,31 @@ class PayloadBuilder
      * @param $quote
      * @return mixed
      */
-    private function buildCustomerPayload($quote)
+    private function buildCustomerPayload($quote, $billingAddress)
     {
+
+        /** 
+        *  "shopper": {
+            *    "first_name": "testsdfsdf",
+            *    "last_name": "tessdfsdfsdft",
+            *    "phone": "0400000000",
+            *    "email": "danzip@zip.co",
+            *    "billing_address": {
+            *      "line1": "8 dd",
+            *      "city": "yssdd",
+            *      "postal_code": "2199",
+            *      "state": "NSW",
+            *      "country": "ZA"
+            *    }
+            *  },
+        */
         $billingAddress = $quote->getBillingAddress();
-        $customerPayload["order"]["customer"] = [
+        $customerPayload["shopper"] = [
             "first_name" => $quote->getCustomerFirstname() ? $quote->getCustomerFirstname() : $billingAddress->getFirstname(),
             "last_name" => $quote->getCustomerLastname() ? $quote->getCustomerLastname() : $billingAddress->getLastname(),
             "email" => $quote->getCustomerEmail(),
             "phone" => $billingAddress->getTelephone(),
+            "billing_address" => $billingAddress
         ];
         return $customerPayload;
     }
@@ -125,16 +245,22 @@ class PayloadBuilder
      * @return mixed
      */
     private function buildBillingPayload($quote)
-    {
+    {   /** 
+        *    "billing_address": {
+            *      "line1": "8 dd",
+            *      "city": "yssdd",
+            *      "postal_code": "2199",
+            *      "state": "NSW",
+            *      "country": "ZA"
+            *    }
+        */
         $billingAddress = $quote->getBillingAddress();
-        $billingPayload["order"]["billing_address"] = [
-            "line1" => $billingAddress->getStreetLine(1),
-            "line2" => $billingAddress->getStreetLine(2),
-            "line4" => $billingAddress->getCity(),
+        $billingPayload = [
+            "line1" => $billingAddress->getStreetLine(1).' ' .$billingAddress->getStreetLine(2),
+            "city" => $billingAddress->getCity(),
+            "postal_code" => $billingAddress->getPostcode(),
             "state" => $billingAddress->getRegionCode(),
-            "postcode" => $billingAddress->getPostcode(),
-            "country" => $billingAddress->getCountryId(),
-            "phone" => $billingAddress->getTelephone(),
+            "country" => $billingAddress->getCountryId()
         ];
         return $billingPayload;
     }
@@ -146,15 +272,28 @@ class PayloadBuilder
      */
     private function buildShippingPayload($quote)
     {
+        /**
+        *  "shipping": {
+        *      "pickup": false,
+        *      "address": {
+        *        "line1": "8 dd",
+        *        "city": "yssdd",
+        *        "postal_code": "2199",
+        *        "state": "NSW",
+        *        "country": "ZA"
+        *      }
+        *    }
+        * 
+        */
         $shippingAddress = $quote->getShippingAddress();
-        $shippingPayload["order"]["shipping_address"] = [
-            "line1" => $shippingAddress->getStreetLine(1),
-            "line2" => $shippingAddress->getStreetLine(2),
-            "line4" => $shippingAddress->getCity(),
+        $shippingPayload["pickup"] = False;
+        $shippingPayload["address"] = [
+            "line1" => $shippingAddress->getStreetLine(1).' '.$shippingAddress->getStreetLine(2),
+            "city" => $shippingAddress->getCity(),
+            "postal_code" => $shippingAddress->getPostcode(),
             "state" => $shippingAddress->getRegionCode(),
-            "postcode" => $shippingAddress->getPostcode(),
             "country" => $shippingAddress->getCountryId(),
-            "phone" => $shippingAddress->getTelephone(),
+           
         ];
         return $shippingPayload;
     }
@@ -167,20 +306,56 @@ class PayloadBuilder
      */
     private function buildItemPayload($quote)
     {
+        /**
+        *     "items": [
+        *      {
+        *        "name": "Argus All-Weather Tank",
+        *        "amount": 23.54,
+        *        "reference": "99",
+        *        "quantity": 3,
+        *        "type": "sku",
+        *        "image_uri": "http://127.0.0.1/magento22/pub/static/version1594351058/frontend/Magento/luma/en_AU/Magento_Catalog/images/product/placeholder/.jpg",
+        *        "item_uri": "http://127.0.0.1/magento22/argus-all-weather-tank",
+        *        "product_code": "MT07-S-Gray"
+        *      },
+        *      {
+        *        "name": "Shipping",
+        *        "amount": 16.05,
+        *        "reference": "Shipping",
+        *        "quantity": 1,
+        *        "type": "shipping"
+        *      }
+        *    ],
+        */
         $currencyCode = $this->storeManager->getStore()->getCurrentCurrencyCode();
-        $itemPayload["order"]["lines"] = [];
+        $itemPayload = [];
         foreach ($quote->getAllVisibleItems() as $item) {
             $productName = $item->getName();
             $productSku = $item->getSku();
             $productQuantity = $item->getQtyOrdered();
             $itemData = [
-                "title" => $productName,
-                "sku" => $productSku,
+                "name" => $productName,
+                "amount" => strval(round($item->getPriceInclTax(), self::PRECISION)),
+                "reference" => $productSku,
                 "quantity" => $productQuantity,
-                "price" => strval(round($item->getPriceInclTax(), self::PRECISION)),
+                "type" => "sku",
                 "currency" => $currencyCode,
+                "image_uri" => "http://127.0.0.1/magento22/pub/static/version1594351058/frontend/Magento/luma/en_AU/Magento_Catalog/images/product/placeholder/.jpg",
+                "item_uri"=> "http://127.0.0.1/magento22/argus-all-weather-tank",
+                "product_code"=> "MT07-S-Gray"
             ];
-            array_push($itemPayload["order"]["lines"], $itemData);
+            $shippingData = [
+                "name"=> "Shipping",
+                "amount"=> 16.05,
+                "reference"=> "Shipping",
+                "quantity"=> $productQuantity,
+                "type"=> "shipping"
+            ];
+            $itemPayloadItem=array_merge_recursive(
+                $itemData,
+                $shippingData
+            );
+            array_push($itemPayload, $itemPayloadItem);
         }
         return $itemPayload;
     }

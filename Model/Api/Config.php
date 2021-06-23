@@ -85,28 +85,29 @@ class Config implements ConfigInterface
      */
     public function getAuthToken()
     {
-        $url = $this->spotiiApiIdentity->getSpotiiAuthBaseUrl() . '/api/v1.0/merchant/authentication/';
-        $publicKey = $this->spotiiApiIdentity->getPublicKey();
+        // $url = $this->spotiiApiIdentity->getSpotiiAuthBaseUrl() . '/api/v1.0/merchant/authentication/';
+        // $publicKey = $this->spotiiApiIdentity->getPublicKey();
         $privateKey = $this->spotiiApiIdentity->getPrivateKey();
-        $body = [
-            "public_key" => $publicKey,
-            "private_key" => $privateKey
-        ];
-        try {
-            $response = $this->apiProcessor->call(
-                $url,
-                null,
-                $body,
-                ZendClient::POST
-            );
-            $body = $this->jsonHelper->jsonDecode($response);
-            return $body['token'];
-        } catch (\Exception $e) {
-            $this->spotiiHelper->logSpotiiActions($e->getMessage());
-            throw new \Magento\Framework\Exception\LocalizedException(
-                __('Gateway error: %1', $e->getMessage())
-            );
-        }
+        // $body = [
+        //     "public_key" => $publicKey,
+        //     "private_key" => $privateKey
+        // ];
+        // try {
+        //     $response = $this->apiProcessor->call(
+        //         $url,
+        //         null,
+        //         $body,
+        //         ZendClient::POST
+        //     );
+        //     $body = $this->jsonHelper->jsonDecode($response);
+        //     return $body['token'];
+        return $privateKey;
+        // } catch (\Exception $e) {
+        //     $this->spotiiHelper->logSpotiiActions($e->getMessage());
+        //     throw new \Magento\Framework\Exception\LocalizedException(
+        //         __('Gateway error: %1', $e->getMessage())
+        //     );
+        // }
     }
 
     /**

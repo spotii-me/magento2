@@ -183,17 +183,20 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
         $reference = uniqid() . "-" . $quote->getReservedOrderId();
         $this->spotiiHelper->logSpotiiActions("Reference Id : $reference");
         $payment = $quote->getPayment();
-        $payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $reference);
+        
         $payment->save();
         $response = $this->getSpotiiRedirectUrl($quote, $reference);
         $result = $this->jsonHelper->jsonDecode($response, true);
-        $orderUrl = array_key_exists('checkout_url', $result) ? $result['checkout_url'] : false;
+        $checkoutInfo=[];
+        $checkoutInfo['checkoutUrl'] = array_key_exists('uri', $result) ? $result['uri'] : false;
+        $checkoutInfo['checkoutId'] = array_key_exists('id', $result) ? $result['id'] : false;
+        $payment->setAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID, $checkoutInfo['checkoutId']);
         $this->spotiiHelper->logSpotiiActions("Order url : $orderUrl");
-        if (!$orderUrl) {
+        if (!$checkoutInfo) {
             $this->spotiiHelper->logSpotiiActions("No Token response from API");
             throw new LocalizedException(__('There is an issue processing your order.'));
         }
-        return $orderUrl;
+        return $checkoutInfo;
     }
 
     /**
@@ -205,7 +208,7 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function getSpotiiRedirectUrl($quote, $reference)
     {
-        $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/checkouts/';
+        $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/smi/checkouts';
         $requestBody = $this->apiPayloadBuilder->buildSpotiiCheckoutPayload($quote, $reference);
         try {
             $authToken = $this->spotiiApiConfig->getAuthToken();
@@ -322,45 +325,45 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
             throw new LocalizedException(__('Invalid amount for capture.'));
         }
         $reference = $payment->getAdditionalInformation(self::ADDITIONAL_INFORMATION_KEY_ORDERID);
-        $currency =$payment->getOrder()->getGlobalCurrencyCode();
-        $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
+        // $currency =$payment->getOrder()->getGlobalCurrencyCode();
+        // $grandTotalInCents = round($amount, \Spotii\Spotiipay\Model\Api\PayloadBuilder::PRECISION);
         $this->spotiiHelper->logSpotiiActions("Spotii Reference ID : $reference");
-        $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
+        // $this->spotiiHelper->logSpotiiActions("Magento Order Total : $grandTotalInCents");
         
-        $result = $this->getSpotiiOrderInfo($reference);
-        $spotiiOrderTotal = isset($result['total']) ?
-                                $result['total'] :
-                                null;
-        $spotiiOrderCurr = isset($result['currency']) ?
-        $result['currency'] :
-        null;
-        $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
+        // $result = $this->getSpotiiOrderInfo($reference);
+        // $spotiiOrderTotal = isset($result['total']) ?
+        //                         $result['total'] :
+        //                         null;
+        // $spotiiOrderCurr = isset($result['currency']) ?
+        // $result['currency'] :
+        // null;
+        // $this->spotiiHelper->logSpotiiActions("Spotii Order Total : $spotiiOrderTotal");
 
-        if ($spotiiOrderTotal != null
-            && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal, $currency, $spotiiOrderCurr)) {
-            $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
-            throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
-        }
+        // if ($spotiiOrderTotal != null
+        //     && !$this->isOrderAmountMatched($grandTotalInCents, $spotiiOrderTotal, $currency, $spotiiOrderCurr)) {
+        //     $this->spotiiHelper->logSpotiiActions("Spotii gateway has rejected request due to invalid order total");
+        //     throw new LocalizedException(__('Spotii gateway has rejected request due to invalid order total.'));
+        // }
 
-        $captureExpiration = (isset($result['capture_expiration']) && $result['capture_expiration']) ? $result['capture_expiration'] : null;
-        if ($captureExpiration === null) {
-            $this->spotiiHelper->logSpotiiActions("Not authorized on Spotii");
-            throw new LocalizedException(__('Not authorized on Spotii. Please try again.'));
-        }
-        $captureExpirationTimestamp = $this->dateTime->timestamp($captureExpiration);
-        $currentTimestamp = $this->dateTime->timestamp("now");
-        $this->spotiiHelper->logSpotiiActions("Capture Expiration Timestamp : $captureExpirationTimestamp");
-        $this->spotiiHelper->logSpotiiActions("Current Timestamp : $currentTimestamp");
-        if ($captureExpirationTimestamp >= $currentTimestamp) {
-            $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
-            $this->spotiiCapture($reference);
-            $payment->setTransactionId($reference)->setIsTransactionClosed(false);
-            $this->spotiiHelper->logSpotiiActions("Authorized on Spotii");
-            $this->spotiiHelper->logSpotiiActions("****Capture at Magento end****");
-        } else {
-            $this->spotiiHelper->logSpotiiActions("Unable to capture amount. Time expired.");
-            throw new LocalizedException(__('Unable to capture amount.'));
-        }
+        // $captureExpiration = (isset($result['capture_expiration']) && $result['capture_expiration']) ? $result['capture_expiration'] : null;
+        // if ($captureExpiration === null) {
+        //     $this->spotiiHelper->logSpotiiActions("Not authorized on Spotii");
+        //     throw new LocalizedException(__('Not authorized on Spotii. Please try again.'));
+        // }
+        // $captureExpirationTimestamp = $this->dateTime->timestamp($captureExpiration);
+        // $currentTimestamp = $this->dateTime->timestamp("now");
+        // $this->spotiiHelper->logSpotiiActions("Capture Expiration Timestamp : $captureExpirationTimestamp");
+        // $this->spotiiHelper->logSpotiiActions("Current Timestamp : $currentTimestamp");
+        // if ($captureExpirationTimestamp >= $currentTimestamp) {
+        $payment->setAdditionalInformation('payment_type', $this->getConfigData('payment_action'));
+        $this->spotiiCapture($reference);
+        $payment->setTransactionId($reference)->setIsTransactionClosed(false);
+        $this->spotiiHelper->logSpotiiActions("Authorized on Spotii");
+        $this->spotiiHelper->logSpotiiActions("****Capture at Magento end****");
+        // } else {
+        //     $this->spotiiHelper->logSpotiiActions("Unable to capture amount. Time expired.");
+        //     throw new LocalizedException(__('Unable to capture amount.'));
+        // }
     }
 
     /**
@@ -418,12 +421,17 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     {
         try {
             $this->spotiiHelper->logSpotiiActions("****Capture at Spotii Start****");
-            $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/orders' . '/' . $reference . '/capture' . '/';
+            $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/smi/charges';
             $authToken = $this->spotiiApiConfig->getAuthToken();
+            $body= [];
+            $body['authority'] = [
+                    "type" => "checkout_id",
+                    "value" => $reference
+                ];
             $response = $this->spotiiApiProcessor->call(
                 $url,
                 $authToken,
-                null,
+                $body,
                 \Magento\Framework\HTTP\ZendClient::POST
             );
             $this->spotiiHelper->logSpotiiActions("****Capture at Spotii End****");

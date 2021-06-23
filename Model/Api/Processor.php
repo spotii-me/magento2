@@ -77,9 +77,11 @@ class Processor implements ProcessorInterface
      */
     public function call($url, $authToken = null, $body = false, $method = ZendClient::GET)
     {
+        $crfToken = 'csrftoken=ITB95EuEikmcZ1xso4LyCuC2RKG6Le55ttbeCTPwZIRCcp96Xr0LjIyQgEYdtrXU';
         try {
             if ($authToken) {
                 $this->curl->addHeader("Authorization", "Bearer $authToken");
+                $this->curl->addHeader("cookie", $crfToken);       
             }
             $this->spotiiHelper->logSpotiiActions("Auth token : $authToken");
             $this->spotiiHelper->logSpotiiActions("****Request Info****");
