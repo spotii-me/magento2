@@ -210,6 +210,8 @@ class SpotiiPay extends \Magento\Payment\Model\Method\AbstractMethod
     {
         $url = $this->spotiiApiIdentity->getSpotiiBaseUrl() . '/api/v1.0/smi/checkouts';
         $requestBody = $this->apiPayloadBuilder->buildSpotiiCheckoutPayload($quote, $reference);
+        $this->spotiiHelper->logSpotiiActions("requestBody");
+        $this->spotiiHelper->logSpotiiActions($requestBody);
         try {
             $authToken = $this->spotiiApiConfig->getAuthToken();
             $response = $this->spotiiApiProcessor->call(
