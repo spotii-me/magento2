@@ -114,8 +114,7 @@ class PayloadBuilder
         $orderPayload = $this->buildOrderPayload($quote, $reference,$shippingAddressPayload,$itemPayload);
         $payload = array_merge_recursive(
             $orderPayload,
-            $customerPayload,
-
+            $customerPayload
         );
         $config = [
             "redirect_uri"=>"https://global-api.labs.au.edge.zip.co/merchant/callback?redirect=http%3A%2F%2F127.0.0.1%2Fmagento22%2Fzippayment%2Fcomplete%2F&region=ae"
