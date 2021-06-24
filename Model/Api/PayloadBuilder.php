@@ -35,7 +35,7 @@ class PayloadBuilder
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
-        JsonHelper $jsonHelper,
+        SpotiiHelper $SpotiiHelper,
         ConfigInterface $spotiiApiConfig,
         StoreManagerInterface $storeManager
     ) {
@@ -116,7 +116,7 @@ class PayloadBuilder
         $this->spotiiHelper->logSpotiiActions($billingPayload);
 
         $customerPayload = $this->buildCustomerPayload($quote,$billingPayload);
-        $this->spotiiHelper->logSpotiiActions('cusسtomerPayload');
+        $this->spotiiHelper->logSpotiiActions('customerPayload');
         $this->spotiiHelper->logSpotiiActions($customerPayload);
 
         $itemPayload = $this->buildItemPayload($quote);
