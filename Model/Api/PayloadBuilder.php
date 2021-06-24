@@ -8,7 +8,7 @@
 namespace Spotii\Spotiipay\Model\Api;
 
 use Magento\Store\Model\StoreManagerInterface;
-
+use Spotii\Spotiipay\Helper\Data as SpotiiHelper;
 /**
  * Class PayloadBuilder
  * @package Spotii\Spotiipay\Model\Api
@@ -16,7 +16,10 @@ use Magento\Store\Model\StoreManagerInterface;
 class PayloadBuilder
 {
     const PRECISION = 4;
-
+    /**
+     * @var JsonHelper
+     */
+    protected $jsonHelper;
     /**
      * @var ConfigInterface
      */
@@ -32,9 +35,11 @@ class PayloadBuilder
      * @param StoreManagerInterface $storeManager
      */
     public function __construct(
+        JsonHelper $jsonHelper,
         ConfigInterface $spotiiApiConfig,
         StoreManagerInterface $storeManager
     ) {
+        $this->spotiiHelper = $spotiiHelper;
         $this->spotiiApiConfig = $spotiiApiConfig;
         $this->storeManager = $storeManager;
     }
@@ -107,10 +112,21 @@ class PayloadBuilder
             *} 
         **/
         $billingPayload = $this->buildBillingPayload($quote);
+        $this->spotiiHelper->logSpotiiActions('billingPayload');
+        $this->spotiiHelper->logSpotiiActions($billingPayload);
+
         $customerPayload = $this->buildCustomerPayload($quote,$billingPayload);
-        
+        $this->spotiiHelper->logSpotiiActions('cusسtomerPayload');
+        $this->spotiiHelper->logSpotiiActions($customerPayload);
+
         $itemPayload = $this->buildItemPayload($quote);
+        $this->spotiiHelper->logSpotiiActions('itemPayload');
+        $this->spotiiHelper->logSpotiiActions($itemPayload);
+
         $shippingAddressPayload = $this->buildShippingPayload($quote);
+        $this->spotiiHelper->logSpotiiActions('shippingAddressPayload');
+        $this->spotiiHelper->logSpotiiActions($shippingAddressPayload);
+
         $orderPayload = $this->buildOrderPayload($quote, $reference,$shippingAddressPayload,$itemPayload);
         $payload = array_merge_recursive(
             $orderPayload,
