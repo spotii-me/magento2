@@ -45,9 +45,9 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 			script.type = 'text/javascript';
 			script.onload = ()=> {
 			this.spotiiCatalogWidget();
-			}
+			};
 			script.src = 'https://widget.spotii.me/v1/javascript/spotii-catalog-widget.js';
-			document.body.appendChild(script)
+			document.body.appendChild(script);
 			console.log("dom loaded");
 		},
 
