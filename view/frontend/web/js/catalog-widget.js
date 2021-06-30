@@ -19,12 +19,12 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 
 		spotiiCatalogWidget: function(){
 			var self = this;
-			console.log(self.jsConfig, 'self')
-			let renderToPathClass = self.jsConfig.renderToPath
+			console.log(self.jsConfig, 'self');
+			let renderToPathClass = self.jsConfig.renderToPath;
 			const allProducts = document.getElementsByClassName(renderToPathClass);
 			for(let product of allProducts){
 				if(product.dataset.priceType === "finalPrice"){
-					let targetXPath = `#${product.id}`
+					let targetXPath = `#${product.id}`;
 					let renderToPath;
 					if(product.parentElement.parentElement.className === "special-price"){
 						const spotiiReference = `spotii-${(Math.floor(1000 + Math.random() * 9000))}`;
@@ -34,7 +34,7 @@ define(['jquery', 'ko', 'uiComponent', 'domReady!'], function (
 					else{
 						renderToPath = `#${product.id}`;
 					}
-				window.loadSpotiiWidget(window, document, targetXPath, renderToPath, self.jsConfig.currency)
+				window.loadSpotiiWidget(window, document, targetXPath, renderToPath, self.jsConfig.currency);
 				}
 			}
 
